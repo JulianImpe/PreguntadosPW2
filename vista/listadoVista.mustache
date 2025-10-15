@@ -1,0 +1,50 @@
+<div class="w3-container w3-center w3-margin">
+    <div class="w3-content" style="max-width:1000px">
+        <div class="w3-right w3-small" style="margin-bottom:8px;">
+            {{#admin}}
+                Usuario ADMIN | <a href="/login/logout">Salir</a>
+            {{/admin}}
+            {{^admin}}
+                <a href="/login/loginForm">Ingresar</a>
+            {{/admin}}
+        </div>
+        <form method="POST" class="w3-margin">
+            <input class="w3-input w3-border w3-display-inline-block" style="width:70%" type="text" name="busqueda"
+                   placeholder="Ingrese el nombre, tipo o número de pokémon">
+            <input class="w3-button w3-display-inline-block w3-blue" type="submit" value="Buscar">
+        </form>
+
+        <table class="w3-table-all w3-card-4 w3-centered">
+            <tr class="w3-blue">
+                <th>Imagen</th>
+                <th>Tipo</th>
+                <th>Número</th>
+                <th>Nombre</th>
+                {{#admin}}
+                    <th>Acciones</th>
+                {{/admin}}
+            </tr>
+            {{#pokemon}}
+                <tr>
+                    <td><img src="{{imagen}}" width="50"></td>
+                    <td><img src="/imagenes/tipos/{{tipo}}.png" width="30"></td>
+                    <td>{{numero}}</td>
+                    <td><a href="/pokemon/ver/id={{id}}">{{nombre}}</a></td>
+                    {{#admin}}
+                        <td>
+                            <a class="w3-button w3-yellow w3-small" href="/pokemon/editarForm/id={{id}}">Modificar</a>
+                            <a class="w3-button w3-red w3-small"
+                               href="/pokemon/borrar/id={{id}}"
+                            onclick="return confirm('Confirmar baja?')">Baja
+                            </a>
+                        </td>
+                    {{/admin}}
+                </tr>
+            {{/pokemon}}
+        </table>
+
+        {{#admin}}
+            <div class="w3-margin-top"><a class="w3-button w3-green" href="/pokemon/nuevoForm">Nuevo Pokémon</a></div>
+        {{/admin}}
+    </div>
+</div>
