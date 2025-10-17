@@ -16,4 +16,6 @@ class LoginModel
         $result = $this->conexion->query($sql);
         return $result ?? [];
     }
+
+
 }

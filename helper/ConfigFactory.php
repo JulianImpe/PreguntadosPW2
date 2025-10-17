@@ -8,7 +8,8 @@ include_once("model/PokemonModel.php");
 include_once("model/LoginModel.php");
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 include_once ("helper/MustacheRenderer.php");
-
+include_once("controller/RegistrarseController.php");
+include_once("model/RegistrarseModel.php");
 class ConfigFactory
 {
     private $config;
@@ -36,6 +37,7 @@ class ConfigFactory
 
         $this->objetos["PokemonController"] = new PokemonController(new PokemonModel($this->conexion), $this->renderer);
 
+        $this->objetos["RegistrarseController"] = new RegistrarseController(new RegistrarseModel($this->conexion), $this->renderer);
     }
 
     public function get($objectName)

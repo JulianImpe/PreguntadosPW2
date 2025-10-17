@@ -39,11 +39,19 @@ class LoginController
         $this->redirectToIndex();
     }
 
+
+    public function registrarse()
+    {
+        $this->model->registrarUsuario($_POST["usuario"], $_POST["password"]);
+        $this->redirectToIndex();
+    }
     public function redirectToIndex()
     {
-        header("Location: /");
+        header("Location: /Preguntados/index.php?controller=Pokemon&method=base");
         exit;
     }
+
+
 
 }
 
