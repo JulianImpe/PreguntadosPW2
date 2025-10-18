@@ -44,7 +44,7 @@ class RegistrarseController
     }
     public function redirectToIndex()
     {
-        header("Location: /Preguntados/index.php?controller=Pokemon&method=base");
+        header("Location: /PreguntadosPW2/index.php?controller=Pokemon&method=base");
         exit;
     }
 private function subirFoto()
@@ -61,6 +61,7 @@ private function subirFoto()
     }
     return null;
 }
+
 
     public function mostrarMailEnviado()
     {

@@ -24,18 +24,18 @@ try {
 
     // 🧾 Contenido del correo
     $mail->isHTML(true);
-    $mail->Subject = 'Confirma tu cuenta en Pokémon Trivia';
+    $mail->Subject = 'Confirma tu cuenta en PokeTrivia';
     $mail->Body = "
         <h2>¡Hola, $nombre!</h2>
-        <p>Gracias por registrarte en <b>Pokémon Trivia</b>.</p>
+        <p>Gracias por registrarte en <b>PokeTrivia</b>.</p>
         <p>Para activar tu cuenta, hacé clic en el siguiente enlace:</p>
         <p>
-            <a href='http://localhost/Preguntados/index.php?controller=Login&method=activar&email=$email'>
+            <a href='http://localhost/PreguntadosPW2/index.php?controller=Login&method=activar&email=$email'>
                 Activar cuenta
             </a>
         </p>
     ";
-    $mail->AltBody = "Hola $nombre, activá tu cuenta ingresando a: http://localhost/Preguntados/index.php?controller=Login&method=activar&email=$email";
+    $mail->AltBody = "Hola $nombre, activá tu cuenta ingresando a: http://localhost/PreguntadosPW2/index.php?controller=Login&method=activar&email=$email";
 
     $mail->send();
     echo '✅ Correo de confirmación enviado correctamente.';

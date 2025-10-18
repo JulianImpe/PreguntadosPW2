@@ -6,22 +6,16 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /
-    RewriteRule ^(imagenes)($|/) - [L,NC]
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)/(.*)/(.*)$ index.php?controller=$1&method=$2&$3 [L,QSA]
-    RewriteRule ^(.*)/(.*)$ index.php?controller=$1&method=$2 [L,QSA]
-    RewriteRule ^(.*)$ index.php?controller=$1 [L,QSA]
-# Evitar reescribir archivos o carpetas reales
-RewriteEngine On
-RewriteBase /Preguntados/
+    RewriteBase /PreguntadosPW2/
 
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+    # No reescribir archivos o carpetas reales (CSS, imágenes, JS, etc.)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
 
-# Enviar el resto a index.php
-RewriteRule ^ index.php [L,QSA]
-    </IfModule>
+    # MVC routing: controller/method(/params)
+    RewriteRule ^([^/]+)/([^/]+)/?(.*)$ index.php?controller=$1&method=$2&$3 [L,QSA]
 
+    # controller/
+    RewriteRule ^([^/]+)/?$ index.php?controller=$1 [L,QSA]
+</IfModule>
