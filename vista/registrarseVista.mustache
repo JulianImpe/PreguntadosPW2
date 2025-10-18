@@ -1,126 +1,157 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Registrarse</title>
-    <link rel="stylesheet" href="../estilos/registrarse.css">
-
-</head>
-<body>
-
-
-    <div class="registro-container">
-        <div class="logo-container">
-            <div class="pokeball-icon"></div>
-            <h1>Pokémon Trivia</h1>
-            <p>Únete a la aventura</p>
-        </div>
-
-
-        <form method="POST" action="/registrarse/registrarse" enctype="multipart/form-data" id="registroForm">
-        {{#error}}
-        <div class="error-message">
-            {{error}}
-        </div>
-        {{/error}}
-            <div class="form-group">
-                <label for="nombre_completo">
-                    Nombre Completo <span>*</span>
-                </label>
-                <input
-                    type="text" a
-                    class="form-control"
-                    id="nombre_completo"
-                    name="nombre_completo"
-                    placeholder="Ej: Ash Ketchum"
-                    required
-                    value="nombre_completo">
+<!-- Contenedor principal con fondo degradado -->
+<div class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900 flex items-center justify-center p-5">
+    
+    <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl relative overflow-hidden">
+        <!-- Barra superior decorativa -->
+        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
+        
+        <div class="p-8 md:p-10">
+            <!-- Logo y título -->
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">⚫</div>
+                <h1 class="text-3xl md:text-4xl font-bold text-red-700 uppercase tracking-wider mb-2" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+                    Pokémon Trivia
+                </h1>
+                <p class="text-gray-600 text-sm">Únete a la aventura</p>
             </div>
 
-            <div class="form-group">
-                <label for="usuario">
-                    Nombre de Usuario <span>*</span>
-                </label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="usuario"
-                    name="usuario"
-                    placeholder="Ej: ash_maestro"
-                    required
-                    pattern="[a-zA-Z0-9_]{3,20}"
-                    title="3-20 caracteres: letras, números y guión bajo"
-                    value="usuario">
-            </div>
+            <!-- Formulario -->
+            <form method="POST" action="/registrarse/registrarse" enctype="multipart/form-data" id="registroForm">
+                
+                {{#error}}
+                <div class="bg-red-50 border-l-4 border-red-700 text-red-800 p-3 rounded mb-5 text-sm">
+                    {{error}}
+                </div>
+                {{/error}}
 
-            <div class="form-group">
-                <label for="email">
-                    Email <span>*</span>
-                </label>
-                <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    name="email"
-                    placeholder="tu@email.com"
-                    required
-                    value="email">
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="password">
-                        Contraseña <span>*</span>
+                <!-- Nombre Completo -->
+                <div class="mb-5">
+                    <label for="nombre_completo" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        Nombre Completo <span class="text-red-700">*</span>
                     </label>
                     <input
-                        type="password"
-                        class="form-control"
-                        id="password"
-                        name="password"
-                        placeholder="••••••••"
+                        type="text"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                        id="nombre_completo"
+                        name="nombre_completo"
+                        placeholder="Ej: Ash Ketchum"
                         required
-                        minlength="6">
+                        value="{{nombre_completo}}">
                 </div>
 
-                <div class="form-group">
-                    <label for="fechaNacimiento">
-                        Fecha Nacimiento <span>*</span>
+                <!-- Nombre de Usuario -->
+                <div class="mb-5">
+                    <label for="usuario" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        Nombre de Usuario <span class="text-red-700">*</span>
                     </label>
                     <input
-                        type="date"
-                        class="form-control"
-                        id="fechaNacimiento"
-                        name="fechaNacimiento"
+                        type="text"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                        id="usuario"
+                        name="usuario"
+                        placeholder="Ej: ash_maestro"
                         required
-                        max="2010-01-01"
-                        value="fechaNacimiento">
+                        pattern="[a-zA-Z0-9_]{3,20}"
+                        title="3-20 caracteres: letras, números y guión bajo"
+                        value="{{usuario}}">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="foto_perfil">
-                    Foto de Perfil (opcional)
-                </label>
-                <div class="file-input-wrapper">
-                    <input
-                        type="file"
-                        id="foto_perfil"
-                        name="foto_perfil"
-                        accept="image/*"
-                        onchange="updateFileName(this)">
-                    <label for="foto_perfil" class="file-input-label">
-                        Seleccionar imagen
+                <!-- Email -->
+                <div class="mb-5">
+                    <label for="email" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        Email <span class="text-red-700">*</span>
                     </label>
+                    <input
+                        type="email"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                        id="email"
+                        name="email"
+                        placeholder="tu@email.com"
+                        required
+                        value="{{email}}">
                 </div>
-                <div class="file-name" id="fileName"></div>
+
+                <!-- Contraseña y Fecha de Nacimiento -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label for="password" class="block text-gray-800 font-semibold mb-2 text-sm">
+                            Contraseña <span class="text-red-700">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                            id="password"
+                            name="password"
+                            placeholder="••••••••"
+                            required
+                            minlength="6">
+                    </div>
+
+                    <div>
+                        <label for="fechaNacimiento" class="block text-gray-800 font-semibold mb-2 text-sm">
+                            Fecha Nacimiento <span class="text-red-700">*</span>
+                        </label>
+                        <input
+                            type="date"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                            id="fechaNacimiento"
+                            name="fechaNacimiento"
+                            required
+                            max="2010-01-01"
+                            value="{{fechaNacimiento}}">
+                    </div>
+                </div>
+
+                <!-- Foto de Perfil -->
+                <div class="mb-6">
+                    <label for="foto_perfil" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        Foto de Perfil (opcional)
+                    </label>
+                    <div class="relative">
+                        <input
+                            type="file"
+                            id="foto_perfil"
+                            name="foto_perfil"
+                            accept="image/*"
+                            class="hidden"
+                            onchange="updateFileName(this)">
+                        <label for="foto_perfil" class="flex items-center justify-center px-4 py-3 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer transition-all duration-300 hover:bg-white hover:border-red-700 text-gray-600 hover:text-red-700">
+                            <span class="text-xl mr-2">📷</span>
+                            <span>Seleccionar imagen</span>
+                        </label>
+                    </div>
+                    <div id="fileName" class="mt-2 text-xs text-gray-600 italic"></div>
+                </div>
+
+                <!-- Botón Submit -->
+                <button type="submit" class="w-full py-4 bg-gradient-to-r from-red-700 to-red-600 text-white rounded-lg text-lg font-bold uppercase tracking-wide cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:from-red-600 hover:to-red-700 active:translate-y-0">
+                    Registrarse
+                </button>
+            </form>
+
+            <!-- Link de inicio de sesión -->
+            <div class="text-center mt-5 text-gray-600 text-sm">
+                ¿Ya tienes cuenta? <a href="/login/loginForm" class="text-red-700 font-bold no-underline transition-all duration-300 hover:text-red-600 hover:underline">Inicia sesión aquí</a>
             </div>
-
-            <button type="submit" class="btn-submit">
-                Registrarse
-            </button>
-        </form>
-
-        <div class="login-link">
-            ¿Ya tienes cuenta? <a href="/login/loginForm">Inicia sesión aquí</a>
         </div>
     </div>
+
+    <script>
+        function updateFileName(input) {
+            const fileName = document.getElementById('fileName');
+            if (input.files && input.files[0]) {
+                fileName.textContent = '📁 ' + input.files[0].name;
+            } else {
+                fileName.textContent = '';
+            }
+        }
+
+        // Animación de carga en el botón
+        document.getElementById('registroForm').addEventListener('submit', function(e) {
+            const btn = this.querySelector('button[type="submit"]');
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+            btn.innerHTML = 'Registrando... <span class="inline-block animate-spin ml-2">⚪</span>';
+        });
+    </script>
+    
+</div> <!-- Cierre del contenedor principal -->
