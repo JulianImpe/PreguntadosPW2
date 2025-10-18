@@ -35,10 +35,15 @@ class RegistrarseController
             return;
         }
         $foto_perfil = $this->subirFoto();
-        $this->model->registrarUsuario($usuario, $password, $email, $fecha, $nombre);
+        $this->model->registrarUsuario($usuario, $password, $email, $fecha, $nombre, $foto_perfil);
 
+        include 'helper/enviarEmail.php'; // usar PHPMailer
+        // en enviarEmail.php asegurate de usar $email como destinatario:
+        // $mail->addAddress($email, $nombre);
 
-        $this->redirectToIndex();
+        // 4. Mostrar la vista de "mail enviado"
+        $this->mostrarMailEnviado();
+       // $this->redirectToIndex();
     }
     public function redirectToIndex()
     {
@@ -53,6 +58,11 @@ class RegistrarseController
             move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $destino);
             return $destino;
         }
-        return "uploads/default.png"; // imagen por defecto
+        return null; // imagen por defecto
     }
+    public function mostrarMailEnviado()
+    {
+        $this->renderer->render("mailEnviadoVista", []); // sin datos por ahora
+    }
+
 }

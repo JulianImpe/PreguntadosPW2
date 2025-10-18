@@ -47,7 +47,7 @@ class LoginController
     }
     public function redirectToIndex()
     {
-        header("Location: /Preguntados/index.php?controller=Pokemon&method=base");
+        header("Location: /PreguntadosPW2/index.php?controller=Pokemon&method=base");
         exit;
     }
 
