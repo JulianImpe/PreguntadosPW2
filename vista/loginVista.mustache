@@ -1,11 +1,82 @@
+<!-- Contenedor principal con fondo degradado -->
+<div class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900 flex items-center justify-center p-5">
 
-<div class="w3-container w3-center w3-margin">
-    <form method="POST" action="/login/login" class="w3-card w3-padding w3-light-grey w3-display-inline-block" style="min-width:300px">
-        {{#error}}
-            <div class='w3-panel w3-red'>{{error}}</div>
-        {{/error}}
-        <p><input class="w3-input w3-border" type="text" name="usuario" placeholder="Usuario"></p>
-        <p><input class="w3-input w3-border" type="password" name="password" placeholder="Password"></p>
-        <p><input class="w3-button w3-blue" type="submit" value="Ingresar"></p>
-    </form>
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl relative overflow-hidden">
+        <!-- Barra superior decorativa -->
+        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
+
+        <div class="p-8 md:p-10">
+            <!-- Logo y título -->
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">⚫</div>
+                <h1 class="text-3xl md:text-4xl font-bold text-red-700 uppercase tracking-wider mb-2"
+                    style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+                    Pokémon Trivia
+                </h1>
+                <p class="text-gray-600 text-sm">Inicia sesión para continuar</p>
+            </div>
+
+            <!-- Formulario de login -->
+            <form method="POST" action="/login/login" id="loginForm">
+
+                {{#error}}
+                    <div class="bg-red-50 border-l-4 border-red-700 text-red-800 p-3 rounded mb-5 text-sm">
+                        {{error}}
+                    </div>
+                {{/error}}
+
+                <!-- Usuario -->
+                <div class="mb-5">
+                    <label for="usuario" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        Usuario <span class="text-red-700">*</span>
+                    </label>
+                    <input
+                            type="text"
+                            id="usuario"
+                            name="usuario"
+                            placeholder="Ej: ash_maestro"
+                            required
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                    >
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        Contraseña <span class="text-red-700">*</span>
+                    </label>
+                    <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="••••••••"
+                            required
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                    >
+                </div>
+
+                <!-- Botón Ingresar -->
+                <button type="submit"
+                        class="w-full py-4 bg-gradient-to-r from-red-700 to-red-600 text-white rounded-lg text-lg font-bold uppercase tracking-wide cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:from-red-600 hover:to-red-700 active:translate-y-0">
+                    Ingresar
+                </button>
+            </form>
+
+            <!-- Link de registro -->
+            <div class="text-center mt-5 text-gray-600 text-sm">
+                ¿No tienes cuenta? <a href="/PreguntadosPW2/index.php?controller=Registrarse&method=registrarseForm"
+                                      class="text-red-700 font-bold no-underline transition-all duration-300 hover:text-red-600 hover:underline">Regístrate
+                aquí</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animación de carga en el botón
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            const btn = this.querySelector('button[type="submit"]');
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+            btn.innerHTML = 'Ingresando... <span class="inline-block animate-spin ml-2">⚪</span>';
+        });
+    </script>
 </div>
