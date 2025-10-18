@@ -1,5 +1,14 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="../estilos/registrarse.css">
+
+</head>
 <body>
-<link rel="stylesheet" href="registrarse.css">
+
+
     <div class="registro-container">
         <div class="logo-container">
             <div class="pokeball-icon"></div>
@@ -18,11 +27,11 @@
                 <label for="nombre_completo">
                     Nombre Completo <span>*</span>
                 </label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="nombre_completo" 
-                    name="nombre_completo" 
+                <input
+                    type="text" a
+                    class="form-control"
+                    id="nombre_completo"
+                    name="nombre_completo"
                     placeholder="Ej: Ash Ketchum"
                     required
                     value="nombre_completo">
@@ -32,11 +41,11 @@
                 <label for="usuario">
                     Nombre de Usuario <span>*</span>
                 </label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="usuario" 
-                    name="usuario" 
+                <input
+                    type="text"
+                    class="form-control"
+                    id="usuario"
+                    name="usuario"
                     placeholder="Ej: ash_maestro"
                     required
                     pattern="[a-zA-Z0-9_]{3,20}"
@@ -48,11 +57,11 @@
                 <label for="email">
                     Email <span>*</span>
                 </label>
-                <input 
-                    type="email" 
-                    class="form-control" 
-                    id="email" 
-                    name="email" 
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
                     placeholder="tu@email.com"
                     required
                     value="email">
@@ -63,11 +72,11 @@
                     <label for="password">
                         Contraseña <span>*</span>
                     </label>
-                    <input 
-                        type="password" 
-                        class="form-control" 
-                        id="password" 
-                        name="password" 
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
                         placeholder="••••••••"
                         required
                         minlength="6">
@@ -77,11 +86,11 @@
                     <label for="fechaNacimiento">
                         Fecha Nacimiento <span>*</span>
                     </label>
-                    <input 
-                        type="date" 
-                        class="form-control" 
-                        id="fechaNacimiento" 
-                        name="fechaNacimiento" 
+                    <input
+                        type="date"
+                        class="form-control"
+                        id="fechaNacimiento"
+                        name="fechaNacimiento"
                         required
                         max="2010-01-01"
                         value="fechaNacimiento">
@@ -93,10 +102,10 @@
                     Foto de Perfil (opcional)
                 </label>
                 <div class="file-input-wrapper">
-                    <input 
-                        type="file" 
-                        id="foto_perfil" 
-                        name="foto_perfil" 
+                    <input
+                        type="file"
+                        id="foto_perfil"
+                        name="foto_perfil"
                         accept="image/*"
                         onchange="updateFileName(this)">
                     <label for="foto_perfil" class="file-input-label">
