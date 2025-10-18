@@ -16,7 +16,8 @@
             </div>
 
             <!-- Formulario -->
-            <form method="POST" action="/registrarse/registrarse" enctype="multipart/form-data" id="registroForm">
+            <form method="POST" action="/Preguntados/index.php?controller=Registrarse&method=registrarse" enctype="multipart/form-data" id="registroForm">
+
                 
                 {{#error}}
                 <div class="bg-red-50 border-l-4 border-red-700 text-red-800 p-3 rounded mb-5 text-sm">
@@ -94,11 +95,11 @@
                         <input
                             type="date"
                             class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
-                            id="fechaNacimiento"
-                            name="fechaNacimiento"
+                            id="fecha_nac"
+                            name="fecha_nac"
                             required
                             max="2010-01-01"
-                            value="{{fechaNacimiento}}">
+                            value="{{fecha_nac}}">
                     </div>
                 </div>
 
