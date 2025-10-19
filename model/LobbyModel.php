@@ -8,28 +8,31 @@ class LobbyModel {
         $this->conexion = $conexion;
     }
 
-
-
     public function obtenerDatosUsuario($usuario)
     {
         $sql = "SELECT 
-                    u.usuario,
-                    COALESCE(u.puntos, 0) as puntos,
-                    COALESCE(COUNT(p.id), 0) as partidas_jugadas,
-                    COALESCE(SUM(CASE WHEN p.ganada = 1 THEN 1 ELSE 0 END), 0) as partidas_ganadas,
-                    COALESCE(u.nivel, 1) as nivel
-                FROM usuarios u
-                LEFT JOIN partidas p ON u.id = p.usuario_id
-                WHERE u.usuario = ?
-                GROUP BY u.id";
-
-        $result = $this->conexion->query($sql, [$usuario]);
+                    usuario,
+                    nombre_completo,
+                    email,
+                    fecha_nac,
+                    foto_perfil
+                FROM usuarios
+                WHERE usuario = '$usuario'
+                LIMIT 1";
+        $result = $this->conexion->query($sql);
 
         if (!empty($result)) {
             $datos = $result[0];
 
-            // Calcular ranking
-            $datos['ranking'] = $this->calcularRanking($usuario);
+            // Valores por defecto para estadísticas
+            $datos['ranking'] = '-';
+            $datos['puntos'] = 0;
+            $datos['partidas_jugadas'] = 0;
+            $datos['partidas_ganadas'] = 0;
+            $datos['nivel'] = 1;
+
+            // Devolvemos un array vacío para partidas recientes
+            $datos['partidas_recientes'] = [];
 
             return $datos;
         }
@@ -37,35 +40,9 @@ class LobbyModel {
         return [];
     }
 
+    // Método reemplazo para no romper el controlador
     public function obtenerPartidasRecientes($usuario, $limite = 5)
     {
-        $sql = "SELECT 
-                    p.fecha,
-                    p.puntos_obtenidos,
-                    p.respuestas_correctas as correctas,
-                    p.total_preguntas as totales,
-                    p.ganada
-                FROM partidas p
-                INNER JOIN usuarios u ON p.usuario_id = u.id
-                WHERE u.usuario = ?
-                ORDER BY p.fecha DESC
-                LIMIT ?";
-
-        return $this->conexion->query($sql, [$usuario, $limite]);
-    }
-
-    private function calcularRanking($usuario)
-    {
-        $sql = "SELECT COUNT(*) + 1 as ranking
-                FROM usuarios u1
-                WHERE u1.puntos > (
-                    SELECT puntos 
-                    FROM usuarios 
-                    WHERE usuario = ?
-                )";
-
-        $result = $this->conexion->query($sql, [$usuario]);
-
-        return !empty($result) ? $result[0]['ranking'] : '-';
+        return []; // Como no hay tabla de partidas
     }
 }

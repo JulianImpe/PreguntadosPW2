@@ -22,8 +22,11 @@ class LoginModel
             return [];
         }
 
-        $sql = "SELECT * FROM usuarios WHERE usuario = ? LIMIT 1";
-        $result = $this->conexion->query($sql, [$usuario]);
+      /*  $sql = "SELECT * FROM usuarios WHERE usuario = ? LIMIT 1";
+        $result = $this->conexion->query($sql, [$usuario]);*/
+        $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario' LIMIT 1";
+        $result = $this->conexion->query($sql);
+
 
         if (!empty($result)) {
             $user = $result[0];
