@@ -38,7 +38,7 @@ try {
     $mail->AltBody = "Hola $nombre, activá tu cuenta ingresando a: http://localhost/PreguntadosPW2/index.php?controller=Login&method=activar&email=$email";
 
     $mail->send();
-    echo '✅ Correo de confirmación enviado correctamente.';
+    $data['sucess'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
 } catch (Exception $e) {
-    echo "❌ Error al enviar el correo: {$mail->ErrorInfo}";
+    $data['error'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
 }

@@ -3,4 +3,15 @@
         <h1 class="text-3xl font-bold text-green-600 mb-4">¡Correo enviado correctamente!</h1>
         <p class="text-gray-700 mb-6">Revisa tu bandeja de entrada para continuar.</p>
     </div>
+    {{#success}}
+<script>
+    toastr.success('{{success}}');
+</script>
+{{/success}}
+
+    {{#error}}
+<script>
+    toastr.error('{{error}}');
+</script>
+{{/error}}
 </div>

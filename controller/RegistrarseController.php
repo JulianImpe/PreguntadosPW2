@@ -21,32 +21,72 @@ class RegistrarseController
         $this->renderer->render("registrarse");
     }
     public function registrarse()
-    {
-        $usuario = trim($_POST["usuario"]);
-        $password = trim($_POST["password"]);
-        $email = trim($_POST["email"]);
-        $fecha = $_POST["fecha_nac"];
-        $nombre = trim($_POST["nombre_completo"]);
-        if (strlen($password) < 6 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo "<script>
-                alert('Error: contraseña o email inválido');
-                window.history.back();
-            </script>";
-            return;
-        }
-        $foto_perfil = $this->subirFoto();
-        $this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre);
+{
+    $usuario = trim($_POST["usuario"]);
+    $password = trim($_POST["password"]);
+    $repetir = trim($_POST["repetir_password"]);
+    $email = trim($_POST["email"]);
+    $fecha = $_POST["fecha_nac"];
+    $nombre = trim($_POST["nombre_completo"]);
+
+    // --- LIBRERIA TOASTR---
+    echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
+    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">';
+    echo '<script>toastr.options = { "closeButton": true, "progressBar": true, "positionClass": "toast-top-right" }</script>';
+
+    
+    // 1. Campos vacíos
+    if (empty($usuario) || empty($password) || empty($repetir) || empty($email) || empty($fecha) || empty($nombre)) {
+        $data['error'] = "Todos los campos son obligatorios";
+        $this->renderer->render("registrarse", $data);
+        return;
+    }
+
+    // 2. Contraseñas iguales
+if ($password !== $repetir) {
+    $data['error'] = "Las contraseñas no coinciden";
+    $this->renderer->render("registrarse", $data);
+    return;
+}
 
 
-        include 'helper/enviarEmail.php'; // usar PHPMailer
-        $this->mostrarMailEnviado();
-       // $this->redirectToIndex();
+    // 3. Longitud y complejidad
+    if (strlen($password) < 6 || !preg_match('/[A-Z]/', $password)) {
+        $data['error'] = "La contraseña debe tener al menos 6 caracteres y contener una letra mayúscula";
+        $this->renderer->render("registrarse", $data);
+        return;
     }
-    public function redirectToIndex()
-    {
-        header("Location: /PreguntadosPW2/index.php?controller=Pokemon&method=base");
-        exit;
+
+    // 4. Email válido
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $data['error'] = "El email no es válido";
+        $this->renderer->render("registrarse", $data);
+        return;
     }
+
+    // 6. Ya existe usuario, email o nombre completo
+    if ($this->model->existeUsuario($usuario)) {
+        $data['error'] = "El nombre de usuario ya está en uso";
+        $this->renderer->render("registrarse", $data);
+        return;
+    }
+
+    if ($this->model->existeEmail($email)) {
+        $data['error'] = "El email ya está en uso";
+        $this->renderer->render("registrarse", $data);
+        return;
+    }
+
+
+    // --- Si pasa todas las validaciones ---
+    $foto_perfil = $this->subirFoto();
+    $this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre);
+
+    include 'helper/enviarEmail.php';
+    $this->mostrarMailEnviado();
+}
+
 private function subirFoto()
 {
     if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
@@ -65,7 +105,7 @@ private function subirFoto()
 
     public function mostrarMailEnviado()
     {
-        $this->renderer->render("mailEnviado", []); // sin datos por ahora
+        $data['sucess'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
+        $this->renderer->render("mailEnviado", $data); // sin datos por ahora
     }
-
 }

@@ -8,7 +8,10 @@
         <div class="p-8 md:p-10">
             <!-- Logo y título -->
             <div class="text-center mb-8">
-                <div class="text-6xl mb-4">⚫</div>
+                <div class="text-6xl mb-4">
+                <div  class="text-center mb-4 flex justify-center">
+                <svg class="text-center" xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg></div>
+                </div>
                 <h1 class="text-3xl md:text-4xl font-bold text-red-700 uppercase tracking-wider mb-2" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
                     Pokémon Trivia
                 </h1>
@@ -18,12 +21,11 @@
             <!-- Formulario -->
             <form method="POST" action="PreguntadosPW2/registrarse/registrarse" enctype="multipart/form-data" id="registroForm">
 
-                
-                {{#error}}
-                <div class="bg-red-50 border-l-4 border-red-700 text-red-800 p-3 rounded mb-5 text-sm">
-                    {{error}}
-                </div>
-                {{/error}}
+{{#error}}
+<script>
+    toastr.error('{{error}}');
+</script>
+{{/error}}
 
                 <!-- Nombre Completo -->
                 <div class="mb-5">
@@ -87,6 +89,19 @@
                             required
                             minlength="6">
                     </div>
+                    <div>
+        <label for="repetir_password" class="block text-gray-800 font-semibold mb-2 text-sm">
+        Repetir Contraseña <span class="text-red-700">*</span>
+    </label>
+    <input
+        type="password"
+        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+        id="repetir_password"
+        name="repetir_password"
+        placeholder="••••••••"
+        required
+        minlength="6">
+</div>
 
                     <div>
                         <label for="fechaNacimiento" class="block text-gray-800 font-semibold mb-2 text-sm">
@@ -151,7 +166,7 @@
         document.getElementById('registroForm').addEventListener('submit', function(e) {
             const btn = this.querySelector('button[type="submit"]');
             btn.classList.add('opacity-70', 'cursor-not-allowed');
-            btn.innerHTML = 'Registrando... <span class="inline-block animate-spin ml-2">⚪</span>';
+            btn.innerHTML = 'Registrando... <span class="inline-block animate-spin ml-3 align-middle"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="#fff" d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg></span>';
         });
     </script>
     

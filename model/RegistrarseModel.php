@@ -23,4 +23,20 @@ class RegistrarseModel
                 VALUES ('$usuario', '$password', '$email', '$fecha_nac', '$foto_perfil', '$nombre_completo')";
         $this->conexion->query($sql);
     }
+
+    public function existeUsuario($usuario)
+{
+    $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
+    $res = $this->conexion->query($sql);
+    return !empty($res);
+}
+
+public function existeEmail($email)
+{
+    $sql = "SELECT * FROM usuarios WHERE email = '$email'";
+    $res = $this->conexion->query($sql);
+    return !empty($res);
+}
+
+
 }
