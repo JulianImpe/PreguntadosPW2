@@ -21,7 +21,7 @@ class LoginController
         $this->renderer->render("login");
     }
 
-    public function login()
+   /* public function login()
     {
         $resultado = $this->model->getUserWith($_POST["usuario"], $_POST["password"]);
 
@@ -30,6 +30,29 @@ class LoginController
             $this->redirectToIndex();
         } else {
             $this->renderer->render("login", ["error" => "Usuario o clave incorrecta"]);
+        }
+    }*/
+
+    public function login()
+    {
+        $usuario = trim($_POST["usuario"] ?? '');
+        $password = trim($_POST["password"] ?? '');
+
+        if (empty($usuario) || empty($password)) {
+            $this->renderer->render("login", ["error" => "Todos los campos son obligatorios"]);
+            return;
+        }
+
+        $resultado = $this->model->getUserWith($usuario, $password);
+
+        if (!empty($resultado)) {
+            // Guardamos usuario en sesión
+            $_SESSION["usuario"] = $usuario;
+
+            // Redirigir al lobby
+            $this->redirectToIndex();
+        } else {
+            $this->renderer->render("login", ["error" => "Usuario o contraseña incorrectos"]);
         }
     }
 
@@ -47,7 +70,7 @@ class LoginController
     }
     public function redirectToIndex()
     {
-        header("Location: /PreguntadosPW2/index.php?controller=Pokemon&method=base");
+        header("Location: /PreguntadosPW2/index.php?controller=Lobby&method=base");
         exit;
     }
 
