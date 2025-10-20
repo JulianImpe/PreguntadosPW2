@@ -19,7 +19,7 @@ class MyConexion
         if (!$result) {
             die("Error en la consulta: " . $this->conexion->error);
         }
-        if ($result->num_rows > 0) {
+        if ($result instanceof mysqli_result && $result->num_rows > 0) {
             return $result->fetch_all(MYSQLI_ASSOC);
         }
         return null;
