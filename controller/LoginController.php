@@ -38,6 +38,7 @@ class LoginController
         $usuario = trim($_POST["usuario"] ?? '');
         $password = trim($_POST["password"] ?? '');
 
+        // decidir si hay que traer los datos de usuario y contraseña o si el usuario los escribe
         if (empty($usuario) || empty($password)) {
             $this->renderer->render("login", ["error" => "Todos los campos son obligatorios"]);
             return;
