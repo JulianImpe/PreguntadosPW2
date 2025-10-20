@@ -30,12 +30,12 @@ try {
         <p>Gracias por registrarte en <b>PokeTrivia</b>.</p>
         <p>Para activar tu cuenta, hacé clic en el siguiente enlace:</p>
         <p>
-            <a href='http://localhost/PreguntadosPW2/index.php?controller=Login&method=activar&email=$email'>
+            <a href='http://localhost/PreguntadosPW2/Login/LoginForm$email'>
                 Activar cuenta
             </a>
         </p>
     ";
-    $mail->AltBody = "Hola $nombre, activá tu cuenta ingresando a: http://localhost/PreguntadosPW2/index.php?controller=Login&method=activar&email=$email";
+    $mail->AltBody = "Hola $nombre, activá tu cuenta ingresando a: http://localhost/PreguntadosPW2/Login/LoginForm$email";
 
     $mail->send();
     $data['sucess'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
