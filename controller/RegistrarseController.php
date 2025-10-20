@@ -106,6 +106,6 @@ class RegistrarseController
     public function mostrarMailEnviado()
     {
         $data['sucess'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
-        $this->renderer->render("mailEnviado", $data); // sin datos por ahora
+            $this->renderer->render("mailEnviado", $data); // sin datos por ahora
     }
 }
