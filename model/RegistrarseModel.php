@@ -16,13 +16,23 @@ class RegistrarseModel
         return $result ?? [];
     }
 
-    public function registrarUsuario($usuario, $password, $email, $fecha_nac, $foto_perfil, $nombre_completo)
-    {
-        // Corregir nombres de columnas y valores
-        $sql = "INSERT INTO usuarios (usuario, password, email, fecha_nac, foto_perfil, nombre_completo) 
-                VALUES ('$usuario', '$password', '$email', '$fecha_nac', '$foto_perfil', '$nombre_completo')";
-        $this->conexion->query($sql);
+public function registrarUsuario($usuario, $password, $email, $fecha_nac, $foto_perfil, $nombre_completo, $sexo_id)
+{
+    $sql = "INSERT INTO usuarios (usuario, password, email, fecha_nac, foto_perfil, nombre_completo, Sexo_ID) 
+            VALUES ('$usuario', '$password', '$email', '$fecha_nac', '$foto_perfil', '$nombre_completo', '$sexo_id')";
+    $this->conexion->query($sql);
+}
+
+public function getSexoIdByNombre($nombre)
+{
+    $sql = "SELECT ID FROM Sexo WHERE Nombre = '$nombre'";
+    $result = $this->conexion->query($sql);
+    if (!empty($result)) {
+        return $result[0]['ID'];
     }
+    return null;
+}
+
 
     public function existeUsuario($usuario)
 {
