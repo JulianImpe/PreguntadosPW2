@@ -29,7 +29,7 @@ class PokemonController
 
         $ruta = "";
         if (isset($_FILES["imagen"]) && $_FILES["imagen"]["name"] != "") {
-            $ruta = "/imagenes/" . basename($_FILES["imagen"]["name"]);
+            $ruta = "/public/" . basename($_FILES["imagen"]["name"]);
             move_uploaded_file($_FILES["imagen"]["tmp_name"], $ruta);
         }
 
@@ -44,7 +44,7 @@ class PokemonController
         $this->redirectIfNotAdmin();
 
         $datos["fila"] = $this->model->get($_GET["id"]);
-        $datos["tipos"] = [
+        $datos["img"] = [
             ["tipo_valor" => "agua", "es_tipo_seleccionado" => $datos["fila"]["tipo"] == "agua"],
             ["tipo_valor" => "fuego", "es_tipo_seleccionado" => $datos["fila"]["tipo"] == "fuego"],
             ["tipo_valor" => "electrico", "es_tipo_seleccionado" => $datos["fila"]["tipo"] == "electrico"],

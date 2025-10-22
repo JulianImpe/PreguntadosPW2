@@ -30,7 +30,7 @@ try {
         <p>Gracias por registrarte en <b>PokeTrivia</b>.</p>
         <p>Para activar tu cuenta, hacé clic en el siguiente enlace:</p>
         <p>
-            <a href='http://localhost/PreguntadosPW2/Login/LoginForm'>
+            <a href='/localhost/login/loginForm'>
                 Activar cuenta
             </a>
         </p>
@@ -38,7 +38,7 @@ try {
     $mail->AltBody = "Hola $nombre, activá tu cuenta ingresando a: http://localhost/PreguntadosPW2/Login/LoginForm";
 
     $mail->send();
-    $data['sucess'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
+    $data['success'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
 } catch (Exception $e) {
     $data['error'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
 }

@@ -104,13 +104,13 @@ $this->mostrarMailEnviado();
     {
         if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
             $nombre = uniqid() . "_" . $_FILES['foto_perfil']['name'];
-            $directorio = __DIR__ . '/../imagenes/';
+            $directorio = __DIR__ . '/../public/img/';
             if (!is_dir($directorio)) {
                 mkdir($directorio, 0777, true);
             }
             $destino = $directorio . $nombre;
             move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $destino);
-            return 'imagenes/' . $nombre;
+            return 'img/' . $nombre;
         }
         return null;
     }
@@ -118,7 +118,7 @@ $this->mostrarMailEnviado();
 
     public function mostrarMailEnviado()
     {
-        $data['sucess'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
+        $data['success'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
             $this->renderer->render("mailEnviado", $data); // sin datos por ahora
     }
 }
