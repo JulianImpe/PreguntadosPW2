@@ -95,7 +95,7 @@
                                 minlength="6">
                     </div>
                     <div>
-                        <label for="repetir_password" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        <label for="repetir_password" class="block text-gray-800 font-semibold mb-4 text-sm">
                             Repetir Contraseña <span class="text-red-700">*</span>
                         </label>
                         <input
@@ -107,9 +107,24 @@
                                 required
                                 minlength="6">
                     </div>
-
+                <!-- Sexo -->
+                <div class="mb-5">
+                    <label for="sexo" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        Sexo <span class="text-red-700">*</span>
+                    </label>
+                    <select
+                        id="sexo"
+                        name="sexo"
+                        required
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700">
+                        <option value="" disabled selected>Género</option>
+                        <option value="Masculino" {{#Masculino}}selected{{/Masculino}}>Masculino</option>
+                        <option value="Femenino" {{#Femenino}}selected{{/Femenino}}>Femenino</option>
+                        <option value="Prefiero no cargarlo" {{#Otro}}selected{{/Otro}}>Prefiero no cargarlo</option>
+                    </select>
+                </div>
                     <div>
-                        <label for="fechaNacimiento" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        <label for="fechaNacimiento" class="block text-gray-800 font-semibold mb-4 text-sm">
                             Fecha Nacimiento <span class="text-red-700">*</span>
                         </label>
                         <input

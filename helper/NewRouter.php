@@ -23,20 +23,20 @@ class NewRouter
                 case 'homevista':
                 // Si ya está logueado → no tiene sentido ver login o registrarse
                 if (isset($_SESSION['usuario'])) {
-                    header("Location: /PreguntadosPW2/lobby/base");
+                    header("Location: /lobby/base");
                     exit;
                 }
                 break;
 
             case 'logout':
                 session_destroy();
-                header("Location: /PreguntadosPW2/homeVista");
+                header("Location: /homeVista");
                 exit;
 
             default:
                 // Si intenta entrar a cualquier otro controlador sin sesión → al login
                 if (!isset($_SESSION['usuario'])) {
-                    header("Location: /PreguntadosPW2/login/loginForm");
+                    header("Location: /login/loginForm");
                     exit;
                 }
                 break;
