@@ -48,4 +48,21 @@ class LobbyController {
         // Renderizar la vista del lobby
         $this->renderer->render("lobby", $datosUsuario);
     }
+    public function crearPartidaVista()
+    {
+        // Verificar que el usuario esté logueado
+        if (!isset($_SESSION["usuario"])) {
+            header("Location: /PreguntadosPW2/index.php?controller=Login&method=loginForm");
+            exit;
+        }
+
+        $usuario = $_SESSION["usuario"];
+
+        // Podés pasar datos si querés, por ejemplo usuario
+        $datos = ['usuario' => $usuario];
+
+        // Renderizar la vista Mustache de crear partida
+        $this->renderer->render("crearPartida", $datos);
+    }
+
 }

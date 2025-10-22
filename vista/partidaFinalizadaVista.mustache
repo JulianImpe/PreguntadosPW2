@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Pokémon - Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-4">
+<div class="max-w-2xl mx-auto">
+    <!-- Categoría -->
+    <div class="mb-8">
+        <button class="bg-gradient-to-r from-light-blue-400 to-blue-500 text-white px-6 py-3 rounded-full font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-shadow">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <rect x="2" y="2" width="16" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                <rect x="2" y="5" width="16" height="2" fill="currentColor"/>
+                <circle cx="6" cy="10" r="1" fill="currentColor"/>
+                <circle cx="10" cy="10" r="1" fill="currentColor"/>
+            </svg>
+            Cascada
+        </button>
+    </div>
+
+    <!-- Medalla -->
+    <div class="bg-white rounded-3xl shadow-xl p-8 mb-6">
+        <div class="flex flex-col items-center">
+            <!-- Imagen de medalla -->
+            <div class="relative mb-6">
+                <div class="w-48 h-48 rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 flex items-center justify-center shadow-2xl">
+                    <div class="w-32 h-32 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center relative">
+                        <img src="imagenes/categorias/Cascada.png" alt="Medalla" class="w-20 h-20 object-contain z-10">
+                    </div>
+                </div>
+                <!-- Ribbon -->
+                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-8">
+                    <div class="w-24 h-32 bg-gradient-to-b from-red-500 to-red-600 rounded-t-lg shadow-lg"></div>
+                </div>
+            </div>
+
+            <!-- Texto de éxito -->
+            <h1 class="text-4xl font-bold text-green-500 mb-2">¡Correcto!</h1>
+            <p class="text-gray-600 text-lg">Medalla de Kanto desbloqueada</p>
+        </div>
+    </div>
+
+    <!-- Pregunta y Respuesta -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <p class="text-gray-800 text-lg mb-4">¿Cuál es el Pokémon inicial de tipo fuego en la región de Kanto?</p>
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+            <p class="text-green-800 font-semibold">Respuesta correcta: Charmander</p>
+        </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex gap-4 mb-8">
+        <button class="flex-1 bg-white text-gray-700 px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all hover:bg-gray-50">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                <path d="M12 8v4m0 4h.01" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Reportar Pregunta
+        </button>
+        <button class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all hover:from-blue-600 hover:to-purple-700">
+            Siguiente Pregunta
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Progreso -->
+    <div class="text-center">
+        <div class="flex justify-center gap-2 mb-3">
+            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+            <div class="w-3 h-3 rounded-full bg-gray-300"></div>
+            <div class="w-3 h-3 rounded-full bg-gray-300"></div>
+        </div>
+        <p class="text-gray-600">3 de 5 preguntas completadas</p>
+    </div>
+</div>
+</body>
