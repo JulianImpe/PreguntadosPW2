@@ -17,15 +17,25 @@
 
 </head>
 <body class="bg-gray-100">
-   <header class="bg-red-700 p-4 shadow-lg">
+    <header class="bg-red-700 p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-white">Pokémon Trivia</h1>
+            
+            <span class= "w-12 h-12 pokeball-bg rounded-full border-4 border-gray-800"></span><h1 class="pixel-font text-yellow-300 text-xl drop-shadow-lg" style="text-shadow: 3px 3px 0px #b45309;">POKETRIVIA</h1>
             <nav class="flex gap-4">
-                <a href="/" class="text-white hover:text-red-200 transition-colors">Inicio</a>
-                <a href="/login/loginForm" class="text-white hover:text-red-200 transition-colors">Login</a>
+    {{#usuario}}
+    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/PreguntadosPW2/lobby/base">Inicio</a>
+    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/PreguntadosPW2/logout">Cerrar sesión</a>
+    {{/usuario}}
+
+    {{^usuario}}
+    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/PreguntadosPW2/homeVista">Inicio</a>
+    <a  class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/PreguntadosPW2/login/loginForm">Iniciar sesión</a>
+    <a  class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/PreguntadosPW2/registrarse/registrarseForm">Registrarse</a>
+    {{/usuario}}
             </nav>
         </div>
     </header>
+    
 </body>
 </html>
 

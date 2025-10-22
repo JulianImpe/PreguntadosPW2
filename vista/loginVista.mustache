@@ -8,7 +8,7 @@
         <div class="p-8 md:p-10">
             <!-- Logo y título -->
             <div class="text-center mb-8">
-                <div class="text-6xl mb-4">⚫</div>
+                <div class="text-6xl mb-4"><svg class="text-center" xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg></div>
                 <h1 class="text-3xl md:text-4xl font-bold text-red-700 uppercase tracking-wider mb-2"
                     style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
                     Pokémon Trivia
@@ -65,7 +65,7 @@
             <!-- Link de registro -->
             <div class="text-center mt-5 text-gray-600 text-sm">
                 ¿No tienes cuenta? <a href="/PreguntadosPW2/Registrarse/registrarseForm"
-                                      class="text-red-700 font-bold no-underline transition-all duration-300 hover:text-red-600 hover:underline">Regístrate
+                class="text-red-700 font-bold no-underline transition-all duration-300 hover:text-red-600 hover:underline">Regístrate
                 aquí</a>
             </div>
         </div>
@@ -76,7 +76,7 @@
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             const btn = this.querySelector('button[type="submit"]');
             btn.classList.add('opacity-70', 'cursor-not-allowed');
-            btn.innerHTML = 'Ingresando... <span class="inline-block animate-spin ml-2">⚪</span>';
+            btn.innerHTML = 'Ingresando... <span class="inline-block animate-spin ml-2"><svg class="text-center" xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg></span>';
         });
     </script>
 </div>

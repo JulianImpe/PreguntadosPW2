@@ -2,15 +2,12 @@
 
 class NewRouter
 {
-
-
     private $configFactory;
     private $defaultController;
     private $defaultMethod;
 
-    public function __construct($configFactory, $defaultController,$defaultMethod)
+    public function __construct($configFactory, $defaultController, $defaultMethod)
     {
-
         $this->configFactory = $configFactory;
         $this->defaultController = $defaultController;
         $this->defaultMethod = $defaultMethod;
@@ -18,22 +15,26 @@ class NewRouter
 
     public function executeController($controllerParam, $methodParam)
     {
-// --- Si el usuario ya esta logueado lo mando al lobby sino lo manda al login ---
         $controllerName = strtolower($controllerParam ?? '');
-        switch ($controllerName) {
 
-            
+        switch ($controllerName) {
             case 'login':
             case 'registrarse':
-                
+                case 'homevista':
+                // Si ya está logueado → no tiene sentido ver login o registrarse
                 if (isset($_SESSION['usuario'])) {
                     header("Location: /PreguntadosPW2/lobby/base");
                     exit;
                 }
                 break;
 
-            
+            case 'logout':
+                session_destroy();
+                header("Location: /PreguntadosPW2/homeVista");
+                exit;
+
             default:
+                // Si intenta entrar a cualquier otro controlador sin sesión → al login
                 if (!isset($_SESSION['usuario'])) {
                     header("Location: /PreguntadosPW2/login/loginForm");
                     exit;
@@ -41,7 +42,6 @@ class NewRouter
                 break;
         }
 
-        
         $controller = $this->getControllerFrom($controllerParam);
         $this->executeMethodFromController($controller, $methodParam);
     }
@@ -62,10 +62,7 @@ class NewRouter
     private function executeMethodFromController($controller, $methodName)
     {
         call_user_func(
-            array(
-                $controller,
-                $this->getMethodName($controller, $methodName)
-            )
+            [$controller, $this->getMethodName($controller, $methodName)]
         );
     }
 
@@ -78,6 +75,8 @@ class NewRouter
 
     public function getMethodName($controller, $methodName)
     {
-        return method_exists($controller, $methodName) ? $methodName : $this->defaultMethod;
+        return method_exists($controller, $methodName)
+            ? $methodName
+            : $this->defaultMethod;
     }
 }
