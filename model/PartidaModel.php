@@ -1,7 +1,7 @@
 <?php
+
 class PartidaModel
 {
-
     private $database;
 
     public function __construct($database)
@@ -11,75 +11,56 @@ class PartidaModel
 
     public function getPreguntaYSuRespuesta()
     {
-        return $this->database->query(
-            'select * 
-        from (SELECT *
-        FROM pregunta
-        ORDER BY RAND()
-        LIMIT 1) a
-        left join respuesta
-        on a.id = respuesta.pregunta'
-        );
+        // Primero obtenemos UNA pregunta aleatoria
+        $preguntaQuery = "SELECT ID, Texto 
+                          FROM Pregunta 
+                          WHERE Estado_ID = 2 
+                          ORDER BY RAND() 
+                          LIMIT 1";
+
+        $pregunta = $this->database->query($preguntaQuery);
+
+        // Si no hay preguntas aprobadas (tiene en cuenta el estados d el la preg con el id
+        if (empty($pregunta)) {
+            return []; // ← Devolver array vacío
+        }
+
+        $preguntaID = $pregunta[0]['ID'];
+
+        // Luego traemos TODAS sus respuestas
+        $respuestasQuery = "SELECT 
+                                p.ID as preguntaID, 
+                                p.Texto as preguntaTexto, 
+                                r.ID as respuestaID, 
+                                r.Texto as respuestaTexto, 
+                                r.Es_Correcta as esCorrecta
+                            FROM Pregunta p
+                            INNER JOIN Respuesta r ON p.ID = r.Pregunta_ID
+                            WHERE p.ID = $preguntaID
+                            ORDER BY RAND()";
+
+        return $this->database->query($respuestasQuery);
     }
 
-    public function getRespuestas()
+    public function getRespuestaCorrecta($idPregunta)
     {
-        return $this->database->query('SELECT * FROM respuesta');
-    }
-
-
-    public function getDescripcion($idRandom)// llmos el nobre de la imagen para guardar q categoria gano o perdio
-    {
-        $query = "SELECT descripcion FROM pregunta WHERE id like '%$idRandom%'";
-        $result = $this->database->query($query);
-        return $result[0]['descripcion'];
-    }
-    //public function reportar($descripcion, $id)
-    //{
-    // $query = "INSERT INTO preguntasreportadas(descripcion_reporte, pregunta_id) VALUES ('$descripcion', '$id')";
-    // $this->database->queryB($query);
-    //}
-
-    public function getPreguntas()
-    {
-        return $this->database->query('SELECT * FROM pregunta');
-    }
-
-    public function getPreguntaPorID($idRandom)
-    {
-        //return $this->database->query('SELECT * FROM pregunta WHERE id like ' .  $idRandom);
-        $query = 'SELECT p.id, p.descripcion, c.tipo, c.imagen
-              FROM pregunta p
-              JOIN categoria c ON p.categoria = c.id
-              WHERE p.id = ' . $idRandom;
-
+        $idPregunta = (int)$idPregunta;
+        $query = "SELECT ID, Texto FROM Respuesta WHERE Pregunta_ID = $idPregunta AND Es_Correcta = 1";
         return $this->database->query($query);
     }
 
-    public function getRespuestaPorID($idRandom)
-    {
-        return $this->database->query('SELECT * FROM respuesta WHERE pregunta like  ' . $idRandom);
-    }
+  //  public function guardarPartida()
+   // {
+    //    $usuario = $_SESSION['usuario'] ?? 'invitado';
+     //   $puntaje = $_SESSION['puntaje'] ?? 0;
+     //   $this->database->query("INSERT INTO Partida (Creada_por_usuario_ID, puntaje, Fecha_creacion) VALUES ('$usuario', '$puntaje', NOW())");
+   // }
 
-    public function getRespuestaCorrecta($idRandom)
-    {
-        $idRandom = (int)$idRandom; // Asegurarse de que $idRandom sea un entero válido
-        $query = 'SELECT CAST(es_correcta AS SIGNED) AS es_correcta_int FROM respuesta WHERE id = ' . $idRandom;
-        return $this->database->query($query);
-    }
-
-    public function guardarPartida()
-    {
-        $usuario = $_SESSION['user'];
-        $puntaje = $_SESSION['puntaje'];
-        $this->database->queryB("INSERT INTO partida(user_name, puntaje, fecha) VALUES('$usuario', '$puntaje', NOW())");
-    }
-
-    public function getIdPartida($usuario)
-    {
-        $query = "SELECT MAX(id) AS max_id FROM partida WHERE user_name = '" . $usuario . "'";
-        $result = $this->database->query($query);
-        return $result;
-    }
-
+   // public function getIdPartida($usuario)
+  //  {
+     //   $usuario = $this->database->escape($usuario);
+     ///   $query = "SELECT MAX(ID) AS max_id FROM Partida WHERE Creada_por_usuario_ID = '$usuario'";
+      //  $result = $this->database->query($query);
+      //  return $result[0]['max_id'] ?? null;
+   // }
 }

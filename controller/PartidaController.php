@@ -1,5 +1,7 @@
 <?php
-class PartidaController {
+
+class PartidaController
+{
     private $model;
     private $renderer;
 
@@ -7,32 +9,35 @@ class PartidaController {
     {
         $this->model = $model;
         $this->renderer = $renderer;
-
-
-//esto va en el model?
-        if (!isset($_SESSION['puntaje'])) $_SESSION['puntaje'] = 0;
-        if (!isset($_SESSION['partidaJugada'])) $_SESSION['partidaJugada'] = [];
     }
 
     public function base()
     {
-        $this->jugar();
+        $this->mostrarPartida();
     }
 
-    public function jugar()
+    public function mostrarPartida()
     {
-        $this->renderer->render("crearPartida");
+        $resultado = $this->model->getPreguntaYSuRespuesta();
+
+        if ($resultado && count($resultado) > 0) {
+            $preguntaRender = [
+                "texto" => $resultado[0]['preguntaTexto'],
+                "id" => $resultado[0]['preguntaID'],
+                "respuestas" => array_map(function($r, $i){
+                    return [
+                        "id" => $r['respuestaID'],
+                        "texto" => $r['respuestaTexto'],
+                        "letra" => chr(65 + $i)
+                    ];
+                }, $resultado, array_keys($resultado))
+            ];
+
+            $this->renderer->render("crearPartida", ["pregunta" => $preguntaRender]);
+        } else {
+            $this->renderer->render("crearPartida", ["pregunta" => null]);
+        }
     }
 
-
-
-    public function partidaFinalizada() // no redirige a la vista Finalizada
-    {
-        //no esto segura si las sesiones van acá
-        $puntaje = $_SESSION['puntaje'] ?? 0;
-        $_SESSION['puntaje'] = 0;
-        $_SESSION['partidaJugada'] = [];
-
-        $this->renderer->render("partidaFinalizada", ['puntaje' => $puntaje]);
-    }
+ //faltaria redirigir a la vista cuando es correcta
 }

@@ -1,6 +1,7 @@
 <?php
 
-class LobbyController {
+class LobbyController
+{
     private $model;
     private $renderer;
 
@@ -48,6 +49,7 @@ class LobbyController {
         // Renderizar la vista del lobby
         $this->renderer->render("lobby", $datosUsuario);
     }
+
     public function crearPartidaVista()
     {
         // Verificar que el usuario esté logueado
@@ -56,13 +58,11 @@ class LobbyController {
             exit;
         }
 
-        $usuario = $_SESSION["usuario"];
-
-        // Podés pasar datos si querés, por ejemplo usuario
-        $datos = ['usuario' => $usuario];
-
-        // Renderizar la vista Mustache de crear partida
-        $this->renderer->render("crearPartida", $datos);
+        // Redirigir a la función mostrarPartida
+        header("Location: /PreguntadosPW2/index.php?controller=Partida&method=mostrarPartida");
+        exit;
     }
+
+    //no cambie las urls porque no tenia el xampp configurado
 
 }
