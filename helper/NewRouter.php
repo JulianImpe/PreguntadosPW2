@@ -18,6 +18,30 @@ class NewRouter
 
     public function executeController($controllerParam, $methodParam)
     {
+// --- Si el usuario ya esta logueado lo mando al lobby sino lo manda al login ---
+        $controllerName = strtolower($controllerParam ?? '');
+        switch ($controllerName) {
+
+            
+            case 'login':
+            case 'registrarse':
+                
+                if (isset($_SESSION['usuario'])) {
+                    header("Location: /PreguntadosPW2/lobby/base");
+                    exit;
+                }
+                break;
+
+            
+            default:
+                if (!isset($_SESSION['usuario'])) {
+                    header("Location: /PreguntadosPW2/login/loginForm");
+                    exit;
+                }
+                break;
+        }
+
+        
         $controller = $this->getControllerFrom($controllerParam);
         $this->executeMethodFromController($controller, $methodParam);
     }

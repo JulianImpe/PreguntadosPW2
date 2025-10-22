@@ -28,16 +28,13 @@ class RegistrarseController
         $email = trim($_POST["email"]);
         $fecha = $_POST["fecha_nac"];
         $nombre = trim($_POST["nombre_completo"]);
+        $sexo = trim($_POST["sexo"]);
 
-        // --- LIBRERIA TOASTR---
-        echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>';
-        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
-        echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">';
-        echo '<script>toastr.options = { "closeButton": true, "progressBar": true, "positionClass": "toast-top-right" }</script>';
+
 
 
         // 1. Campos vacíos
-        if (empty($usuario) || empty($password) || empty($repetir) || empty($email) || empty($fecha) || empty($nombre)) {
+        if (empty($usuario) || empty($password) || empty($repetir) || empty($email) || empty($fecha) || empty($nombre)|| empty($sexo)) {
             $data['error'] = "Todos los campos son obligatorios";
             $this->renderer->render("registrarse", $data);
             return;
@@ -77,14 +74,30 @@ class RegistrarseController
             $this->renderer->render("registrarse", $data);
             return;
         }
-
-
         // --- Si pasa todas las validaciones ---
-        $foto_perfil = $this->subirFoto();
-        $this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre);
+$foto_perfil = $this->subirFoto();
 
-        include 'helper/enviarEmail.php';
-        $this->mostrarMailEnviado();
+// Obtener el ID del sexo (a partir del nombre)
+$sexo_id = $this->model->getSexoIdByNombre($sexo);
+
+// Si no existe el ID, error
+if (!$sexo_id) {
+    $data['error'] = "Sexo inválido.";
+    $this->renderer->render("registrarse", $data);
+    return;
+}
+
+// Registrar usuario con el ID correcto
+$this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre, $sexo_id);
+
+include 'helper/enviarEmail.php';
+$this->mostrarMailEnviado();
+
+    }
+
+    public function getSexoIdByNombre($sexo)
+    {
+        return $this->model->getSexoIdByNombre($sexo);
     }
 
     private function subirFoto()
