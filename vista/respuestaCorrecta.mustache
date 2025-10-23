@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado - Pokémon Trivia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            image-rendering: pixelated;
+        }
+        .gameboy-screen {
+            background: linear-gradient(to bottom, #9bbc0f 0%, #8bac0f 100%);
+            box-shadow:
+                    inset 0 0 20px rgba(0,0,0,0.3),
+                    0 8px 0 #0f380f,
+                    0 12px 20px rgba(0,0,0,0.4);
+        }
+        .gameboy-text {
+            text-shadow: 2px 2px 0px #0f380f;
+            color: #0f380f;
+        }
+        .gameboy-window {
+            background: #f8f8f8;
+            border: 4px solid #0f380f;
+            box-shadow: inset 0 0 0 2px #fff;
+        }
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0; }
+        }
+        .blink {
+            animation: blink 1.5s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .bounce {
+            animation: bounce 0.6s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 flex items-center justify-center p-4">
+
+<div class="gameboy-screen rounded-3xl p-8 max-w-2xl w-full">
+
+    {{#correcta}}
+        <!-- RESPUESTA CORRECTA -->
+        <div class="text-center mb-8 bounce">
+            <div class="text-6xl mb-4">✨🎉✨</div>
+            <h1 class="gameboy-text text-3xl mb-2">¡CORRECTO!</h1>
+        </div>
+
+        <div class="gameboy-window rounded-2xl p-8 mb-6">
+            <div class="text-center space-y-6">
+                <div class="text-5xl">🏆</div>
+
+                <p class="gameboy-text text-lg leading-relaxed">
+                    ¡Respuesta<br>correcta!<br><br>
+                    ¡Felicidades!
+                </p>
+
+                <div class="flex justify-center gap-2 pt-4">
+                    <div class="w-3 h-3 bg-yellow-400 rounded-full bounce" style="animation-delay: 0s;"></div>
+                    <div class="w-3 h-3 bg-yellow-400 rounded-full bounce" style="animation-delay: 0.2s;"></div>
+                    <div class="w-3 h-3 bg-yellow-400 rounded-full bounce" style="animation-delay: 0.4s;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center space-y-4">
+            <form method="GET" action="index.php">
+                <input type="hidden" name="controller" value="Partida">
+                <input type="hidden" name="method" value="mostrarPartida">
+                <button type="submit"
+                        class="gameboy-text bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-8 py-4 rounded-xl border-4 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all text-sm">
+                    ▶ SIGUIENTE
+                </button>
+            </form>
+
+            <div class="gameboy-text text-xs opacity-60 blink mt-4">
+                PRESIONA A
+            </div>
+        </div>
+    {{/correcta}}
+
+    {{^correcta}}
+        <!-- RESPUESTA INCORRECTA -->
+        <div class="text-center mb-8 shake">
+            <div class="text-6xl mb-4">❌💔❌</div>
+            <h1 class="gameboy-text text-3xl mb-2 text-red-800">¡INCORRECTO!</h1>
+        </div>
+
+        <div class="gameboy-window rounded-2xl p-8 mb-6 bg-red-50">
+            <div class="text-center space-y-6">
+                <div class="text-5xl">😔</div>
+
+                <p class="gameboy-text text-lg leading-relaxed text-red-900">
+                    ¡Oh no!<br><br>
+                    Respuesta<br>incorrecta...
+                </p>
+
+                <div class="flex justify-center gap-2 pt-4">
+                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                    <div class="w-3 h-3 bg-red-300 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center space-y-4">
+            <form method="GET" action="index.php">
+                <input type="hidden" name="controller" value="Partida">
+                <input type="hidden" name="method" value="mostrarPartida">
+                <button type="submit"
+                        class="gameboy-text bg-red-500 hover:bg-red-400 text-white px-8 py-4 rounded-xl border-4 border-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all text-sm">
+                    ▶ SIGUIENTE
+                </button>
+            </form>
+
+            <div class="gameboy-text text-xs opacity-60 blink mt-4">
+                PRESIONA A
+            </div>
+        </div>
+    {{/correcta}}
+
+    <!-- Botón volver al lobby -->
+    <div class="text-center mt-8 pt-6 border-t-4 border-gray-900">
+        <a href="index.php?controller=Lobby&method=ver"
+           class="gameboy-text text-xs hover:text-yellow-600 transition-colors inline-block">
+            ← VOLVER AL LOBBY
+        </a>
+    </div>
+
+</div>
+
+
+</body>
+</html>
