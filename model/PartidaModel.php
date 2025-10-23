@@ -49,18 +49,18 @@ class PartidaModel
         return $this->database->query($query);
     }
 
-  //  public function guardarPartida()
-   // {
+    //  public function guardarPartida()
+    // {
     //    $usuario = $_SESSION['usuario'] ?? 'invitado';
-     //   $puntaje = $_SESSION['puntaje'] ?? 0;
-     //   $this->database->query("INSERT INTO Partida (Creada_por_usuario_ID, puntaje, Fecha_creacion) VALUES ('$usuario', '$puntaje', NOW())");
-   // }
+    //   $puntaje = $_SESSION['puntaje'] ?? 0;
+    //   $this->database->query("INSERT INTO Partida (Creada_por_usuario_ID, puntaje, Fecha_creacion) VALUES ('$usuario', '$puntaje', NOW())");
+    // }
 
-   // public function getIdPartida($usuario)
-  //  {
-     //   $usuario = $this->database->escape($usuario);
-     ///   $query = "SELECT MAX(ID) AS max_id FROM Partida WHERE Creada_por_usuario_ID = '$usuario'";
-      //  $result = $this->database->query($query);
-      //  return $result[0]['max_id'] ?? null;
-   // }
+    // public function getIdPartida($usuario)
+    //  {
+    //   $usuario = $this->database->escape($usuario);
+    ///   $query = "SELECT MAX(ID) AS max_id FROM Partida WHERE Creada_por_usuario_ID = '$usuario'";
+    //  $result = $this->database->query($query);
+    //  return $result[0]['max_id'] ?? null;
+    // }
 }
