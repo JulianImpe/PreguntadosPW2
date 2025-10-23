@@ -62,34 +62,46 @@ class PartidaController {
             $this->renderer->render("crearPartida", ["pregunta" => null]);
         }
     }
+public function responder()
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('Location: /partida/base');
+        exit;
+    }
 
-    public function responder()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /partida/base'); // ruta limpia
-            exit;
-        }
+    $respuestaId = $_POST['respuesta'] ?? null;
+    $preguntaId = $_POST['pregunta_id'] ?? null;
 
-        $respuestaId = $_POST['respuesta'] ?? '';
-        $respuestaCorrectaId = $_POST['respuesta_id_correcta'] ?? '';
+    if (!$respuestaId || !$preguntaId) {
+        header('Location: /partida/base');
+        exit;
+    }
 
-        if ($respuestaId && $respuestaId == $respuestaCorrectaId) {
-            $_SESSION['puntaje_actual'] = ($_SESSION['puntaje_actual'] ?? 0) + 10;
-            // Redirigir a la siguiente pregunta
-            header('Location: /partida/base'); // ruta limpia
-            exit;
-        }
-else{
-    header('Location: /partida/partidaFinalizada');
-    exit;
+    // Obtener la respuesta correcta
+    $respuestaCorrecta = $this->model->getRespuestaCorrecta($preguntaId);
+
+    // Verificar si la respuesta es correcta
+    $esCorrecta = false;
+    if (!empty($respuestaCorrecta)) {
+        $esCorrecta = ($respuestaId == $respuestaCorrecta[0]['ID']);
+    }
+
+    // Actualizar puntaje si es correcta
+    if ($esCorrecta) {
+        $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 10;
+    }
+
+    // Obtener la pregunta actual para mostrar en el resultado
+    $preguntaActual = $this->model->getPreguntaPorId($preguntaId);
+
+    $data = [
+        'esCorrecta' => $esCorrecta,
+        'puntaje' => $_SESSION['puntaje'] ?? 0,
+        'pregunta' => $preguntaActual
+    ];
+
+    // CORRECCIÓN: Cambiar $this->view por $this->renderer
+    $this->renderer->render('partidaFinalizada', $data);
 }
-
-
-    }
-
-    public function partidaFinalizada()
-    {
-        $this->renderer->render("partidaFinalizada", []);
-    }
 
 }
