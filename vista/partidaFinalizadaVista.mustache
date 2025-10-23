@@ -3,81 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Pokémon - Preview</title>
+    <title>Resultado - Pokémon Trivia</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .btn-pokemon {
+            transition: all 0.3s ease;
+        }
+        .btn-pokemon:hover {
+            transform: translateY(-2px);
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen p-4">
+<body class="bg-gradient-to-b from-gray-100 to-gray-300 min-h-screen p-4">
+
 <div class="max-w-2xl mx-auto">
-    <!-- Categoría -->
-    <div class="mb-8">
-        <button class="bg-gradient-to-r from-light-blue-400 to-blue-500 text-white px-6 py-3 rounded-full font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-shadow">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <rect x="2" y="2" width="16" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
-                <rect x="2" y="5" width="16" height="2" fill="currentColor"/>
-                <circle cx="6" cy="10" r="1" fill="currentColor"/>
-                <circle cx="10" cy="10" r="1" fill="currentColor"/>
-            </svg>
-            Cascada
-        </button>
-    </div>
-
-    <!-- Medalla -->
-    <div class="bg-white rounded-3xl shadow-xl p-8 mb-6">
-        <div class="flex flex-col items-center">
-            <!-- Imagen de medalla -->
-            <div class="relative mb-6">
-                <div class="w-48 h-48 rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 flex items-center justify-center shadow-2xl">
-                    <div class="w-32 h-32 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center relative">
-                        <img src="imagenes/categorias/Cascada.png" alt="Medalla" class="w-20 h-20 object-contain z-10">
-                    </div>
-                </div>
-                <!-- Ribbon -->
-                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-8">
-                    <div class="w-24 h-32 bg-gradient-to-b from-red-500 to-red-600 rounded-t-lg shadow-lg"></div>
-                </div>
+    <!-- Título según resultado -->
+    <div class="mb-8 text-center">
+        {{#esCorrecta}}
+            <div class="inline-block bg-gradient-to-r from-green-500 to-green-600 rounded-xl px-10 py-4 shadow-xl border-4 border-white">
+                <h1 class="text-white text-2xl font-bold">✓ ¡CORRECTO!</h1>
             </div>
+        {{/esCorrecta}}
+        {{^esCorrecta}}
+            <div class="inline-block bg-gradient-to-r from-red-500 to-red-600 rounded-xl px-10 py-4 shadow-xl border-4 border-white">
+                <h1 class="text-white text-2xl font-bold">✗ INCORRECTO</h1>
+            </div>
+        {{/esCorrecta}}
+    </div>
 
-            <!-- Texto de éxito -->
-            <h1 class="text-4xl font-bold text-green-500 mb-2">¡Correcto!</h1>
-            <p class="text-gray-600 text-lg">Medalla de Kanto desbloqueada</p>
+    <!-- Contenedor principal -->
+    <div class="bg-white rounded-2xl shadow-2xl p-12 mb-6 border-4 border-gray-300">
+
+        <!-- Puntaje -->
+        <div class="fixed top-8 left-8 z-40">
+            <div class="text-center mb-6">
+                <p class="text-gray-600 text-lg mb-2">Puntaje actual</p>
+                <p id="puntajeDisplay" class="text-5xl font-bold text-yellow-500">{{pregunta.puntaje_actual}}</p>
+            </div>
+        </div>
+
+        <!-- Imagen centrada -->
+        <div class="text-center float">
+            {{#esCorrecta}}
+                <img src="/public/img/Lideres/snorlax-removebg-preview.png"  alt="Snorlax" class="mx-auto w-40 h-40 object-contain">
+            {{/esCorrecta}}
+            {{^esCorrecta}}
+                <img src="/public/img/Lideres/snorlax-removebg-preview.png" alt="Snorlax" class="mx-auto w-40 h-40 object-contain opacity-50">
+            {{/esCorrecta}}
         </div>
     </div>
 
-    <!-- Pregunta y Respuesta -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-        <p class="text-gray-800 text-lg mb-4">¿Cuál es el Pokémon inicial de tipo fuego en la región de Kanto?</p>
-        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
-            <p class="text-green-800 font-semibold">Respuesta correcta: Charmander</p>
-        </div>
-    </div>
-
-    <!-- Botones de acción -->
-    <div class="flex gap-4 mb-8">
-        <button class="flex-1 bg-white text-gray-700 px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all hover:bg-gray-50">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 8v4m0 4h.01" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Reportar Pregunta
+    <!-- Botones de acción según resultado -->
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="window.location.href='/partida/reportar?id={{pregunta.ID}}'" class="bg-white hover:bg-gray-50 text-gray-800 px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-gray-400 btn-pokemon">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4m0 4h.01" stroke-linecap="round"/>
+        </svg>
+        <span class="text-sm">REPORTAR</span>
         </button>
-        <button class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all hover:from-blue-600 hover:to-purple-700">
-            Siguiente Pregunta
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-    </div>
 
-    <!-- Progreso -->
-    <div class="text-center">
-        <div class="flex justify-center gap-2 mb-3">
-            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-            <div class="w-3 h-3 rounded-full bg-gray-300"></div>
-            <div class="w-3 h-3 rounded-full bg-gray-300"></div>
-        </div>
-        <p class="text-gray-600">3 de 5 preguntas completadas</p>
+        {{#esCorrecta}}
+            <!-- Si es correcta, continuar jugando -->
+            <button onclick="window.location.href='/partida/base'" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-green-700 btn-pokemon">
+                <span class="text-sm">SIGUIENTE</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                    <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        {{/esCorrecta}}
+
+        {{^esCorrecta}}
+            <!-- Si es incorrecta, volver al lobby -->
+            <button onclick="window.location.href='/lobby/base'" class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-red-700 btn-pokemon">
+                <span class="text-sm">VOLVER AL LOBBY</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        {{/esCorrecta}}
     </div>
 </div>
+
 </body>
+</html>

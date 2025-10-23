@@ -49,14 +49,7 @@ class ConfigFactory
 
         $this->objetos["LobbyController"] = new LobbyController(new LobbyModel($this->conexion), $this->renderer);
 
-        $this->objetos["PartidaController"] = new PartidaController(
-            new PartidaModel($this->conexion),
-            $this->renderer
-        );
-
-
-
-
+        $this->objetos["PartidaController"] = new PartidaController(new PartidaModel($this->conexion), $this->renderer);
 
         $this->objetos["HomeVistaController"] =   new HomeVistaController( new LobbyModel($this->conexion), $this->renderer);
     }
