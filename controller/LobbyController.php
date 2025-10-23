@@ -24,7 +24,7 @@ class LobbyController
     {
         // Verificar que el usuario esté logueado
         if (!isset($_SESSION["usuario"])) {
-            header("Location: /PreguntadosPW2/index.php?controller=Login&method=loginForm");
+            header("Location:login/loginForm");
             exit;
         }
 
@@ -58,12 +58,12 @@ class LobbyController
     {
         // Verificar que el usuario esté logueado
         if (!isset($_SESSION["usuario"])) {
-            header("Location: /PreguntadosPW2/index.php?controller=Login&method=loginForm");
+            header("Location: /login/loginForm");
             exit;
         }
 
         // Redirigir a la función mostrarPartida
-        header("Location: /PreguntadosPW2/index.php?controller=Partida&method=mostrarPartida");
+        header("Location: /partida/base");
         exit;
     }
 

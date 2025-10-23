@@ -13,7 +13,7 @@ include_once("model/RegistrarseModel.php");
 include_once("controller/LobbyController.php");
 include_once("model/LobbyModel.php");
 require_once('controller/PartidaController.php');
-include_once('model/PartidaModel.php');            // ← AGREGA ESTO
+include_once('model/PartidaModel.php');
 
 
 include_once("controller/HomeVistaController.php");
@@ -48,6 +48,7 @@ class ConfigFactory
         $this->objetos["RegistrarseController"] = new RegistrarseController(new RegistrarseModel($this->conexion), $this->renderer);
 
         $this->objetos["LobbyController"] = new LobbyController(new LobbyModel($this->conexion), $this->renderer);
+
         $this->objetos["PartidaController"] = new PartidaController(
             new PartidaModel($this->conexion),
             $this->renderer
