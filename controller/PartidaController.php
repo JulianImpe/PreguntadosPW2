@@ -75,11 +75,16 @@ class PartidaController {
 
         if ($respuestaId && $respuestaId == $respuestaCorrectaId) {
             $_SESSION['puntaje_actual'] = ($_SESSION['puntaje_actual'] ?? 0) + 10;
+            // Redirigir a la siguiente pregunta
+            header('Location: /partida/base'); // ruta limpia
+            exit;
         }
+else{
+    header('Location: /partida/partidaFinalizada');
+    exit;
+}
 
-        // Redirigir a la siguiente pregunta
-        header('Location: /partida/base'); // ruta limpia
-        exit;
+
     }
 
     public function partidaFinalizada()

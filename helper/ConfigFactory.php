@@ -55,6 +55,9 @@ class ConfigFactory
         );
 
 
+
+
+
         $this->objetos["HomeVistaController"] =   new HomeVistaController( new LobbyModel($this->conexion), $this->renderer);
     }
 
