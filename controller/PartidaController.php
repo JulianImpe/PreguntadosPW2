@@ -66,23 +66,25 @@ class PartidaController {
     public function responder()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: partida/base');
+            header('Location: /partida/base'); // ruta limpia
             exit;
         }
 
         $respuestaId = $_POST['respuesta'] ?? '';
         $respuestaCorrectaId = $_POST['respuesta_id_correcta'] ?? '';
 
-        // Verificar si respondió correctamente
         if ($respuestaId && $respuestaId == $respuestaCorrectaId) {
             $_SESSION['puntaje_actual'] = ($_SESSION['puntaje_actual'] ?? 0) + 10;
-        } else {
-            // Si no respondió o fue incorrecta, no suma puntos
-            // Opcionalmente puedes restar puntos aquí
         }
 
         // Redirigir a la siguiente pregunta
-        header('Location:partida/base');
+        header('Location: /partida/base'); // ruta limpia
         exit;
     }
+
+    public function partidaFinalizada()
+    {
+        $this->renderer->render("partidaFinalizada", []);
+    }
+
 }
