@@ -71,7 +71,7 @@ class LoginController
     }
     public function redirectToIndex()
     {
-        header("Location: /PreguntadosPW2/lobby/base");
+        header("Location: /lobby/base");
         exit;
     }
 

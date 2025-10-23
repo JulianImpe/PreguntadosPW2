@@ -14,18 +14,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script>toastr.options = { "closeButton": true, "progressBar": true, "positionClass": "toast-top-right" }</script>
-
+<!--Google Fonts-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        .pixel-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+        .pokeball-bg {
+            background: linear-gradient(180deg, #ef4444 0%, #ef4444 45%, #1f2937 45%, #1f2937 55%, #f3f4f6 55%, #f3f4f6 100%);
+        }
+        </style>
 </head>
-<body class="bg-gray-100">
-   <header class="bg-red-700 p-4 shadow-lg">
+<body class="bg-gray-100 pixel-font">
+    <header class="bg-red-700 p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-white">Pokémon Trivia</h1>
+            
+            <span class= "pixel-font  w-12 h-12 pokeball-bg rounded-full border-4 border-gray-800"></span><h1 class="text-yellow-300 text-5xl drop-shadow-lg" style="text-shadow: 3px 3px 0px #b45309;">POKETRIVIA</h1>
             <nav class="flex gap-4">
-                <a href="/" class="text-white hover:text-red-200 transition-colors">Inicio</a>
-                <a href="/login/loginForm" class="text-white hover:text-red-200 transition-colors">Login</a>
+    {{#usuario}}
+    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/lobby/base">Inicio</a>
+    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/logout">Cerrar sesión</a>
+    {{/usuario}}
+
+    {{^usuario}}
+    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/homeVista">Inicio</a>
+    <a  class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/login/loginForm">Iniciar sesión</a>
+    <a  class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/registrarse/registrarseForm">Registrarse</a>
+    {{/usuario}}
             </nav>
         </div>
     </header>
+    
 </body>
 </html>
 

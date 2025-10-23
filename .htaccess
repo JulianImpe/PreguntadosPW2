@@ -6,16 +6,11 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /PreguntadosPW2/
-
-    # No reescribir archivos o carpetas reales (CSS, imágenes, JS, etc.)
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [L]
-
-    # MVC routing: controller/method(/params)
-    RewriteRule ^([^/]+)/([^/]+)/?(.*)$ index.php?controller=$1&method=$2&$3 [L,QSA]
-
-    # controller/
-    RewriteRule ^([^/]+)/?$ index.php?controller=$1 [L,QSA]
+    RewriteBase /
+    RewriteRule ^(public)($|/) - [L,NC]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/(.*)/(.*)$ index.php?controller=$1&method=$2&$3 [L,QSA]
+    RewriteRule ^(.*)/(.*)$ index.php?controller=$1&method=$2 [L,QSA]
+    RewriteRule ^(.*)$ index.php?controller=$1 [L,QSA]
 </IfModule>

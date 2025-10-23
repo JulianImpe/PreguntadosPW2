@@ -16,6 +16,8 @@ require_once('controller/PartidaController.php');
 include_once('model/PartidaModel.php');            // ← AGREGA ESTO
 
 
+include_once("controller/HomeVistaController.php");
+
 class ConfigFactory
 {
     private $config;
@@ -51,6 +53,8 @@ class ConfigFactory
             $this->renderer
         );
 
+
+        $this->objetos["HomeVistaController"] =   new HomeVistaController( new LobbyModel($this->conexion), $this->renderer);
     }
 
     public function get($objectName)
