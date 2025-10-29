@@ -23,12 +23,12 @@ class LobbyController
     public function index()
     {
         // Verificar que el usuario esté logueado
-        if (!isset($_SESSION["usuario"])) {
+        if (!isset($_SESSION["usuario_id"])) {
             header("Location:login/loginForm");
             exit;
         }
 
-        $usuario = $_SESSION["usuario"];
+        $usuario = $_SESSION["usuario_id"];
 
         // Obtener datos del usuario desde el modelo
         $datosUsuario = $this->model->obtenerDatosUsuario($usuario);
@@ -57,7 +57,7 @@ class LobbyController
     public function crearPartidaVista()
     {
         // Verificar que el usuario esté logueado
-        if (!isset($_SESSION["usuario"])) {
+        if (!isset($_SESSION["usuario_id"])) {
             header("Location: /login/loginForm");
             exit;
         }

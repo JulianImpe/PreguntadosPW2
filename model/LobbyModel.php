@@ -8,6 +8,41 @@ class LobbyModel {
         $this->conexion = $conexion;
     }
 
+
+
+    public function obtenerDatosUsuarioPorId($usuarioId)
+    {
+        $usuarioId = (int)$usuarioId;
+        $sql = "SELECT 
+                    ID,
+                    usuario,
+                    nombre_completo,
+                    email,
+                    fecha_nac,
+                    foto_perfil
+                FROM usuarios
+                WHERE ID = $usuarioId
+                LIMIT 1";
+        $result = $this->conexion->query($sql);
+
+        if (!empty($result)) {
+            $datos = $result[0];
+
+            // Valores por defecto para estadísticas
+            $datos['ranking'] = '-';
+            $datos['puntos'] = 0;
+            $datos['partidas_jugadas'] = 0;
+            $datos['partidas_ganadas'] = 0;
+            $datos['nivel'] = 1;
+
+            // Devolvemos un array vacío para partidas recientes
+            $datos['partidas_recientes'] = [];
+
+            return $datos;
+        }
+
+        return [];
+    }
     public function obtenerDatosUsuario($usuario)
     {
         $sql = "SELECT 

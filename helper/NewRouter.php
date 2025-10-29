@@ -22,7 +22,7 @@ class NewRouter
             case 'registrarse':
                 case 'homevista':
                 // Si ya está logueado → no tiene sentido ver login o registrarse
-                if (isset($_SESSION['usuario'])) {
+                if (isset($_SESSION['usuario_id'])) {
                     header("Location: /lobby/base");
                     exit;
                 }
@@ -35,7 +35,7 @@ class NewRouter
 
             default:
                 // Si intenta entrar a cualquier otro controlador sin sesión → al login
-                if (!isset($_SESSION['usuario'])) {
+                if (!isset($_SESSION['usuario_id'])) {
                     header("Location: /login/loginForm");
                     exit;
                 }
