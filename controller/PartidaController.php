@@ -20,9 +20,24 @@ class PartidaController {
         $this->mostrarPartida();
     }
 
-    function mostrarPartida()
+function mostrarPartida()
     {
         $preguntaRender = $this->model->getPreguntaRender();
+
+        //le pongo estilos a las dificultades
+        $clase = 'bg-gray-200 text-gray-800 border-gray-300'; // default 
+        $nivel = $preguntaRender['nivel_dificultad'] ?? null;
+        if ($nivel === 'Fácil') {
+            $clase = 'bg-green-100 text-green-800 border-green-300';
+        } elseif ($nivel === 'Medio') {
+            $clase = 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        } elseif ($nivel === 'Difícil') {
+            $clase = 'bg-red-100 text-red-800 border-red-300';
+        }
+
+        if ($preguntaRender) {
+            $preguntaRender['dificultad_clase'] = $clase;
+        }
 
         $this->renderer->render("crearPartida", [
             "pregunta" => $preguntaRender
@@ -47,6 +62,5 @@ class PartidaController {
 
             $this->renderer->render('partidaFinalizada', $data);
         }
-
 
 }

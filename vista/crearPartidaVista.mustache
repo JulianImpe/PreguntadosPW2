@@ -50,6 +50,11 @@
                     {{texto}}
                 </p>
             </div>
+            <div class="mb-4 text-center">
+                <span class="inline-block px-3 py-1 rounded-full font-semibold border-2 {{dificultad_clase}}">
+                    {{nivel_dificultad}}{{#dificultad}} ({{dificultad}}){{/dificultad}}
+                </span>
+            </div>
 
             <!-- Formulario de respuestas -->
             <form id="formRespuestas" method="POST" action="/partida/responder">
