@@ -14,6 +14,9 @@ include_once("controller/LobbyController.php");
 include_once("model/LobbyModel.php");
 require_once('controller/PartidaController.php');
 include_once('model/PartidaModel.php');
+include_once("controller/RankingController.php");
+include_once("model/RankingModel.php");
+
 
 
 include_once("controller/HomeVistaController.php");
@@ -52,6 +55,8 @@ class ConfigFactory
         $this->objetos["PartidaController"] = new PartidaController(new PartidaModel($this->conexion), $this->renderer);
 
         $this->objetos["HomeVistaController"] =   new HomeVistaController( new LobbyModel($this->conexion), $this->renderer);
+
+        $this->objetos["RankingController"] = new RankingController(new RankingModel($this->conexion), $this->renderer);
     }
 
     public function get($objectName)
