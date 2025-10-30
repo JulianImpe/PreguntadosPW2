@@ -22,7 +22,7 @@ class LobbyController
 
     public function index()
     {
-        // Verificar que el usuario esté logueado
+
         if (!isset($_SESSION["usuario_id"])) {
             header("Location:login/loginForm");
             exit;
@@ -30,10 +30,10 @@ class LobbyController
 
         $usuario = $_SESSION["usuario_id"];
 
-        // Obtener datos del usuario desde el modelo
+
         $datosUsuario = $this->model->obtenerDatosUsuario($usuario);
 
-        // Si no se encuentran datos, usar valores por defecto
+
         if (empty($datosUsuario)) {
             $datosUsuario = [
                 'usuario' => $usuario,
@@ -45,7 +45,7 @@ class LobbyController
             ];
         }
 
-        // Obtener últimas partidas
+
         $partidasRecientes = $this->model->obtenerPartidasRecientes($usuario);
 
         $datosUsuario['partidas_recientes'] = $partidasRecientes;
@@ -56,17 +56,17 @@ class LobbyController
 
     public function crearPartidaVista()
     {
-        // Verificar que el usuario esté logueado
+
         if (!isset($_SESSION["usuario_id"])) {
             header("Location: /login/loginForm");
             exit;
         }
 
-        // Redirigir a la función mostrarPartida
+
         header("Location: /partida/base");
         exit;
     }
 
-    //no cambie las urls porque no tenia el xampp configurado
+
 
 }
