@@ -44,7 +44,8 @@ public function getPreguntaYRespuesta($medallaId = null)
         LIMIT 4
     ");
 
-// 3️⃣ Combinar la pregunta con las respuestas (una sola estructura)
+// combina los datos de la pregunta con sus respuestas para traerlo todo junto
+// asi el controlador solo llama a este metodo y obtiene todo
     $resultado = [];
     foreach ($respuestas as $r) {
         $resultado[] = [
