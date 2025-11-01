@@ -9,42 +9,58 @@ class PartidaModel
         $this->database = $database;
     }
 
-public function getPreguntaYRespuesta()
+public function getPreguntaYRespuesta($medallaId = null)
 {
-    // Buscar una pregunta aleatoria de la medalla "Cascada"
-    $sqlPregunta = "
-        SELECT p.ID, p.Texto, p.Dificultad, p.DificultadNivel
-        FROM Pregunta p
-        INNER JOIN Medallas m ON p.Medalla_ID = m.ID
-        WHERE p.Estado_ID = 2 
-        AND m.Nombre = 'Medalla Cascada'
-        ORDER BY RAND()
-        LIMIT 1
-    ";
+    // filtro por medalla si se pasa una
+    $sqlMedalla = $medallaId ? "AND p.Medalla_ID = " . intval($medallaId) : "";
 
-    $pregunta = $this->database->query($sqlPregunta);
-    if (empty($pregunta)) return [];
-
-    $preguntaId = $pregunta[0]['ID'];
-
-    // Traer las respuestas de esa pregunta
-    $sqlRespuestas = "
+    // primero seleccionamos pregunta random
+    $pregunta = $this->database->query("
         SELECT 
             p.ID AS preguntaId,
             p.Texto AS preguntaTexto,
             p.Dificultad,
-            p.DificultadNivel,
+            p.DificultadNivel
+        FROM Pregunta p
+        WHERE p.Estado_ID = 2
+        $sqlMedalla
+        ORDER BY RAND()
+        LIMIT 1
+    ");
+
+    if (empty($pregunta)) return [];
+
+    $preguntaId = $pregunta[0]['preguntaId'];
+
+    // traemos las respuestas de la preguntas a la que pasamos con el id
+    $respuestas = $this->database->query("
+        SELECT DISTINCT
             r.ID AS respuestaId,
             r.Texto AS respuestaTexto,
             r.Es_Correcta AS esCorrecta
-        FROM Pregunta p
-        INNER JOIN Respuesta r ON p.ID = r.Pregunta_ID
-        WHERE p.ID = $preguntaId
+        FROM Respuesta r
+        WHERE r.Pregunta_ID = $preguntaId
         ORDER BY RAND()
-    ";
+        LIMIT 4
+    ");
 
-    return $this->database->query($sqlRespuestas);
+// 3️⃣ Combinar la pregunta con las respuestas (una sola estructura)
+    $resultado = [];
+    foreach ($respuestas as $r) {
+        $resultado[] = [
+            'preguntaId' => $preguntaId,
+            'preguntaTexto' => $pregunta[0]['preguntaTexto'],
+            'Dificultad' => $pregunta[0]['Dificultad'],
+            'DificultadNivel' => $pregunta[0]['DificultadNivel'],
+            'respuestaId' => $r['respuestaId'],
+            'respuestaTexto' => $r['respuestaTexto'],
+            'esCorrecta' => $r['esCorrecta']
+        ];
+    }
+
+    return $resultado;
 }
+
 
     public function getRespuestaCorrecta($preguntaId)
     {
@@ -65,9 +81,10 @@ public function getPreguntaYRespuesta()
 public function getPreguntaRender($targetDifficulty = 0.5)
 {
     $preguntaYRespuestas = $this->getPreguntaYRespuesta();
-    if (empty($preguntaYRespuestas)) return null;
+    if (empty($preguntaYRespuestas)) {
+    var_dump("No hay preguntas en la BD"); die;
+}
 
-    // Buscar la respuesta correcta
     $idRespuestaCorrecta = null;
     foreach ($preguntaYRespuestas as $respuesta) {
         if ($respuesta['esCorrecta'] == 1) {
@@ -82,17 +99,22 @@ public function getPreguntaRender($targetDifficulty = 0.5)
     $dificultadFormateada = is_null($dificultad) ? null : number_format((float)$dificultad, 3, '.', '');
 
 
-    $respuestas = [];
-    foreach ($preguntaYRespuestas as $indice => $respuesta) {
-        $esCorrecta = ($respuesta['esCorrecta'] == 1);
-        $respuestas[] = [
-            "id" => $respuesta['respuestaId'],
-            "texto" => $respuesta['respuestaTexto'],
-            "letra" => chr(65 + $indice),
-            "es_correcta" => $esCorrecta,
-            "es_correcta_str" => $esCorrecta ? '1' : '0'
-        ];
-    }
+$respuestas = [];
+$usadas = [];
+
+foreach ($preguntaYRespuestas as $indice => $respuesta) {
+    if (in_array($respuesta['respuestaId'], $usadas)) continue;
+    $usadas[] = $respuesta['respuestaId'];
+
+    $esCorrecta = ($respuesta['esCorrecta'] == 1);
+    $respuestas[] = [
+        "id" => $respuesta['respuestaId'],
+        "texto" => $respuesta['respuestaTexto'],
+        "letra" => chr(65 + count($respuestas)), 
+        "es_correcta" => $esCorrecta,
+        "es_correcta_str" => $esCorrecta ? '1' : '0'
+    ];
+}
 
     return [
         "id" => $preguntaYRespuestas[0]['preguntaId'],
@@ -179,17 +201,28 @@ public function procesarRespuesta($preguntaId, $respuestaId)
         'pregunta' => $this->getPreguntaPorId($preguntaId)
     ];
 }
-public function traerPreguntasDificilesRandom()
+public function traerPreguntasDificilesRandom($medallaId = null)
 {
-    $query = "
-        SELECT p.ID, p.Texto, COALESCE(p.Dificultad, 1) AS dificultad_score
-        FROM Pregunta p
-        WHERE p.Estado_ID = 2
-        AND p.Medalla_ID = 2
-        ORDER BY (RAND() * 0.4) + (dificultad_score * 0.6) DESC
-        LIMIT 1";
+    //guardo el where en una variable
+    $where = "p.Estado_ID = 2";
 
-    $resultado = $this->database->query($query);
-    return $resultado;
+    if (!is_null($medallaId)) {
+        $where .= " AND p.Medalla_ID = " . intval($medallaId);
+    }
+
+    $query = "
+        SELECT 
+            p.ID, 
+            p.Texto, 
+            COALESCE(p.Dificultad, 1) AS dificultad_score,
+            p.Medalla_ID
+        FROM Pregunta p
+        WHERE $where
+        ORDER BY (RAND() * 0.4) + (dificultad_score * 0.6) DESC
+        LIMIT 1
+    ";
+
+    return $this->database->query($query);
 }
+
 }

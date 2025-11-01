@@ -27,7 +27,7 @@
 
 <div class="max-w-2xl mx-auto">
     <!-- Título según resultado -->
-    <div class="mb-8 text-center">
+    <div class="my-8 text-center">
         {{#esCorrecta}}
             <div class="inline-block bg-gradient-to-r from-green-500 to-green-600 rounded-xl px-10 py-4 shadow-xl border-4 border-white">
                 <h1 class="text-white text-2xl font-bold">✓ ¡CORRECTO!</h1>
@@ -44,7 +44,7 @@
     <div class="bg-white rounded-2xl shadow-2xl p-12 mb-6 border-4 border-gray-300">
 
         <!-- Puntaje -->
-        <div class="fixed top-8 left-8 z-40">
+        <div class="mb-8">
             <div class="text-center mb-6">
                 <p class="text-gray-600 text-lg mb-2">Puntaje actual</p>
                 <p id="puntajeDisplay" class="text-5xl font-bold text-yellow-500">{{pregunta.puntaje_actual}}</p>
@@ -63,7 +63,7 @@
     </div>
 
     <!-- Botones de acción según resultado -->
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-2 gap-4 mb-8">
         <button onclick="window.location.href='/partida/reportar?id={{pregunta.ID}}'" class="bg-white hover:bg-gray-50 text-gray-800 px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-gray-400 btn-pokemon">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
             <circle cx="12" cy="12" r="10"/>

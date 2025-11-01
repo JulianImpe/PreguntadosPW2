@@ -1,6 +1,7 @@
 <?php
 
-class PartidaController {
+class PartidaController
+{
     private $model;
     private $renderer;
 
@@ -20,7 +21,7 @@ class PartidaController {
         $this->mostrarPartida();
     }
 
-function mostrarPartida()
+    function mostrarPartida()
     {
         $preguntaRender = $this->model->getPreguntaRender();
 
@@ -59,8 +60,8 @@ function mostrarPartida()
         }
         $data = $this->model->procesarRespuesta($preguntaId, $respuestaId);
 
-
-            $this->renderer->render('partidaFinalizada', $data);
-        }
-
+        $data['pregunta']['puntaje_actual'] = $data['puntaje'];
+        
+        $this->renderer->render('partidaFinalizada', $data);
+    }
 }
