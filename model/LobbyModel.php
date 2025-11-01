@@ -14,10 +14,13 @@ class LobbyModel {
     public function obtenerDatosUsuario($usuarioId)
     {
         $usuarioId = (int)$usuarioId;
-        $sql = "SELECT usuario, 
-        nombre_completo,
-        email,fecha_nac,
-        foto_perfil
+        $sql = "SELECT 
+                ID,        -- le agrego id para qr
+                usuario, 
+                foto_perfil, 
+                nombre_completo,
+                email,
+                fecha_nac
             FROM usuarios
             WHERE ID = $usuarioId
             LIMIT 1";
@@ -25,8 +28,7 @@ class LobbyModel {
 
         if (!empty($result)) {
             $datos = $result[0];
-
-
+            $datos['usuario_id'] = $datos['ID'];
             $datos['ranking'] = '-';
             $datos['puntos'] = 0;
             $datos['partidas_jugadas'] = 0;
@@ -39,7 +41,6 @@ class LobbyModel {
 
         return [];
     }
-
 
 
     public function obtenerPartidasRecientes($usuario, $limite = 5)

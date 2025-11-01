@@ -1,0 +1,138 @@
+<!-- Contenedor principal -->
+<div class="bg-[url('/public/img/fondo-perfil.jpg')] bg-fixed bg-cover bg-center min-h-screen flex justify-center">
+
+    <!-- Card centrada -->
+    <div class="w-full max-w-2xl bg-white/50 backdrop-blur-sm rounded-3xl shadow-2xl relative overflow-hidden p-6 md:p-8 mx-auto my-6">
+
+        <!-- Barra superior decorativa -->
+        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
+
+        <div class="flex flex-col items-center">
+
+            <!-- Badge ENTRENADOR -->
+            <div class="bg-red-100 px-4 py-2 rounded-full mb-3">
+                <span class="text-red-700 font-bold text-sm">⚡ ENTRENADOR</span>
+            </div>
+
+            <!-- Logo Pokéball -->
+            <div class="text-center mb-4">
+                <div class="flex justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" class="text-red-700"></svg>
+                </div>
+            </div>
+
+            <!-- Avatar y Nombre -->
+            <div class="w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-red-700 shadow-lg bg-white">
+                {{#tiene_foto}}
+                    <img src="{{foto_perfil}}" alt="Foto de perfil" class="w-full h-full object-cover">
+                {{/tiene_foto}}
+                {{^tiene_foto}}
+                    <div class="w-full h-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                {{/tiene_foto}}
+            </div>
+
+
+
+                <h1 class="text-2xl md:text-3xl font-bold text-red-700 uppercase tracking-wider mb-1">{{nombre_completo}}</h1>
+                <p class="text-gray-600 font-semibold text-sm">@{{usuario}}</p>
+            </div>
+
+            <!-- Información del Usuario -->
+            <div class="space-y-4 w-full">
+
+                <!-- Email -->
+                <div class="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
+                    <label class="block text-blue-700 font-semibold mb-1 text-xs uppercase tracking-wider">📧 Email</label>
+                    <p class="text-gray-800 font-bold text-sm break-all">{{email}}</p>
+                </div>
+
+                <!-- Edad y Fecha de Nacimiento -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
+                        <label class="block text-purple-700 font-semibold mb-1 text-xs uppercase tracking-wider">🎂 Edad</label>
+                        <p class="text-gray-800 font-black text-sm">{{edad}} años</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 border-l-4 border-green-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
+                        <label class="block text-green-700 font-semibold mb-1 text-xs uppercase tracking-wider">📅 Nacimiento</label>
+                        <p class="text-gray-800 font-bold text-sm">{{fecha_nacimiento}}</p>
+                    </div>
+                </div>
+
+                <!-- Sexo -->
+                <div class="bg-gradient-to-r from-pink-50 to-pink-100 border-l-4 border-pink-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
+                    <label class="block text-pink-700 font-semibold mb-1 text-xs uppercase tracking-wider">⚧ Género</label>
+                    <p class="text-gray-800 font-bold text-sm">{{sexo}}</p>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md flex items-center justify-between">
+                    <div>
+                        <label class="block text-red-700 font-semibold mb-1 text-xs uppercase tracking-wider">🔒 Contraseña</label>
+                        <p class="text-gray-600 font-bold text-sm tracking-widest">........</p>
+                    </div>
+                    <button id="btnEditarPassword" type="button" class="text-red-600 hover:text-red-800 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M16.5 3.5l4 4L13 15H9v-4L16.5 3.5z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Formulario oculto -->
+                <div id="formCambiarPassword" class="mt-2 hidden">
+                    <form action="/perfil/cambiarPassword" method="POST" class="space-y-2">
+                        <input type="password" name="password_actual" placeholder="Contraseña actual" class="w-full p-2 border rounded-lg text-sm">
+                        <input type="password" name="password_nueva" placeholder="Nueva contraseña" class="w-full p-2 border rounded-lg text-sm">
+                        <input type="password" name="password_confirmar" placeholder="Confirmar nueva contraseña" class="w-full p-2 border rounded-lg text-sm">
+                        <button type="submit" class="w-full px-3 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors text-sm">
+                            Guardar cambios
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <script>
+                const btnEditar = document.getElementById('btnEditarPassword');
+                const form = document.getElementById('formCambiarPassword');
+                btnEditar.addEventListener('click', () => form.classList.toggle('hidden'));
+            </script>
+
+            <!-- Contenedor para toasts -->
+            <div id="toastContainer" class="w-full max-w-2xl mx-auto mt-4"></div>
+            {{#toast}}
+                <div class="toast px-6 py-3 rounded shadow-lg mb-4 text-white font-semibold"
+                     style="background-color: {{tipo == 'success' ? '#16a34a' : '#dc2626'}}">
+                    {{mensaje}}
+                </div>
+            {{/toast}}
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toasts = document.querySelectorAll('.toast');
+                    toasts.forEach(toastEl => {
+                        // Animación de desaparición después de 3s
+                        setTimeout(() => {
+                            toastEl.classList.add('opacity-0', 'transition', 'duration-500');
+                            setTimeout(() => toastEl.remove(), 500);
+                        }, 3000);
+                    });
+                });
+            </script>
+
+            <!-- Footer Card -->
+            <div class="mt-6 pt-4 text-center">
+                <p class="text-gray-500 text-xs mb-2 uppercase tracking-wider">¡Sigue capturando conocimiento!</p>
+                <a href="/lobby/base" class="w-full sm:w-auto py-2 px-6 bg-green-600 text-white font-bold uppercase tracking-wide text-sm rounded-lg hover:bg-green-700 transition-colors">
+                    🎮 VOLVER AL LOBBY
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

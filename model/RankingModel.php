@@ -9,7 +9,10 @@ public function __construct($conexion){
 
 public function obtenerRanking(){
 
-    $sql = "SELECT u.usuario, MAX(p.Puntaje_obtenido) AS mejor_puntaje
+    $sql = "SELECT
+       u.ID as id,
+    u.usuario, 
+    MAX(p.Puntaje_obtenido) AS mejor_puntaje
         FROM Partida p
         INNER JOIN usuarios u ON p.Usuario_ID = u.ID
         GROUP BY u.ID, u.usuario

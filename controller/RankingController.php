@@ -11,6 +11,11 @@ class RankingController{
 
     public function verRanking(){
         $ranking = $this->model->obtenerRanking();
+        $posicion = 1;
+
+        foreach ($ranking as &$jugador) {
+            $jugador['posicion'] = $posicion++;
+        }
 
         $this->renderer->render("ranking",["ranking" => $ranking]);
 

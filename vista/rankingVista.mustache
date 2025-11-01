@@ -21,8 +21,13 @@
         <tbody>
         {{#ranking}}
             <tr class="border-b border-gray-300 hover:bg-gray-100 transition">
-                <td class="py-3 font-bold">{{@index}}°</td>
-                <td class="py-3">{{usuario}}</td>
+                <td class="py-3 font-bold">{{posicion}}°</td>
+                <td class="py-3">
+                    <a href="/perfil/perfilCompartidoVista?id={{id}}"
+                    class="text-gray-700 hover:text-gray-900 font-bold transition-colors cursor-pointer">
+                    {{usuario}}
+                    </a>
+                </td>
                 <td class="py-3">{{mejor_puntaje}}</td>
             </tr>
         {{/ranking}}

@@ -11,9 +11,9 @@ class LobbyController
         $this->renderer = $renderer;
     }
 
-/**
- * Redirige al índice de la vista de Lobby.
- */
+    /**
+     * Redirige al índice de la vista de Lobby.
+     */
 
     public function base()
     {
@@ -22,17 +22,13 @@ class LobbyController
 
     public function index()
     {
-
         if (!isset($_SESSION["usuario_id"])) {
             header("Location:login/loginForm");
             exit;
         }
 
         $usuario = $_SESSION["usuario_id"];
-
-
         $datosUsuario = $this->model->obtenerDatosUsuario($usuario);
-
 
         if (empty($datosUsuario)) {
             $datosUsuario = [
@@ -45,15 +41,21 @@ class LobbyController
             ];
         }
 
+//llamo la foto del usuario
+        if (!empty($datosUsuario['foto_perfil'])) {
+            $datosUsuario['foto_perfil'] = '/public/img/' . basename($datosUsuario['foto_perfil']);
+            $datosUsuario['tiene_foto'] = true;
+        } else {
+            $datosUsuario['foto_perfil'] = '/img/default-avatar.png';
+            $datosUsuario['tiene_foto'] = false;
+        }
 
         $partidasRecientes = $this->model->obtenerPartidasRecientes($usuario);
-
         $datosUsuario['partidas_recientes'] = $partidasRecientes;
 
-        // Renderizar la vista del lobby
+
         $this->renderer->render("lobby", $datosUsuario);
     }
-
     public function crearPartidaVista()
     {
 
