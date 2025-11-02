@@ -23,9 +23,7 @@
 <body class="min-h-screen bg-gradient-to-b from-sky-400 to-emerald-300">
 
 <!-- Botón QR flotante fijo a la derecha -->
-<button id="btnMostrarQR" data-usuario-id="{{usuario_id}}" class="fixed top-20 right-6 z-40 ...">
-    <img src="/public/img/qr-simple.png" alt="qr" class="w-12 h-12 object-cover rounded">
-</button>
+
 
 <!-- Header estilo Game Boy -->
 <div class="bg-white shadow-2xl shadow-md top-0 z-50">
@@ -58,8 +56,8 @@
             <div class="flex items-center gap-4">
                 <!-- Puntos -->
                 <div class="hidden md:flex items-center gap-2 bg-yellow-400 pokemon-border px-4 py-2 rounded-lg">
-                    <span class="text-xl">⭐</span>
-                    <p class="font-black text-gray-800">{{puntos}}</p>
+                    <span class="text-xl mb-1">Puntaje: </span>
+                    <p class="font-black text-gray-800">{{puntaje}}</p>
                 </div>
             </div>
         </div>
@@ -135,7 +133,7 @@
                 </div>
             </div>
             <a href="/ranking/verRanking"
-               class="block bg-yellow-900 hover:bg-yellow-800 text-white text-center px-6 py-3 rounded-lg font-bold transition-all">
+            class="block bg-yellow-900 hover:bg-yellow-800 text-white text-center px-6 py-3 rounded-lg font-bold transition-all">
                 VER ENTRENADORES
             </a>
         </div>

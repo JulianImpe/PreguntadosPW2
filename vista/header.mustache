@@ -35,6 +35,9 @@
     {{#usuario}}
     <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/lobby/base">Inicio</a>
     <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/logout">Cerrar sesión</a>
+    <button id="btnMostrarQR" data-usuario-id="{{usuario_id}}" class="flex items-center justify-center transform bg-white pokemon-border w-12 h-12 shadow-lg hover:scale-105 transition-transform z-50 ">
+    <img src="/public/img/qr-simple.png" alt="qr" class="w-12 h-10">
+</button>
     {{/usuario}}
 
     {{^usuario}}

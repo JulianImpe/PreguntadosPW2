@@ -35,10 +35,45 @@ class PartidaController
 
     function mostrarPartida()
     {
+
+        if (isset($_SESSION['pregunta_activa'])) {
+            $inicio = $_SESSION['pregunta_activa']['inicio'];
+            $duracion = 15; // segundos de limite
+            $transcurrido = time() - $inicio;
+
+            if ($transcurrido > $duracion) {
+
+                $this->renderer->render('partidaFinalizada', [
+                    'esCorrecta' => false,
+                    'mensaje' => '¡Tiempo agotado!',
+                    'puntaje' => $_SESSION['puntaje'],
+                    'pregunta' => null,
+                    'partida_terminada' => true
+                ]);
+
+                unset($_SESSION['pregunta_activa']); // limpiar estado
+                return;
+            }
+        }
+
+
+        if (isset($_SESSION['pregunta_activa'])) {
+            $this->renderer->render('partidaFinalizada', [
+                'esCorrecta' => false,
+                'mensaje' => 'Trampa detectada o recarga de página',
+                'puntaje' => $_SESSION['puntaje'],
+                'pregunta' => null,
+                'partida_terminada' => true
+            ]);
+            unset($_SESSION['pregunta_activa']);
+            return;
+        }
+
+
         $preguntaRender = $this->model->getPreguntaRender();
 
-        //le pongo estilos a las dificultades
-        $clase = 'bg-gray-200 text-gray-800 border-gray-300'; // default 
+        // estilos para dificultad
+        $clase = 'bg-gray-200 text-gray-800 border-gray-300';
         $nivel = $preguntaRender['nivel_dificultad'] ?? null;
         if ($nivel === 'Fácil') {
             $clase = 'bg-green-100 text-green-800 border-green-300';
@@ -52,10 +87,18 @@ class PartidaController
             $preguntaRender['dificultad_clase'] = $clase;
         }
 
+        // Guardar el inicio de la nueva pregunta
+        $_SESSION['pregunta_activa'] = [
+            'id' => $preguntaRender['id'],
+            'inicio' => time()
+        ];
+
+        // Renderizar la vista
         $this->renderer->render("crearPartida", [
             "pregunta" => $preguntaRender
         ]);
     }
+
 
     public function responder()
     {
@@ -71,6 +114,9 @@ class PartidaController
             header('Location: /partida/base');
             exit;
         }
+
+        unset($_SESSION['pregunta_activa']);
+
 
         $data = $this->model->procesarRespuesta($preguntaId, $respuestaId);
 
