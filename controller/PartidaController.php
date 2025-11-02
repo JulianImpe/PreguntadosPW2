@@ -10,14 +10,26 @@ class PartidaController
         $this->model = $model;
         $this->renderer = $renderer;
 
-
-        if (!isset($_SESSION['puntaje_actual'])) {
-            $_SESSION['puntaje_actual'] = 0;
+        // Inicializamos puntaje si no existe
+        if (!isset($_SESSION['puntaje'])) {
+            $_SESSION['puntaje'] = 0;
         }
     }
 
     public function base()
     {
+
+        if (!isset($_SESSION['usuario_id'])) {
+            // Redirigir a login si no hay usuario
+            header("Location: /login/loginForm");
+            exit;
+        }
+
+
+
+        $partidaId = $this->model->crearPartida($_SESSION['usuario_id']);
+        $_SESSION['partida_id'] = $partidaId;
+
         $this->mostrarPartida();
     }
 
@@ -44,6 +56,7 @@ class PartidaController
             "pregunta" => $preguntaRender
         ]);
     }
+
     public function responder()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -58,10 +71,15 @@ class PartidaController
             header('Location: /partida/base');
             exit;
         }
+
         $data = $this->model->procesarRespuesta($preguntaId, $respuestaId);
 
-        $data['pregunta']['puntaje_actual'] = $data['puntaje'];
-        
+        if (isset($data['partida_terminada']) && $data['partida_terminada'] === true) {
+            $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje']);
+            unset($_SESSION['puntaje']);
+            unset($_SESSION['partida_id']);
+        }
+
         $this->renderer->render('partidaFinalizada', $data);
     }
 }

@@ -47,10 +47,13 @@ class LoginController
         $resultado = $this->model->getUserWith($usuario, $password);
 
         if (!empty($resultado)) {
-            // Guardamos usuario en sesión
-            $_SESSION["usuario"] = $usuario;
 
-            // Redirigir al lobby
+            $_SESSION["usuario_id"] = $resultado[0]['ID'];
+            $_SESSION["usuario"] = $resultado[0]['usuario'];
+
+
+
+
             $this->redirectToIndex();
         } else {
             $this->renderer->render("login", ["error" => "Usuario o contraseña incorrectos"]);

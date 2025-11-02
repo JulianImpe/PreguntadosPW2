@@ -1,0 +1,65 @@
+<!-- Contenedor principal -->
+<div class="bg-[url('/public/img/fondo-perfil.jpg')] bg-fixed bg-cover bg-center min-h-screen flex items-center justify-center p-4">
+
+    <!-- Card centrada y compacta -->
+    <div class="w-full max-w-md bg-white/50 backdrop-blur-sm rounded-3xl shadow-2xl relative overflow-hidden p-8">
+
+        <!-- Barra superior decorativa -->
+        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
+
+        <div class="flex flex-col items-center">
+
+            <!-- Badge ENTRENADOR -->
+            <div class="bg-red-100 px-4 py-2 rounded-full mb-4">
+                <span class="text-red-700 font-bold text-sm">⚡ ENTRENADOR</span>
+            </div>
+
+            <!-- Avatar -->
+            <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-4 border-red-700 shadow-lg bg-white mb-4">
+                {{#tiene_foto}}
+                    <img src="{{foto_perfil}}" alt="Foto de perfil" class="w-full h-full object-cover">
+                {{/tiene_foto}}
+                {{^tiene_foto}}
+                    <div class="w-full h-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                {{/tiene_foto}}
+            </div>
+
+            <!-- Nombre y Usuario -->
+            <h1 class="text-2xl font-bold text-red-700 uppercase tracking-wider mb-1 text-center">{{nombre_completo}}</h1>
+            <p class="text-gray-600 font-semibold text-sm mb-6 text-center">@{{usuario}}</p>
+
+            <!-- Información del Usuario -->
+            <div class="space-y-3 w-full">
+
+                <!-- Edad -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500 rounded-lg p-3 text-center">
+                    <label class="block text-purple-700 font-semibold mb-1 text-xs uppercase tracking-wider">🎂 Edad</label>
+                    <p class="text-gray-800 font-black text-lg">{{edad}} años</p>
+                </div>
+
+                <!-- Sexo -->
+                <div class="bg-gradient-to-r from-pink-50 to-pink-100 border-l-4 border-pink-500 rounded-lg p-3 text-center">
+                    <label class="block text-pink-700 font-semibold mb-1 text-xs uppercase tracking-wider">⚧ Género</label>
+                    <p class="text-gray-800 font-bold text-lg">{{sexo}}</p>
+                </div>
+
+            </div>
+
+            <!-- Footer Card -->
+            <div class="mt-6 pt-4 text-center w-full">
+                <p class="text-gray-500 text-xs mb-3 uppercase tracking-wider">¡Sigue capturando conocimiento!</p>
+                <a href="/lobby/base" class="block w-full py-3 px-6 bg-green-600 text-white font-bold uppercase tracking-wide text-sm rounded-lg hover:bg-green-700 transition-colors">
+                    🎮 VOLVER AL LOBBY
+                </a>
+            </div>
+
+<!--            agregar boton para jugar con ese usuario-->
+
+        </div>
+    </div>
+</div>

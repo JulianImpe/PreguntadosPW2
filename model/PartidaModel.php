@@ -199,9 +199,61 @@ public function procesarRespuesta($preguntaId, $respuestaId)
     return [
         'esCorrecta' => $esCorrecta,
         'puntaje' => $_SESSION['puntaje'] ?? 0,
-        'pregunta' => $this->getPreguntaPorId($preguntaId)
+        'pregunta' => $this->getPreguntaPorId($preguntaId),
+            'partida_terminada' => !$esCorrecta
     ];
 }
+
+
+
+    /*public function iniciarPartida($usuarioId)
+    {
+        $this->database->insert("INSERT INTO Partida (Usuario_ID) VALUES ($usuarioId)");
+        return $this->database->lastInsertId();
+    }*/
+
+
+    public function registrarRespuesta($partidaId, $preguntaId, $esCorrecta)
+    {
+        $orden = $this->database->query("SELECT COUNT(*) AS n FROM Pregunta_partida WHERE Partida_ID = $partidaId")[0]["n"] + 1;
+
+        $this->database->insert("
+        INSERT INTO Pregunta_partida (Partida_ID, Pregunta_ID, Orden_en_partida, EsCorrecta)
+        VALUES ($partidaId, $preguntaId, $orden, $esCorrecta)
+    ");
+    }
+
+    public function finalizarPartida($partidaId, $puntaje)
+    {
+        $partidaId = (int)$partidaId;
+        $puntaje = (int)$puntaje;
+        $sql = "UPDATE Partida 
+            SET Puntaje_obtenido = $puntaje, Estado_ID = 2, Hora_finalizacion = NOW() 
+            WHERE ID = $partidaId";
+        $this->database->query($sql); // acá no usamos update(), usamos query()
+    }
+
+
+    public function crearPartida($usuarioId)
+    {
+        $usuarioId = (int)$usuarioId;
+
+
+        $usuario = $this->database->query("SELECT ID FROM usuarios WHERE ID = $usuarioId");
+        if (empty($usuario)) {
+            throw new Exception("No se puede crear la partida: usuario inexistente.");
+        }
+
+        $query = "INSERT INTO Partida (Usuario_ID) VALUES ($usuarioId)";
+        $this->database->query($query);
+
+        return $this->database->lastInsertId();
+    }
+
+
+
+
+
 public function traerPreguntasDificilesRandom($medallaId = null)
 {
     //guardo el where en una variable

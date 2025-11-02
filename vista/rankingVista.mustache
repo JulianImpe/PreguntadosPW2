@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-yellow-300 to-yellow-500 min-h-screen">
+
+<div class="container mx-auto px-6 py-10">
+    <h1 class="text-3xl font-bold text-center text-yellow-900 mb-8">🏆 Ranking Entrenadores</h1>
+
+    <table class="w-full text-center bg-white rounded-xl shadow-lg">
+        <thead>
+        <tr class="bg-yellow-400 text-yellow-900 font-bold">
+            <th class="py-3">Posición</th>
+            <th class="py-3">Jugador</th>
+            <th class="py-3">Mejor Puntaje</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#ranking}}
+            <tr class="border-b border-gray-300 hover:bg-gray-100 transition">
+                <td class="py-3 font-bold">{{posicion}}°</td>
+                <td class="py-3">
+                    <a href="/perfil/perfilCompartidoVista?id={{id}}"
+                    class="text-gray-700 hover:text-gray-900 font-bold transition-colors cursor-pointer">
+                    {{usuario}}
+                    </a>
+                </td>
+                <td class="py-3">{{mejor_puntaje}}</td>
+            </tr>
+        {{/ranking}}
+
+        {{^ranking}}
+            <tr>
+                <td colspan="3" class="py-6 text-gray-500 font-bold">
+                    ¡Aún no hay resultados!
+                </td>
+            </tr>
+        {{/ranking}}
+        </tbody>
+    </table>
+
+    <div class="text-center mt-6">
+        <a href="/lobby/base"
+           class="bg-yellow-900 hover:bg-yellow-800 text-white px-6 py-3 rounded-lg font-bold">
+            Volver al Lobby
+        </a>
+    </div>
+</div>
+</body>
+</html>

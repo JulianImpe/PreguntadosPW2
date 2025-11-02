@@ -6,11 +6,6 @@
     <title>Lobby - Pokémon Trivia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
-        .pixel-font {
-            font-family: 'Press Start 2P', cursive;
-        }
 
         .pokemon-border {
             border: 4px solid #2c3e50;
@@ -27,24 +22,57 @@
 </head>
 <body class="min-h-screen bg-gradient-to-b from-sky-400 to-emerald-300">
 
+<!-- Botón QR flotante fijo a la derecha -->
+<button id="btnMostrarQR" data-usuario-id="{{usuario_id}}" class="fixed top-20 right-6 z-40 ...">
+    <img src="/public/img/qr-simple.png" alt="qr" class="w-12 h-12 object-cover rounded">
+</button>
+
 <!-- Header estilo Game Boy -->
-<div class="bg-grey-500 shadow-2xl shadow-md top-0 z-50">
+<div class="bg-white shadow-2xl shadow-md top-0 z-50">
     <div class="container mx-auto px-5 py-3">
         <div class="flex justify-between items-center">
+            <!-- Lado izquierdo: Foto + Entrenador + Nombre -->
             <div class="flex items-center gap-3">
+                <!-- Foto de perfil -->
+                <div class="w-12 h-12 rounded-full overflow-hidden border-3 border-red-700 shadow-lg bg-white">
+                    {{#tiene_foto}}
+                        <img src="{{foto_perfil}}" alt="Foto de perfil" class="w-full h-full object-cover">
+                    {{/tiene_foto}}
+                    {{^tiene_foto}}
+                        <div class="w-full h-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                    {{/tiene_foto}}
+                </div>
+
+                <!-- Texto -->
                 <div>
-                    
                     <p class="text-black text-xl font-bold">Entrenador: {{usuario}}</p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-3">
+            <!-- Lado derecho: Puntos -->
+            <div class="flex items-center gap-4">
+                <!-- Puntos -->
                 <div class="hidden md:flex items-center gap-2 bg-yellow-400 pokemon-border px-4 py-2 rounded-lg">
                     <span class="text-xl">⭐</span>
                     <p class="font-black text-gray-800">{{puntos}}</p>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Modal QR (oculto por defecto) -->
+<div id="modalQR" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl pokemon-border p-8 max-w-sm w-full relative">
+        <button id="btnCerrarQR" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
+        <h3 class="text-center pixel-font text-sm mb-4 text-gray-800">MI CÓDIGO QR</h3>
+        <div id="qrcode" class="bg-white p-4 rounded-lg flex justify-center"></div>
+        <p class="text-center text-gray-600 text-xs mt-4">Escanea para ver mi perfil</p>
     </div>
 </div>
 
@@ -77,6 +105,7 @@
             <p class="text-white text-2xl font-black">#{{ranking}}</p>
         </div>
     </div>
+
     <div class="mb-8 text-center">
         <form method="GET" action="/PreguntadosPW2/index.php" id="crearPartidaForm">
             <input type="hidden" name="controller" value="Lobby">
@@ -90,6 +119,7 @@
             </button>
         </form>
     </div>
+
     <!-- Menú principal - estilo Pokédex -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 
@@ -104,7 +134,7 @@
                     <p class="text-yellow-800 text-xs">Tabla de clasificación</p>
                 </div>
             </div>
-            <a href="/PreguntadosPW2/index.php?controller=Ranking&method=ver"
+            <a href="/ranking/verRanking"
                class="block bg-yellow-900 hover:bg-yellow-800 text-white text-center px-6 py-3 rounded-lg font-bold transition-all">
                 VER ENTRENADORES
             </a>
@@ -118,10 +148,10 @@
                 </div>
                 <div>
                     <h2 class="pixel-font text-blue-100 text-sm mb-1">PERFIL</h2>
-                    <p class="text-blue-200 text-xs">Datos del entrenador</p>
+                    <p class="text-blue-200 text-xs">Datos personales</p>
                 </div>
             </div>
-            <a href="/PreguntadosPW2/index.php?controller=Perfil&method=ver"
+            <a href="/perfil/ver"
                class="block bg-blue-900 hover:bg-blue-800 text-white text-center px-6 py-3 rounded-lg font-bold transition-all">
                 VER MI PERFIL
             </a>
@@ -162,7 +192,37 @@
     </div>
 
 </main>
+<!-- Librería QRCode.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
+<script>
+    const btnMostrarQR = document.getElementById('btnMostrarQR');
+    const modalQR = document.getElementById('modalQR');
+    const qrcodeDiv = document.getElementById('qrcode');
+    let qrCodeGenerado = false;
+
+    btnMostrarQR.addEventListener('click', () => {
+        modalQR.classList.remove('hidden');
+
+        if (!qrCodeGenerado) {
+            const usuarioId = btnMostrarQR.dataset.usuarioId;
+            const urlPerfil = window.location.origin + '/perfil/perfilCompartidoVista?id=' + usuarioId;
+
+            new QRCode(qrcodeDiv, {
+                text: urlPerfil,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+            });
+            qrCodeGenerado = true;
+        }
+    });
+
+    document.getElementById('btnCerrarQR').addEventListener('click', () => {
+        modalQR.classList.add('hidden');
+    });
+</script>
 
 </body>
 </html>
