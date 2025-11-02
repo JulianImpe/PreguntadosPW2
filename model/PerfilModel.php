@@ -138,7 +138,7 @@ class PerfilModel
     }
 
 
-    //geerador de qr de google use
+    //generador de qr de google use
     public function obtenerUrlQR($usuarioId)
     {
         if (!$usuarioId) return null;

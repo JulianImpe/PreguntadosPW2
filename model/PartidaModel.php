@@ -95,7 +95,6 @@ class PartidaModel
             }
         }
 
-        // Tomar dificultad y nivel de la primera fila
         $dificultad = $preguntaYRespuestas[0]['Dificultad'] ?? null;
         $nivelDificultad = $preguntaYRespuestas[0]['DificultadNivel'] ?? null;
         $dificultadFormateada = is_null($dificultad) ? null : number_format((float)$dificultad, 3, '.', '');
@@ -133,12 +132,9 @@ class PartidaModel
         $preguntaId = (int)$preguntaId;
         $respuestaId = (int)$respuestaId;
 
-        //  Verifico si la respuesta elegida es la correcta
         $respuestaCorrecta = $this->getRespuestaCorrecta($preguntaId);
         $esCorrecta = !empty($respuestaCorrecta) && $respuestaId == $respuestaCorrecta[0]['ID'];
-
-        //  Actualizo los contadores en la base de datos
-        //    Si la respuesta fue correcta, sumo 1 también en Cant_veces_correcta
+        
         $sumarCorrecta = $esCorrecta ? 1 : 0;
         $this->database->query("
         UPDATE Pregunta
@@ -147,7 +143,6 @@ class PartidaModel
         WHERE ID = $preguntaId
     ");
 
-        // Me traigo los datos de la pregunta para calcular la dificultad
         $datosPregunta = $this->database->query("
         SELECT Cant_veces_respondida, Cant_veces_correcta
         FROM Pregunta
@@ -214,13 +209,6 @@ class PartidaModel
             ];
         }
 
-
-
-        /*public function iniciarPartida($usuarioId)
-    {
-        $this->database->insert("INSERT INTO Partida (Usuario_ID) VALUES ($usuarioId)");
-        return $this->database->lastInsertId();
-    }*/
     }
     public function registrarRespuesta($partidaId, $preguntaId, $esCorrecta)
     {

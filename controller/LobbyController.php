@@ -11,9 +11,6 @@ class LobbyController
         $this->renderer = $renderer;
     }
 
-    /**
-     * Redirige al índice de la vista de Lobby.
-     */
 
     public function base()
     {

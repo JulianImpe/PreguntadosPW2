@@ -10,7 +10,6 @@ class PartidaController
         $this->model = $model;
         $this->renderer = $renderer;
 
-        // Inicializamos puntaje si no existe
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;
         }
@@ -20,7 +19,6 @@ class PartidaController
     {
 
         if (!isset($_SESSION['usuario_id'])) {
-            // Redirigir a login si no hay usuario
             header("Location: /login/loginForm");
             exit;
         }
@@ -87,13 +85,12 @@ class PartidaController
             $preguntaRender['dificultad_clase'] = $clase;
         }
 
-        // Guardar el inicio de la nueva pregunta
         $_SESSION['pregunta_activa'] = [
             'id' => $preguntaRender['id'],
             'inicio' => time()
         ];
 
-        // Renderizar la vista
+
         $this->renderer->render("crearPartida", [
             "pregunta" => $preguntaRender
         ]);
