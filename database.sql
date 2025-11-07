@@ -490,3 +490,65 @@ SET Dificultad = ROUND(1 - ((Cant_veces_correcta + 1) / (GREATEST(Cant_veces_res
             WHEN (1 - ((Cant_veces_correcta + 1) / (Cant_veces_respondida + 2))) <= 0.66 THEN 'Medio'
             ELSE 'Difícil'
             END;
+
+
+CREATE TABLE Pregunta_sugerida (
+                                   ID INT AUTO_INCREMENT PRIMARY KEY,
+                                   Texto TEXT NOT NULL,
+                                   Medalla_ID INT NOT NULL,
+                                   Sugerida_por_usuario_ID INT NOT NULL,
+                                   Fecha_sugerencia DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                   Estado ENUM('Pendiente', 'Aprobada', 'Rechazada') DEFAULT 'Pendiente',
+                                   Revisada_por INT NULL,
+                                   Fecha_revision DATETIME NULL,
+                                   Motivo_rechazo TEXT NULL,
+                                   FOREIGN KEY (Medalla_ID) REFERENCES Medallas(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (Sugerida_por_usuario_ID) REFERENCES usuarios(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (Revisada_por) REFERENCES usuarios(ID) ON DELETE SET NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Tabla para respuestas de preguntas sugeridas
+CREATE TABLE Respuesta_sugerida (
+                                    ID INT AUTO_INCREMENT PRIMARY KEY,
+                                    Pregunta_sugerida_ID INT NOT NULL,
+                                    Texto VARCHAR(255) NOT NULL,
+                                    Es_Correcta BOOLEAN NOT NULL DEFAULT FALSE,
+                                    FOREIGN KEY (Pregunta_sugerida_ID) REFERENCES Pregunta_sugerida(ID) ON DELETE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Modificar tabla Reporte para agregar más información
+ALTER TABLE Reporte
+    ADD COLUMN Estado ENUM('Pendiente', 'En_revision', 'Resuelto', 'Rechazado') DEFAULT 'Pendiente' AFTER Motivo,
+ADD COLUMN Fecha_resolucion DATETIME NULL AFTER Estado;
+
+-- Insertar datos de ejemplo para preguntas sugeridas
+INSERT INTO Pregunta_sugerida (Texto, Medalla_ID, Sugerida_por_usuario_ID, Estado) VALUES
+                                                                                       ('¿Cuál es el Pokémon legendario de tipo Fuego en la primera generación?', 7, 1, 'Pendiente'),
+                                                                                       ('¿Qué movimiento aprende Pikachu al nivel 26 en Pokémon Amarillo?', 3, 1, 'Pendiente'),
+                                                                                       ('¿En qué ruta se encuentra Snorlax durmiendo bloqueando el paso?', 1, 1, 'Pendiente');
+
+-- Insertar respuestas para las preguntas sugeridas
+INSERT INTO Respuesta_sugerida (Pregunta_sugerida_ID, Texto, Es_Correcta) VALUES
+-- Para pregunta 1 (Pokémon legendario de fuego)
+(1, 'Moltres', TRUE),
+(1, 'Articuno', FALSE),
+(1, 'Zapdos', FALSE),
+(1, 'Ho-Oh', FALSE),
+
+-- Para pregunta 2 (Movimiento de Pikachu)
+(2, 'Trueno', TRUE),
+(2, 'Rayo', FALSE),
+(2, 'Impactrueno', FALSE),
+(2, 'Bola Voltio', FALSE),
+
+-- Para pregunta 3 (Snorlax)
+(3, 'Ruta 12 y 16', TRUE),
+(3, 'Ruta 10 y 11', FALSE),
+(3, 'Ruta 5 y 6', FALSE),
+(3, 'Ruta 20 y 21', FALSE);
+
+-- Insertar reportes de ejemplo (asegúrate de que existan las preguntas con estos IDs)
+INSERT INTO Reporte (Usuario_ID, Pregunta_ID, Motivo, Estado) VALUES
+                                                                  (1, 5, 'La respuesta correcta está marcada incorrectamente', 'Pendiente'),
+                                                                  (1, 12, 'Pregunta duplicada con la ID #8', 'Pendiente'),
+                                                                  (1, 20, 'Las opciones son confusas y poco claras', 'Pendiente');

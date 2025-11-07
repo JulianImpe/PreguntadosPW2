@@ -8,14 +8,11 @@ class LobbyModel {
         $this->conexion = $conexion;
     }
 
-
-
-
     public function obtenerDatosUsuario($usuarioId)
     {
         $usuarioId = (int)$usuarioId;
         $sql = "SELECT 
-                ID,        -- le agrego id para qr
+                ID,        
                 usuario, 
                 foto_perfil, 
                 nombre_completo,
@@ -41,7 +38,6 @@ class LobbyModel {
 
         return [];
     }
-
 
     public function obtenerPartidasRecientes($usuario, $limite = 5)
     {

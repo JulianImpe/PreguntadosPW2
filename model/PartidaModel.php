@@ -274,4 +274,51 @@ class PartidaModel
 
         return $this->database->query($query);
     }
+    public function enviarReporte($preguntaId, $usuarioId, $motivo)
+    {
+        if (!$preguntaId || !$usuarioId || empty($motivo)) {
+            return ['ok' => false, 'msg' => "Debes completar el motivo del reporte."];
+        }
+
+        $ok = $this->guardarReporte($preguntaId, $usuarioId, $motivo);
+        return $ok
+            ? ['ok' => true, 'msg' => "Tu reporte fue enviado correctamente. ¡Gracias por colaborar!"]
+            : ['ok' => false, 'msg' => "Ocurrió un error al enviar el reporte."];
+    }
+
+    public function actualizarPreguntaCompleta($preguntaId, $texto, $respuestas)
+    {
+        if (!$preguntaId || !$texto || empty($respuestas)) {
+            return ['ok' => false, 'msg' => "Faltan datos para actualizar la pregunta"];
+        }
+
+        $this->actualizarPreguntaTexto($preguntaId, $texto);
+
+        foreach ($respuestas as $r) {
+            $this->actualizarRespuesta($r['id'], $r['texto'], isset($r['es_correcta']) ? 1 : 0);
+        }
+
+        return ['ok' => true, 'msg' => "✅ Pregunta y respuestas actualizadas correctamente"];
+    }
+    public function guardarReporte($preguntaId, $usuarioId, $motivo)
+    {
+        $preguntaId = (int)$preguntaId;
+        $usuarioId = (int)$usuarioId;
+
+        $conexion = $this->database->getConexion();
+        $motivo = $conexion->real_escape_string($motivo);
+
+        $conexion->query("
+        INSERT INTO Reporte (Pregunta_ID, Usuario_ID, Motivo, Estado, Fecha_reporte)
+        VALUES ($preguntaId, $usuarioId, '$motivo', 'Pendiente', NOW())
+    ");
+
+        $conexion->query("
+        UPDATE Pregunta
+        SET Estado_ID = 1
+        WHERE ID = $preguntaId
+    ");
+
+        return true;
+    }
 }

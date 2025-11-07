@@ -33,14 +33,12 @@ class PartidaController
 
     function mostrarPartida()
     {
-
         if (isset($_SESSION['pregunta_activa'])) {
             $inicio = $_SESSION['pregunta_activa']['inicio'];
-            $duracion = 15; // segundos de limite
+            $duracion = 15;
             $transcurrido = time() - $inicio;
 
             if ($transcurrido > $duracion) {
-
                 $this->renderer->render('partidaFinalizada', [
                     'esCorrecta' => false,
                     'mensaje' => '¡Tiempo agotado!',
@@ -48,12 +46,10 @@ class PartidaController
                     'pregunta' => null,
                     'partida_terminada' => true
                 ]);
-
-                unset($_SESSION['pregunta_activa']); // limpiar estado
+                unset($_SESSION['pregunta_activa']);
                 return;
             }
         }
-
 
         if (isset($_SESSION['pregunta_activa'])) {
             $this->renderer->render('partidaFinalizada', [
@@ -67,10 +63,8 @@ class PartidaController
             return;
         }
 
-
         $preguntaRender = $this->model->getPreguntaRender();
 
-        // estilos para dificultad
         $clase = 'bg-gray-200 text-gray-800 border-gray-300';
         $nivel = $preguntaRender['nivel_dificultad'] ?? null;
         if ($nivel === 'Fácil') {
@@ -90,13 +84,23 @@ class PartidaController
             'inicio' => time()
         ];
 
+        // ESTO ES LO NUEVO 👇
+        $data = ["pregunta" => $preguntaRender];
 
-        $this->renderer->render("crearPartida", [
-            "pregunta" => $preguntaRender
-        ]);
+        // Agregar mensajes si existen
+        if (isset($_SESSION['exito_reporte'])) {
+            $data['exito_reporte'] = $_SESSION['exito_reporte'];
+            unset($_SESSION['exito_reporte']);
+        }
+
+        if (isset($_SESSION['error_reporte'])) {
+            $data['error_reporte'] = $_SESSION['error_reporte'];
+            unset($_SESSION['error_reporte']);
+        }
+
+        $this->renderer->render("crearPartida", $data);
+        // HASTA ACÁ 👆
     }
-
-
     public function responder()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -125,4 +129,40 @@ class PartidaController
 
         $this->renderer->render('partidaFinalizada', $data);
     }
+    public function enviarReporte()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /lobby/base');
+            exit;
+        }
+
+        $resultado = $this->model->enviarReporte(
+            $_POST['pregunta_id'] ?? null,
+            $_SESSION['usuario_id'] ?? null,
+            trim($_POST['motivo'] ?? '')
+        );
+
+        $_SESSION[$resultado['ok'] ? 'exito_reporte' : 'error_reporte'] = $resultado['msg'];
+        header('Location: /partida/base');
+        exit;
+    }
+
+    public function actualizarPreguntaCompleta()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /editor/lobbyEditor");
+            exit;
+        }
+
+        $resultado = $this->model->actualizarPreguntaCompleta(
+            $_POST['pregunta_id'] ?? null,
+            $_POST['texto'] ?? '',
+            $_POST['respuestas'] ?? []
+        );
+
+        $_SESSION[$resultado['ok'] ? 'mensaje' : 'error'] = $resultado['msg'];
+        header("Location: /editor/lobbyEditor");
+        exit;
+    }
+
 }
