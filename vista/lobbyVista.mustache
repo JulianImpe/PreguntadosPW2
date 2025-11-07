@@ -6,7 +6,6 @@
     <title>Lobby - Pokémon Trivia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-
         .pokemon-border {
             border: 4px solid #2c3e50;
             box-shadow:
@@ -21,9 +20,6 @@
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-sky-400 to-emerald-300">
-
-<!-- Botón QR flotante fijo a la derecha -->
-
 
 <!-- Header estilo Game Boy -->
 <div class="bg-white shadow-2xl shadow-md top-0 z-50">
@@ -60,6 +56,18 @@
                     <p class="font-black text-gray-800">{{puntaje}}</p>
                 </div>
             </div>
+                    <!-- Botón Crear Pregunta -->
+        <form method="GET" action="/PreguntadosPW2/index.php">
+            <input type="hidden" name="controller" value="Pregunta">
+            <input type="hidden" name="method" value="crearPreguntaVista">
+            <button type="submit"
+                    class="w-full bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all hover:scale-105 transition-all">
+                <div class="flex items-center justify-center gap-3">
+                    <span class="text-3xl">✏️</span>
+                    <span>CREAR PREGUNTA</span>
+                </div>
+            </button>
+        </form>
         </div>
     </div>
 </div>
@@ -79,43 +87,51 @@
 
     <!-- Medallas/Stats -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white pokemon-border rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+        <div class="bg-white pokemon-border rounded-xl p-4 text-center transition-transform">
             <div class="text-4xl mb-2">🎮</div>
             <p class="text-gray-600 text-xs font-bold">PARTIDAS</p>
             <p class="text-gray-800 text-2xl font-black">{{partidas_jugadas}}</p>
         </div>
 
-        <div class="bg-gradient-to-br from-yellow-300 to-yellow-500 pokemon-border rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+        <div class="bg-gradient-to-br from-yellow-300 to-yellow-500 pokemon-border rounded-xl p-4 text-center transition-transform">
             <div class="text-4xl mb-2">🏆</div>
             <p class="text-yellow-900 text-xs font-bold">VICTORIAS</p>
             <p class="text-yellow-900 text-2xl font-black">{{partidas_ganadas}}</p>
         </div>
 
-        <div class="bg-gradient-to-br from-blue-400 to-blue-600 pokemon-border rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+        <div class="bg-gradient-to-br from-blue-400 to-blue-600 pokemon-border rounded-xl p-4 text-center transition-transform">
             <div class="text-4xl mb-2">⚡</div>
             <p class="text-blue-100 text-xs font-bold">NIVEL</p>
             <p class="text-white text-2xl font-black">{{nivel}}</p>
         </div>
 
-        <div class="bg-gradient-to-br from-orange-400 to-red-500 pokemon-border rounded-xl p-4 text-center hover:-translate-y-1 transition-transform">
+        <div class="bg-gradient-to-br from-orange-400 to-red-500 pokemon-border rounded-xl p-4 text-center  transition-transform">
             <div class="text-4xl mb-2">🥇</div>
             <p class="text-red-100 text-xs font-bold">RANKING</p>
             <p class="text-white text-2xl font-black">#{{ranking}}</p>
         </div>
     </div>
-
-    <div class="mb-8 text-center">
-        <form method="GET" action="/PreguntadosPW2/index.php" id="crearPartidaForm">
+    <div class="flex justify-center mb-8">
+        <!-- Botón Combatir -->
+        <form method="GET" action="/PreguntadosPW2/index.php">
             <input type="hidden" name="controller" value="Lobby">
             <input type="hidden" name="method" value="crearPartidaVista">
             <button type="submit"
-                    class="inline-block bg-gradient-to-b from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white pixel-font text-lg px-8 py-6 rounded-full pokemon-border hover:scale-105 transition-all">
-                <div class="flex items-center gap-3">
-                    <span class="text-3xl"><svg class="text-center" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg></span>
+            
+                    class="w-50 bg-gradient-to-b from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white pixel-font text-lg px-8 py-6 rounded-full pokemon-border hover:scale-105 transition-all">
+                <div class="flex items-center justify-center gap-3">
+                    <span class="text-3xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/>
+                        </svg>
+                    </span>
                     <span>¡COMBATIR!</span>
-                </div>
+                    
             </button>
         </form>
+        
+
+
     </div>
 
     <!-- Menú principal - estilo Pokédex -->
@@ -190,6 +206,7 @@
     </div>
 
 </main>
+
 <!-- Librería QRCode.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -199,27 +216,32 @@
     const qrcodeDiv = document.getElementById('qrcode');
     let qrCodeGenerado = false;
 
-    btnMostrarQR.addEventListener('click', () => {
-        modalQR.classList.remove('hidden');
+    if (btnMostrarQR) {
+        btnMostrarQR.addEventListener('click', () => {
+            modalQR.classList.remove('hidden');
 
-        if (!qrCodeGenerado) {
-            const usuarioId = btnMostrarQR.dataset.usuarioId;
-            const urlPerfil = window.location.origin + '/perfil/perfilCompartidoVista?id=' + usuarioId;
+            if (!qrCodeGenerado) {
+                const usuarioId = btnMostrarQR.dataset.usuarioId;
+                const urlPerfil = window.location.origin + '/perfil/perfilCompartidoVista?id=' + usuarioId;
 
-            new QRCode(qrcodeDiv, {
-                text: urlPerfil,
-                width: 200,
-                height: 200,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-            });
-            qrCodeGenerado = true;
-        }
-    });
+                new QRCode(qrcodeDiv, {
+                    text: urlPerfil,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                });
+                qrCodeGenerado = true;
+            }
+        });
+    }
 
-    document.getElementById('btnCerrarQR').addEventListener('click', () => {
-        modalQR.classList.add('hidden');
-    });
+    const btnCerrarQR = document.getElementById('btnCerrarQR');
+    if (btnCerrarQR) {
+        btnCerrarQR.addEventListener('click', () => {
+            modalQR.classList.add('hidden');
+        });
+    }
 </script>
 
 </body>
