@@ -21,7 +21,9 @@ class SugerenciaController
         $medallas = $this->model->obtenerMedallas();
 
         $this->renderer->render("sugerirPregunta", [
-            "medallas" => $medallas
+            "medallas" => $medallas,
+            "usuario" => true,
+            "usuario_id" => $_SESSION['usuario_id']
         ]);
     }
 
