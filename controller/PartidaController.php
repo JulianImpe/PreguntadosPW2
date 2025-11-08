@@ -69,6 +69,7 @@ class PartidaController
 
 
         $preguntaRender = $this->model->getPreguntaRender();
+        $medallas = $this->model->getMedallaDeLaPregunta($preguntaRender['id']);
 
         // estilos para dificultad
         $clase = 'bg-gray-200 text-gray-800 border-gray-300';
@@ -92,7 +93,8 @@ class PartidaController
 
 
         $this->renderer->render("crearPartida", [
-            "pregunta" => $preguntaRender
+            "pregunta" => $preguntaRender,
+            "medallas" => [$medallas]
         ]);
     }
 

@@ -186,14 +186,14 @@ CREATE TABLE Usuario_pregunta_vista (
 -- ==============================
 
 INSERT INTO Medallas (Nombre, Color, Imagen_url) VALUES
-                                                     ('Medalla Roca', '#8B7355', 'boulder_badge.png'),       -- Brock
-                                                     ('Medalla Cascada', '#4DA6FF', 'cascade_badge.png'),    -- Misty
-                                                     ('Medalla Trueno', '#FFD700', 'thunder_badge.png'),     -- Lt. Surge
-                                                     ('Medalla Arcoíris', '#FF80FF', 'rainbow_badge.png'),   -- Erika
-                                                     ('Medalla Alma', '#9400D3', 'soul_badge.png'),          -- Koga
-                                                     ('Medalla Pantano', '#00FF7F', 'marsh_badge.png'),      -- Sabrina
-                                                     ('Medalla Volcán', '#FF4500', 'volcano_badge.png'),     -- Blaine
-                                                     ('Medalla Tierra', '#654321', 'earth_badge.png');        -- Giovanni
+                                                     ('Medalla Roca', '#8B7355', 'img/categorias/Roca.png'),       -- Brock
+                                                     ('Medalla Cascada', '#4DA6FF', 'img/categorias/Cascada.png'),    -- Misty
+                                                     ('Medalla Trueno', '#FFD700', 'img/categorias/Electrico.png'),     -- Lt. Surge
+                                                     ('Medalla Arcoíris', '#FF80FF', 'img/categorias/Arcoiris.png'),   -- Erika
+                                                     ('Medalla Alma', '#9400D3', 'img/categorias/Alma.png'),          -- Koga
+                                                     ('Medalla Pantano', '#00FF7F', 'img/categorias/Psiquico.png'),      -- Sabrina
+                                                     ('Medalla Volcán', '#FF4500', 'img/categorias/Volcan.png'),     -- Blaine
+                                                     ('Medalla Tierra', '#654321', 'img/categorias/Tierra.png');        -- Giovanni
 
 -- ==============================
 -- PREGUNTAS Y RESPUESTAS
