@@ -79,6 +79,41 @@ class EditorModel
 
     public function aprobarPreguntaSugerida($preguntaId, $editorId)
     {
+        $preguntaId = (int)$preguntaId;
+        $editorId = (int)$editorId;
+
+
+        $result = $this->conexion->query("SELECT * FROM Pregunta_sugerida WHERE ID = $preguntaId");
+        $sugerida = !empty($result) ? $result[0] : null;
+
+        if (!$sugerida) {
+            return false;
+        }
+
+
+        $texto = $this->conexion->getConexion()->real_escape_string($sugerida['Texto']);
+        $medallaId = (int)$sugerida['Medalla_ID'];
+        $creadaPor = (int)$sugerida['Sugerida_por_usuario_ID'];
+
+        $sqlInsertPregunta = "
+        INSERT INTO Pregunta (Texto, Medalla_ID, Estado_ID, Creada_por_usuario_ID, Aprobada_por)
+        VALUES ('$texto', $medallaId, 2, $creadaPor, $editorId)
+    ";
+        $this->conexion->query($sqlInsertPregunta);
+        $nuevaPreguntaId = $this->conexion->lastInsertId();
+
+
+        $respuestas = $this->conexion->query("SELECT * FROM Respuesta_sugerida WHERE Pregunta_sugerida_ID = $preguntaId");
+
+        foreach ($respuestas as $resp) {
+            $textoResp = $this->conexion->getConexion()->real_escape_string($resp['Texto']);
+            $esCorrecta = $resp['Es_Correcta'] ? 1 : 0;
+
+            $this->conexion->query("
+            INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta)
+            VALUES ($nuevaPreguntaId, '$textoResp', $esCorrecta)
+        ");
+        }
         return $this->actualizarEstadoSugerida($preguntaId, $editorId, 'Aprobada');
     }
 
@@ -186,6 +221,7 @@ class EditorModel
     {
         $preguntaId = (int)$preguntaId;
         $editorId = (int)$editorId;
+
         return $this->conexion->query("
             UPDATE Pregunta_sugerida 
             SET Estado = '$estado', Revisada_por = $editorId, Fecha_revision = NOW()
