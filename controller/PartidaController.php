@@ -64,6 +64,7 @@ class PartidaController
         }
 
         $preguntaRender = $this->model->getPreguntaRender();
+        $medallas = $this->model->getMedallaDeLaPregunta($preguntaRender['id']);
 
         $clase = 'bg-gray-200 text-gray-800 border-gray-300';
         $nivel = $preguntaRender['nivel_dificultad'] ?? null;
@@ -98,7 +99,12 @@ class PartidaController
             unset($_SESSION['error_reporte']);
         }
 
+        $data = array_merge($data, [
+            "medallas" => $medallas
+        ]);
+
         $this->renderer->render("crearPartida", $data);
+
         // HASTA ACÁ 👆
     }
     public function responder()

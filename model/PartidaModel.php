@@ -321,4 +321,17 @@ class PartidaModel
 
         return true;
     }
+
+
+    public function getMedallaDeLaPregunta($preguntaId) {
+        $preguntaId = (int)$preguntaId;
+        $query = "
+        SELECT m.ID as id, m.Nombre as nombre, m.Imagen_url as imagen_url
+        FROM Medallas m
+        INNER JOIN Pregunta p On p.Medalla_ID = m.ID
+        WHERE p.ID = $preguntaId
+        LIMIT 1";
+        $result = $this->database->query($query);
+        return $result ? $result[0] : null;
+    }
 }
