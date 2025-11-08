@@ -9,16 +9,10 @@ class PartidaModel
         $this->database = $database;
     }
 
-    /**
-     * Obtiene una pregunta que el usuario NO haya visto aún
-     * Filtra por medalla si se especifica
-     * Ajusta según el nivel del jugador
-     */
     public function getPreguntaYRespuesta($usuarioId, $medallaId = null)
     {
         $usuarioId = (int)$usuarioId;
         
-        // Obtener nivel del jugador
         $nivelJugador = $this->obtenerNivelJugador($usuarioId);
         
         // Definir rango de dificultad según nivel
@@ -38,7 +32,6 @@ class PartidaModel
         
         $sqlMedalla = $medallaId ? "AND p.Medalla_ID = " . intval($medallaId) : "";
         
-        // Buscar pregunta que NO haya visto y esté en su rango de dificultad
         $pregunta = $this->database->query("
             SELECT 
                 p.ID AS preguntaId,
@@ -56,11 +49,9 @@ class PartidaModel
             LIMIT 1
         ");
 
-        // Si no hay preguntas sin ver, hacer TRUNCATE y reiniciar
         if (empty($pregunta)) {
             $this->database->query("DELETE FROM Usuario_pregunta_vista WHERE Usuario_ID = $usuarioId");
             
-            // Volver a buscar
             $pregunta = $this->database->query("
                 SELECT 
                     p.ID AS preguntaId,
@@ -80,10 +71,8 @@ class PartidaModel
 
         $preguntaId = $pregunta[0]['preguntaId'];
         
-        // Marcar pregunta como vista
         $this->marcarPreguntaVista($usuarioId, $preguntaId);
 
-        // Traer respuestas
         $respuestas = $this->database->query("
             SELECT DISTINCT
                 r.ID AS respuestaId,
@@ -111,9 +100,6 @@ class PartidaModel
         return $resultado;
     }
 
-    /**
-     * Marca una pregunta como vista por el usuario
-     */
     private function marcarPreguntaVista($usuarioId, $preguntaId)
     {
         $usuarioId = (int)$usuarioId;
@@ -125,10 +111,6 @@ class PartidaModel
         ");
     }
 
-    /**
-     * Calcula el nivel del jugador según su ratio de aciertos
-     * Retorna un valor entre 0 y 1
-     */
     public function obtenerNivelJugador($usuarioId)
     {
         $usuarioId = (int)$usuarioId;
@@ -215,10 +197,6 @@ class PartidaModel
         ];
     }
 
-    /**
-     * Procesa la respuesta y actualiza dificultad
-     * Ahora también considera si se acabó el tiempo
-     */
     public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = false)
     {
         $preguntaId = (int)$preguntaId;
@@ -227,7 +205,6 @@ class PartidaModel
         $respuestaCorrecta = $this->getRespuestaCorrecta($preguntaId);
         $esCorrecta = !empty($respuestaCorrecta) && $respuestaId == $respuestaCorrecta[0]['ID'];
         
-        // Si se agotó el tiempo, la respuesta es incorrecta
         if ($tiempoAgotado) {
             $esCorrecta = false;
         }

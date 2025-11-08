@@ -30,18 +30,15 @@ class PartidaController
 
     function mostrarPartida()
     {
-        // Verificar si hay pregunta activa y si se agotó el tiempo
         if (isset($_SESSION['pregunta_activa'])) {
             $inicio = $_SESSION['pregunta_activa']['inicio'];
             $duracion = 15;
             $transcurrido = time() - $inicio;
 
             if ($transcurrido > $duracion) {
-                // Registrar que falló por tiempo
                 $preguntaId = $_SESSION['pregunta_activa']['id'];
                 $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaId, 0);
                 
-                // Procesar como respuesta incorrecta por tiempo agotado
                 $respuestaCorrecta = $this->model->getRespuestaCorrecta($preguntaId);
                 $respuestaCorrectaId = $respuestaCorrecta[0]['ID'] ?? 0;
                 
@@ -63,7 +60,6 @@ class PartidaController
             }
         }
 
-        // Obtener pregunta según nivel del jugador
         $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id']);
 
         if (!$preguntaRender) {
@@ -77,7 +73,6 @@ class PartidaController
             return;
         }
 
-        // Estilos para dificultad
         $clase = 'bg-gray-200 text-gray-800 border-gray-300';
         $nivel = $preguntaRender['nivel_dificultad'] ?? null;
         if ($nivel === 'Fácil') {
@@ -115,7 +110,6 @@ class PartidaController
             exit;
         }
 
-        // Verificar tiempo
         $tiempoAgotado = false;
         if (isset($_SESSION['pregunta_activa'])) {
             $inicio = $_SESSION['pregunta_activa']['inicio'];
@@ -127,7 +121,7 @@ class PartidaController
 
         unset($_SESSION['pregunta_activa']);
 
-        // Registrar respuesta
+
         $data = $this->model->procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado);
         $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaId, $data['esCorrecta'] ? 1 : 0);
 
