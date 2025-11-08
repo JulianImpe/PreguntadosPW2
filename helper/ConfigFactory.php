@@ -20,6 +20,8 @@ include_once("controller/PerfilController.php");
 include_once("model/PerfilModel.php");
 include_once("controller/EditorController.php");
 include_once("model/EditorModel.php");
+include_once("controller/SugerenciaController.php");
+include_once("model/SugerenciaModel.php");
 
 
 
@@ -67,6 +69,8 @@ class ConfigFactory
         $this->objetos["PerfilController"] = new PerfilController(new PerfilModel($this->conexion), $this->renderer);
 
         $this->objetos["EditorController"] = new EditorController(new EditorModel($this->conexion), $this->renderer);
+
+        $this->objetos["SugerenciaController"] = new SugerenciaController(new SugerenciaModel($this->conexion), $this->renderer);
 
 
     }

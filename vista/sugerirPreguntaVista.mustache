@@ -1,0 +1,45 @@
+<h1 class="text-xl font-bold mb-4">Sugerir Pregunta</h1>
+
+{{#error}}
+    <div class="bg-red-200 text-red-800 p-3 rounded mb-4">{{error}}</div>
+{{/error}}
+
+{{#exito}}
+    <div class="bg-green-200 text-green-800 p-3 rounded mb-4">{{exito}}</div>
+{{/exito}}
+
+<form method="POST" action="/sugerencia/guardar" class="space-y-3">
+
+    <label>Pregunta:</label>
+    <input type="text" name="texto" class="w-full border p-2 rounded">
+
+    <label>Respuestas:</label>
+    {{#respuestas}}
+    {{/respuestas}}
+
+    <input type="text" name="respuestas[]" placeholder="Respuesta 1" class="w-full border p-2 rounded">
+    <input type="text" name="respuestas[]" placeholder="Respuesta 2" class="w-full border p-2 rounded">
+    <input type="text" name="respuestas[]" placeholder="Respuesta 3" class="w-full border p-2 rounded">
+    <input type="text" name="respuestas[]" placeholder="Respuesta 4" class="w-full border p-2 rounded">
+
+    <label>Seleccione la correcta:</label>
+    <select name="correcta" class="border p-2 rounded">
+        <option value="0">Respuesta 1</option>
+        <option value="1">Respuesta 2</option>
+        <option value="2">Respuesta 3</option>
+        <option value="3">Respuesta 4</option>
+    </select>
+
+    <label>Medalla:</label>
+    <select name="medallaId" required>
+        {{#medallas}}
+            <option value="{{ID}}">{{Nombre}}</option>
+        {{/medallas}}
+    </select>
+
+
+
+    <button class="bg-blue-500 text-white px-4 py-2 rounded mt-3">
+        Enviar
+    </button>
+</form>
