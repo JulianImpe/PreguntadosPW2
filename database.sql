@@ -76,6 +76,8 @@ CREATE TABLE usuarios (
                           FOREIGN KEY (Mapa_ID) REFERENCES Mapa(ID) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+
+
 -- ==============================
 -- PARTIDAS
 -- ==============================
@@ -186,14 +188,14 @@ CREATE TABLE Usuario_pregunta_vista (
 -- ==============================
 
 INSERT INTO Medallas (Nombre, Color, Imagen_url) VALUES
-                                                     ('Medalla Roca', '#8B7355', 'boulder_badge.png'),       -- Brock
-                                                     ('Medalla Cascada', '#4DA6FF', 'cascade_badge.png'),    -- Misty
-                                                     ('Medalla Trueno', '#FFD700', 'thunder_badge.png'),     -- Lt. Surge
-                                                     ('Medalla Arcoíris', '#FF80FF', 'rainbow_badge.png'),   -- Erika
-                                                     ('Medalla Alma', '#9400D3', 'soul_badge.png'),          -- Koga
-                                                     ('Medalla Pantano', '#00FF7F', 'marsh_badge.png'),      -- Sabrina
-                                                     ('Medalla Volcán', '#FF4500', 'volcano_badge.png'),     -- Blaine
-                                                     ('Medalla Tierra', '#654321', 'earth_badge.png');        -- Giovanni
+                                                     ('Medalla Roca', '#8B7355', 'img/categorias/Roca.png'),       -- Brock
+                                                     ('Medalla Cascada', '#4DA6FF', 'img/categorias/Cascada.png'),    -- Misty
+                                                     ('Medalla Trueno', '#FFD700', 'img/categorias/Electrico.png'),     -- Lt. Surge
+                                                     ('Medalla Arcoíris', '#FF80FF', 'img/categorias/Arcoiris.png'),   -- Erika
+                                                     ('Medalla Alma', '#9400D3', 'img/categorias/Alma.png'),          -- Koga
+                                                     ('Medalla Pantano', '#00FF7F', 'img/categorias/Psiquico.png'),      -- Sabrina
+                                                     ('Medalla Volcán', '#FF4500', 'img/categorias/Volcan.png'),     -- Blaine
+                                                     ('Medalla Tierra', '#654321', 'img/categorias/Tierra.png');        -- Giovanni
 
 -- ==============================
 -- PREGUNTAS Y RESPUESTAS
@@ -520,35 +522,3 @@ CREATE TABLE Respuesta_sugerida (
 ALTER TABLE Reporte
     ADD COLUMN Estado ENUM('Pendiente', 'En_revision', 'Resuelto', 'Rechazado') DEFAULT 'Pendiente' AFTER Motivo,
 ADD COLUMN Fecha_resolucion DATETIME NULL AFTER Estado;
-
--- Insertar datos de ejemplo para preguntas sugeridas
-INSERT INTO Pregunta_sugerida (Texto, Medalla_ID, Sugerida_por_usuario_ID, Estado) VALUES
-                                                                                       ('¿Cuál es el Pokémon legendario de tipo Fuego en la primera generación?', 7, 1, 'Pendiente'),
-                                                                                       ('¿Qué movimiento aprende Pikachu al nivel 26 en Pokémon Amarillo?', 3, 1, 'Pendiente'),
-                                                                                       ('¿En qué ruta se encuentra Snorlax durmiendo bloqueando el paso?', 1, 1, 'Pendiente');
-
--- Insertar respuestas para las preguntas sugeridas
-INSERT INTO Respuesta_sugerida (Pregunta_sugerida_ID, Texto, Es_Correcta) VALUES
--- Para pregunta 1 (Pokémon legendario de fuego)
-(1, 'Moltres', TRUE),
-(1, 'Articuno', FALSE),
-(1, 'Zapdos', FALSE),
-(1, 'Ho-Oh', FALSE),
-
--- Para pregunta 2 (Movimiento de Pikachu)
-(2, 'Trueno', TRUE),
-(2, 'Rayo', FALSE),
-(2, 'Impactrueno', FALSE),
-(2, 'Bola Voltio', FALSE),
-
--- Para pregunta 3 (Snorlax)
-(3, 'Ruta 12 y 16', TRUE),
-(3, 'Ruta 10 y 11', FALSE),
-(3, 'Ruta 5 y 6', FALSE),
-(3, 'Ruta 20 y 21', FALSE);
-
--- Insertar reportes de ejemplo (asegúrate de que existan las preguntas con estos IDs)
-INSERT INTO Reporte (Usuario_ID, Pregunta_ID, Motivo, Estado) VALUES
-                                                                  (1, 5, 'La respuesta correcta está marcada incorrectamente', 'Pendiente'),
-                                                                  (1, 12, 'Pregunta duplicada con la ID #8', 'Pendiente'),
-                                                                  (1, 20, 'Las opciones son confusas y poco claras', 'Pendiente');
