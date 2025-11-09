@@ -197,77 +197,86 @@ class PartidaModel
         ];
     }
 
-    public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = false)
-    {
-        $preguntaId = (int)$preguntaId;
-        $respuestaId = (int)$respuestaId;
+public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = false)
+{
+    $preguntaId = (int)$preguntaId;
+    $respuestaId = (int)$respuestaId;
 
-        $respuestaCorrecta = $this->getRespuestaCorrecta($preguntaId);
-        $esCorrecta = !empty($respuestaCorrecta) && $respuestaId == $respuestaCorrecta[0]['ID'];
-        
-        if ($tiempoAgotado) {
-            $esCorrecta = false;
-        }
-        
-        $sumarCorrecta = $esCorrecta ? 1 : 0;
-        
-        $this->database->query("
-            UPDATE Pregunta
-            SET Cant_veces_respondida = Cant_veces_respondida + 1,
-                Cant_veces_correcta = Cant_veces_correcta + $sumarCorrecta
-            WHERE ID = $preguntaId
-        ");
+    $respuestaCorrecta = $this->getRespuestaCorrecta($preguntaId);
+    $esCorrecta = !empty($respuestaCorrecta) && $respuestaId == $respuestaCorrecta[0]['ID'];
 
-        $datosPregunta = $this->database->query("
-            SELECT Cant_veces_respondida, Cant_veces_correcta
-            FROM Pregunta
-            WHERE ID = $preguntaId
-        ");
+    if ($tiempoAgotado) {
+        $esCorrecta = false;
+    }
 
-        $cantidadRespondidas = (int)($datosPregunta[0]['Cant_veces_respondida'] ?? 0);
-        $cantidadCorrectas = (int)($datosPregunta[0]['Cant_veces_correcta'] ?? 0);
+    // ✅ Obtener dificultad antes de actualizar contadores
+    $datosPrevios = $this->database->query("
+        SELECT COALESCE(Dificultad, 0.5) AS Dificultad
+        FROM Pregunta
+        WHERE ID = $preguntaId
+    ");
+    $dificultadAnterior = (float)($datosPrevios[0]['Dificultad'] ?? 0.5);
 
-        if ($cantidadRespondidas === 0) {
-            $dificultad = 0.5;
+    $sumarCorrecta = $esCorrecta ? 1 : 0;
+
+    $this->database->query("
+        UPDATE Pregunta
+        SET Cant_veces_respondida = Cant_veces_respondida + 1,
+            Cant_veces_correcta = Cant_veces_correcta + $sumarCorrecta
+        WHERE ID = $preguntaId
+    ");
+
+    $datosPregunta = $this->database->query("
+        SELECT Cant_veces_respondida, Cant_veces_correcta
+        FROM Pregunta
+        WHERE ID = $preguntaId
+    ");
+
+    $cantidadRespondidas = (int)($datosPregunta[0]['Cant_veces_respondida'] ?? 0);
+    $cantidadCorrectas = (int)($datosPregunta[0]['Cant_veces_correcta'] ?? 0);
+
+    if ($cantidadRespondidas === 0) {
+        $dificultad = 0.5;
+        $nivelDificultad = 'Medio';
+    } else {
+        $probabilidadDeAcierto = $cantidadCorrectas / $cantidadRespondidas;
+        $dificultad = 1 - $probabilidadDeAcierto;
+
+        if ($dificultad <= 0.33) {
+            $nivelDificultad = 'Fácil';
+        } elseif ($dificultad <= 0.66) {
             $nivelDificultad = 'Medio';
         } else {
-            $probabilidadDeAcierto = $cantidadCorrectas / $cantidadRespondidas;
-            $dificultad = 1 - $probabilidadDeAcierto;
-
-            if ($dificultad <= 0.33) {
-                $nivelDificultad = 'Fácil';
-            } elseif ($dificultad <= 0.66) {
-                $nivelDificultad = 'Medio';
-            } else {
-                $nivelDificultad = 'Difícil';
-            }
-
-            $this->database->query("
-                UPDATE Pregunta
-                SET Dificultad = $dificultad,
-                    DificultadNivel = '{$nivelDificultad}'
-                WHERE ID = $preguntaId
-            ");
-
-            // Sumar puntos solo si es correcta
-            if ($esCorrecta) {
-                if ($dificultad <= 0.33) {
-                    $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 10;
-                } elseif ($dificultad <= 0.66) {
-                    $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 20;
-                } else {
-                    $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 30;
-                }
-            }
+            $nivelDificultad = 'Difícil';
         }
 
-        return [
-            'esCorrecta' => $esCorrecta,
-            'puntaje' => $_SESSION['puntaje'] ?? 0,
-            'pregunta' => $this->getPreguntaPorId($preguntaId),
-            'partida_terminada' => !$esCorrecta || $tiempoAgotado
-        ];
+        $this->database->query("
+            UPDATE Pregunta
+            SET Dificultad = $dificultad,
+                DificultadNivel = '{$nivelDificultad}'
+            WHERE ID = $preguntaId
+        ");
     }
+
+    // ✅ Sumar puntos usando la dificultad anterior (no la nueva)
+    if ($esCorrecta) {
+        if ($dificultadAnterior <= 0.33) {
+            $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 10;
+        } elseif ($dificultadAnterior <= 0.66) {
+            $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 20;
+        } else {
+            $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 30;
+        }
+    }
+
+    return [
+        'esCorrecta' => $esCorrecta,
+        'puntaje' => $_SESSION['puntaje'] ?? 0,
+        'pregunta' => $this->getPreguntaPorId($preguntaId),
+        'partida_terminada' => !$esCorrecta || $tiempoAgotado
+    ];
+}
+
 
     public function registrarRespuesta($partidaId, $preguntaId, $esCorrecta)
     {

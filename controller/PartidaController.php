@@ -114,7 +114,7 @@ class PartidaController
         if (isset($_SESSION['pregunta_activa'])) {
             $inicio = $_SESSION['pregunta_activa']['inicio'];
             $transcurrido = time() - $inicio;
-            if ($transcurrido > 15) {
+            if ($transcurrido > 18) {
                 $tiempoAgotado = true;
             }
         }
