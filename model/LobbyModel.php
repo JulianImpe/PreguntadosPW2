@@ -13,7 +13,6 @@ class LobbyModel
     {
         $usuarioId = (int)$usuarioId;
 
-        // Obtener datos básicos del usuario
         $usuario = $this->database->query("
             SELECT 
                 u.usuario,
@@ -29,7 +28,6 @@ class LobbyModel
 
         $datos = $usuario[0];
 
-        // Calcular partidas jugadas y ganadas
         $partidas = $this->database->query("
             SELECT 
                 COUNT(DISTINCT p.ID) as partidas_jugadas,
@@ -44,19 +42,16 @@ class LobbyModel
         $datos['partidas_jugadas'] = $partidas[0]['partidas_jugadas'] ?? 0;
         $datos['partidas_ganadas'] = $partidas[0]['partidas_ganadas'] ?? 0;
 
-        // Calcular NIVEL según ratio de aciertos
         $correctas = (int)($partidas[0]['respuestas_correctas'] ?? 0);
         $totales = (int)($partidas[0]['respuestas_totales'] ?? 1);
         
         if ($totales > 0) {
             $ratio = $correctas / $totales;
-            // Convertir ratio a nivel (1-10)
             $datos['nivel'] = max(1, min(10, ceil($ratio * 10)));
         } else {
             $datos['nivel'] = 1;
         }
 
-        // Calcular ranking
         $ranking = $this->database->query("
             SELECT COUNT(*) + 1 as posicion
             FROM usuarios

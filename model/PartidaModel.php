@@ -15,10 +15,6 @@ class PartidaModel
         
         $nivelJugador = $this->obtenerNivelJugador($usuarioId);
         
-        // Definir rango de dificultad según nivel
-        // Nivel bajo (0-0.33): preguntas fáciles (0-0.5)
-        // Nivel medio (0.34-0.66): preguntas medias (0.3-0.7)
-        // Nivel alto (0.67-1): preguntas difíciles (0.5-1)
         if ($nivelJugador <= 0.33) {
             $minDif = 0;
             $maxDif = 0.5;
@@ -126,7 +122,7 @@ class PartidaModel
         ");
         
         if (empty($resultado) || $resultado[0]['respuestas_totales'] == 0) {
-            return 0.5; // Nivel medio por defecto
+            return 0.5; 
         }
         
         $correctas = (int)$resultado[0]['respuestas_correctas'];
@@ -209,7 +205,6 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
         $esCorrecta = false;
     }
 
-    // ✅ Obtener dificultad antes de actualizar contadores
     $datosPrevios = $this->database->query("
         SELECT COALESCE(Dificultad, 0.5) AS Dificultad
         FROM Pregunta
@@ -258,7 +253,6 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
         ");
     }
 
-    // ✅ Sumar puntos usando la dificultad anterior (no la nueva)
     if ($esCorrecta) {
         if ($dificultadAnterior <= 0.33) {
             $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 10;
@@ -324,7 +318,6 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
 
     public function traerPreguntasDificilesRandom($medallaId = null)
     {
-        //guardo el where en una variable
         $where = "p.Estado_ID = 2";
 
         if (!is_null($medallaId)) {
@@ -357,22 +350,6 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
             : ['ok' => false, 'msg' => "Ocurrió un error al enviar el reporte."];
     }
 
-    /*
-    public function actualizarPreguntaCompleta($preguntaId, $texto, $respuestas)
-    {
-        if (!$preguntaId || !$texto || empty($respuestas)) {
-            return ['ok' => false, 'msg' => "Faltan datos para actualizar la pregunta"];
-        }
-
-        $this->actualizarPreguntaTexto($preguntaId, $texto);
-
-        foreach ($respuestas as $r) {
-            $this->actualizarRespuesta($r['id'], $r['texto'], isset($r['es_correcta']) ? 1 : 0);
-        }
-
-        return ['ok' => true, 'msg' => "✅ Pregunta y respuestas actualizadas correctamente"];
-    }
-        */
     public function guardarReporte($preguntaId, $usuarioId, $motivo)
     {
         $preguntaId = (int)$preguntaId;

@@ -95,10 +95,8 @@ class PartidaController
             'inicio' => time()
         ];
 
-        // ESTO ES LO NUEVO 👇
         $data = ["pregunta" => $preguntaRender];
 
-        // Agregar mensajes si existen
         if (isset($_SESSION['exito_reporte'])) {
             $data['exito_reporte'] = $_SESSION['exito_reporte'];
             unset($_SESSION['exito_reporte']);
@@ -115,7 +113,6 @@ class PartidaController
 
         $this->renderer->render("crearPartida", $data);
 
-        // HASTA ACÁ 👆
     }
     public function responder()
     {
@@ -190,8 +187,4 @@ class PartidaController
         header("Location: /editor/lobbyEditor");
         exit;
     }
-
-    // Supongamos que en tu lógica ya tenés algo como:
-
-
 }
