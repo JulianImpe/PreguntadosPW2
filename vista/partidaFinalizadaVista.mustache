@@ -21,12 +21,19 @@
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
+
+        .pokemon-border {
+            border: 4px solid #2c3e50;
+            box-shadow:
+                    inset -4px -4px 0px rgba(0,0,0,0.3),
+                    inset 4px 4px 0px rgba(255,255,255,0.3),
+                    4px 4px 0px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-b from-gray-100 to-gray-300 min-h-screen p-4">
 
 <div class="max-w-2xl mx-auto">
-    <!-- Título según resultado -->
     <div class="my-8 text-center">
         {{#esCorrecta}}
             <div class="inline-block bg-gradient-to-r from-green-500 to-green-600 rounded-xl px-10 py-4 shadow-xl border-4 border-white">
@@ -37,7 +44,6 @@
             <div class="inline-block bg-gradient-to-r from-red-500 to-red-600 rounded-xl px-10 py-4 shadow-xl border-4 border-white">
                 <h1 class="text-white text-2xl font-bold">✗ INCORRECTO</h1>
             </div>
-
         {{/esCorrecta}}
     </div>
 
@@ -63,18 +69,17 @@
         </div>
     </div>
 
-    <!-- Botones de acción según resultado -->
+    <!-- Botones de acción  -->
     <div class="grid grid-cols-2 gap-4 mb-8">
-        <button onclick="window.location.href='/partida/reportar?id={{pregunta.ID}}'" class="bg-white hover:bg-gray-50 text-gray-800 px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-gray-400 btn-pokemon">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 8v4m0 4h.01" stroke-linecap="round"/>
-        </svg>
-        <span class="text-sm">REPORTAR</span>
+        <button onclick="abrirModalReporte()" class="bg-white hover:bg-gray-50 text-gray-800 px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-gray-400 btn-pokemon">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 8v4m0 4h.01" stroke-linecap="round"/>
+            </svg>
+            <span class="text-sm">REPORTAR</span>
         </button>
 
         {{#esCorrecta}}
-            <!-- Si es correcta, continuar jugando -->
             <button onclick="window.location.href='/partida/base'" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-green-700 btn-pokemon">
                 <span class="text-sm">SIGUIENTE</span>
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
@@ -84,7 +89,6 @@
         {{/esCorrecta}}
 
         {{^esCorrecta}}
-            <!-- Si es incorrecta, volver al lobby -->
             <button onclick="window.location.href='/lobby/base'" class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-red-700 btn-pokemon">
                 <span class="text-sm">VOLVER AL LOBBY</span>
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
@@ -94,6 +98,158 @@
         {{/esCorrecta}}
     </div>
 </div>
+
+<!-- Modal de Reporte -->
+<div id="modalReporte" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl pokemon-border max-w-lg w-full p-6 relative animate-scale">
+        <button onclick="cerrarModalReporte()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold leading-none">
+            ×
+        </button>
+
+        <div class="text-center mb-6">
+            <div class="inline-block bg-red-500 rounded-full p-3 mb-3">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v4m0 4h.01" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800">Reportar Pregunta</h2>
+            <p class="text-gray-600 text-sm mt-2">ID: #{{pregunta.ID}}</p>
+        </div>
+
+        <div class="bg-gray-100 rounded-lg p-4 mb-6">
+            <p class="text-gray-700 font-semibold text-sm">{{pregunta.Texto}}</p>
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" action="/partida/enviarReporte" id="formReporte">
+            <input type="hidden" name="pregunta_id" value="{{pregunta.ID}}">
+
+            <div class="mb-6">
+                <label for="motivo" class="block text-gray-700 font-bold mb-2">
+                    Motivo del reporte <span class="text-red-500">*</span>
+                </label>
+                <textarea
+                        id="motivo"
+                        name="motivo"
+                        rows="4"
+                        required
+                        maxlength="500"
+                        placeholder="Describe el problema con esta pregunta..."
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-red-500 focus:outline-none resize-none"
+                ></textarea>
+                <p class="text-gray-500 text-xs mt-1">
+                    <span id="caracteresRestantes">500</span> caracteres restantes
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-gray-700 font-bold mb-2 text-sm">Razones comunes:</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="setMotivo('La respuesta correcta está mal marcada')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg text-xs font-semibold transition-all">
+                        Respuesta incorrecta
+                    </button>
+                    <button type="button" onclick="setMotivo('La pregunta está duplicada')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg text-xs font-semibold transition-all">
+                        Pregunta duplicada
+                    </button>
+                    <button type="button" onclick="setMotivo('Las opciones son confusas')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg text-xs font-semibold transition-all">
+                        Opciones confusas
+                    </button>
+                    <button type="button" onclick="setMotivo('Información desactualizada')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg text-xs font-semibold transition-all">
+                        Info desactualizada
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button type="button" onclick="cerrarModalReporte()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-lg font-bold transition-all pokemon-border">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold transition-all pokemon-border">
+                    Enviar Reporte
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MENSAJES DE ÉXITO / ERROR -->
+{{#exito_reporte}}
+    <div id="mensajeExito" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>{{exito_reporte}}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            document.getElementById('mensajeExito').style.opacity = '0';
+            setTimeout(() => document.getElementById('mensajeExito').remove(), 300);
+        }, 3000);
+    </script>
+{{/exito_reporte}}
+
+{{#error_reporte}}
+    <div id="mensajeError" class="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        <span>{{error_reporte}}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            document.getElementById('mensajeError').style.opacity = '0';
+            setTimeout(() => document.getElementById('mensajeError').remove(), 300);
+        }, 3000);
+    </script>
+{{/error_reporte}}
+<!--escritura en vivo-->
+<script>
+    const motivoTextarea = document.getElementById('motivo');
+    const caracteresRestantes = document.getElementById('caracteresRestantes');
+
+    motivoTextarea.addEventListener('input', function() {
+        const restantes = 500 - this.value.length;
+        caracteresRestantes.textContent = restantes;
+        caracteresRestantes.classList.toggle('text-red-500', restantes < 50);
+        caracteresRestantes.classList.toggle('text-gray-500', restantes >= 50);
+    });
+
+    function abrirModalReporte() {
+        document.getElementById('modalReporte').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModalReporte() {
+        document.getElementById('modalReporte').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        document.getElementById('formReporte').reset();
+        caracteresRestantes.textContent = '500';
+    }
+
+    function setMotivo(texto) {
+        motivoTextarea.value = texto;
+        motivoTextarea.dispatchEvent(new Event('input'));
+        motivoTextarea.focus();
+    }
+
+    document.getElementById('modalReporte').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModalReporte();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') cerrarModalReporte();
+    });
+</script>
+
+<style>
+    @keyframes scale {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    .animate-scale { animation: scale 0.2s ease-out; }
+</style>
 
 </body>
 </html>

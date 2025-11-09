@@ -64,7 +64,4 @@ class LobbyController
         header("Location: /partida/base");
         exit;
     }
-
-
-
 }

@@ -317,4 +317,92 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
 
         return $this->database->lastInsertId();
     }
+
+
+
+
+
+    public function traerPreguntasDificilesRandom($medallaId = null)
+    {
+        //guardo el where en una variable
+        $where = "p.Estado_ID = 2";
+
+        if (!is_null($medallaId)) {
+            $where .= " AND p.Medalla_ID = " . intval($medallaId);
+        }
+
+        $query = "
+        SELECT 
+            p.ID, 
+            p.Texto, 
+            COALESCE(p.Dificultad, 1) AS dificultad_score,
+            p.Medalla_ID
+        FROM Pregunta p
+        WHERE $where
+        ORDER BY (RAND() * 0.4) + (dificultad_score * 0.6) DESC
+        LIMIT 1
+    ";
+
+        return $this->database->query($query);
+    }
+    public function enviarReporte($preguntaId, $usuarioId, $motivo)
+    {
+        if (!$preguntaId || !$usuarioId || empty($motivo)) {
+            return ['ok' => false, 'msg' => "Debes completar el motivo del reporte."];
+        }
+
+        $ok = $this->guardarReporte($preguntaId, $usuarioId, $motivo);
+        return $ok
+            ? ['ok' => true, 'msg' => "Tu reporte fue enviado correctamente. ¡Gracias por colaborar!"]
+            : ['ok' => false, 'msg' => "Ocurrió un error al enviar el reporte."];
+    }
+
+    public function actualizarPreguntaCompleta($preguntaId, $texto, $respuestas)
+    {
+        if (!$preguntaId || !$texto || empty($respuestas)) {
+            return ['ok' => false, 'msg' => "Faltan datos para actualizar la pregunta"];
+        }
+
+        $this->actualizarPreguntaTexto($preguntaId, $texto);
+
+        foreach ($respuestas as $r) {
+            $this->actualizarRespuesta($r['id'], $r['texto'], isset($r['es_correcta']) ? 1 : 0);
+        }
+
+        return ['ok' => true, 'msg' => "✅ Pregunta y respuestas actualizadas correctamente"];
+    }
+    public function guardarReporte($preguntaId, $usuarioId, $motivo)
+    {
+        $preguntaId = (int)$preguntaId;
+        $usuarioId = (int)$usuarioId;
+
+        $conexion = $this->database->getConexion();
+        $motivo = $conexion->real_escape_string($motivo);
+
+        $conexion->query("
+        INSERT INTO Reporte (Pregunta_ID, Usuario_ID, Motivo, Estado, Fecha_reporte)
+        VALUES ($preguntaId, $usuarioId, '$motivo', 'Pendiente', NOW())
+    ");
+
+        $conexion->query("
+        UPDATE Pregunta
+        SET Estado_ID = 1
+        WHERE ID = $preguntaId
+    ");
+
+        return true;
+    }
+
+
+    public function getMedallaDeLaPregunta($preguntaId) {
+        $preguntaId = (int)$preguntaId;
+        $query = "
+        SELECT m.ID as id, m.Nombre as nombre, m.Imagen_url as imagen_url
+        FROM Medallas m
+        INNER JOIN Pregunta p On p.Medalla_ID = m.ID
+        WHERE p.ID = $preguntaId
+        LIMIT 1";
+        $result = $this->database->query($query);
+        return $result ? $result[0] : null;
+    }
 }

@@ -76,6 +76,8 @@ CREATE TABLE usuarios (
                           FOREIGN KEY (Mapa_ID) REFERENCES Mapa(ID) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+
+
 -- ==============================
 -- PARTIDAS
 -- ==============================
@@ -186,14 +188,14 @@ CREATE TABLE Usuario_pregunta_vista (
 -- ==============================
 
 INSERT INTO Medallas (Nombre, Color, Imagen_url) VALUES
-                                                     ('Medalla Roca', '#8B7355', 'boulder_badge.png'),       -- Brock
-                                                     ('Medalla Cascada', '#4DA6FF', 'cascade_badge.png'),    -- Misty
-                                                     ('Medalla Trueno', '#FFD700', 'thunder_badge.png'),     -- Lt. Surge
-                                                     ('Medalla Arcoíris', '#FF80FF', 'rainbow_badge.png'),   -- Erika
-                                                     ('Medalla Alma', '#9400D3', 'soul_badge.png'),          -- Koga
-                                                     ('Medalla Pantano', '#00FF7F', 'marsh_badge.png'),      -- Sabrina
-                                                     ('Medalla Volcán', '#FF4500', 'volcano_badge.png'),     -- Blaine
-                                                     ('Medalla Tierra', '#654321', 'earth_badge.png');        -- Giovanni
+                                                     ('Medalla Roca', '#8B7355', 'img/categorias/Roca.png'),       -- Brock
+                                                     ('Medalla Cascada', '#4DA6FF', 'img/categorias/Cascada.png'),    -- Misty
+                                                     ('Medalla Trueno', '#FFD700', 'img/categorias/Electrico.png'),     -- Lt. Surge
+                                                     ('Medalla Arcoíris', '#FF80FF', 'img/categorias/Arcoiris.png'),   -- Erika
+                                                     ('Medalla Alma', '#9400D3', 'img/categorias/Alma.png'),          -- Koga
+                                                     ('Medalla Pantano', '#00FF7F', 'img/categorias/Psiquico.png'),      -- Sabrina
+                                                     ('Medalla Volcán', '#FF4500', 'img/categorias/Volcan.png'),     -- Blaine
+                                                     ('Medalla Tierra', '#654321', 'img/categorias/Tierra.png');        -- Giovanni
 
 -- ==============================
 -- PREGUNTAS Y RESPUESTAS
@@ -490,3 +492,33 @@ SET Dificultad = ROUND(1 - ((Cant_veces_correcta + 1) / (GREATEST(Cant_veces_res
             WHEN (1 - ((Cant_veces_correcta + 1) / (Cant_veces_respondida + 2))) <= 0.66 THEN 'Medio'
             ELSE 'Difícil'
             END;
+
+
+CREATE TABLE Pregunta_sugerida (
+                                   ID INT AUTO_INCREMENT PRIMARY KEY,
+                                   Texto TEXT NOT NULL,
+                                   Medalla_ID INT NOT NULL,
+                                   Sugerida_por_usuario_ID INT NOT NULL,
+                                   Fecha_sugerencia DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                   Estado ENUM('Pendiente', 'Aprobada', 'Rechazada') DEFAULT 'Pendiente',
+                                   Revisada_por INT NULL,
+                                   Fecha_revision DATETIME NULL,
+                                   Motivo_rechazo TEXT NULL,
+                                   FOREIGN KEY (Medalla_ID) REFERENCES Medallas(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (Sugerida_por_usuario_ID) REFERENCES usuarios(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (Revisada_por) REFERENCES usuarios(ID) ON DELETE SET NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Tabla para respuestas de preguntas sugeridas
+CREATE TABLE Respuesta_sugerida (
+                                    ID INT AUTO_INCREMENT PRIMARY KEY,
+                                    Pregunta_sugerida_ID INT NOT NULL,
+                                    Texto VARCHAR(255) NOT NULL,
+                                    Es_Correcta BOOLEAN NOT NULL DEFAULT FALSE,
+                                    FOREIGN KEY (Pregunta_sugerida_ID) REFERENCES Pregunta_sugerida(ID) ON DELETE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Modificar tabla Reporte para agregar más información
+ALTER TABLE Reporte
+    ADD COLUMN Estado ENUM('Pendiente', 'En_revision', 'Resuelto', 'Rechazado') DEFAULT 'Pendiente' AFTER Motivo,
+ADD COLUMN Fecha_resolucion DATETIME NULL AFTER Estado;

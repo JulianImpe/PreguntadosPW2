@@ -31,7 +31,10 @@ class MyConexion
     {
         return $this->conexion->insert_id;
     }
-
+    public function getConexion()
+    {
+        return $this->conexion;
+    }
 
 
 }
