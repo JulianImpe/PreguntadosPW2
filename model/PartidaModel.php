@@ -357,6 +357,7 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
             : ['ok' => false, 'msg' => "Ocurrió un error al enviar el reporte."];
     }
 
+    /*
     public function actualizarPreguntaCompleta($preguntaId, $texto, $respuestas)
     {
         if (!$preguntaId || !$texto || empty($respuestas)) {
@@ -371,6 +372,7 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
 
         return ['ok' => true, 'msg' => "✅ Pregunta y respuestas actualizadas correctamente"];
     }
+        */
     public function guardarReporte($preguntaId, $usuarioId, $motivo)
     {
         $preguntaId = (int)$preguntaId;
@@ -405,4 +407,6 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
         $result = $this->database->query($query);
         return $result ? $result[0] : null;
     }
+
+    
 }

@@ -75,7 +75,7 @@ class PartidaController
             return;
         }
 
-        $preguntaRender = $this->model->getPreguntaRender();
+        $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id']);
         $medallas = $this->model->getMedallaDeLaPregunta($preguntaRender['id']);
 
         $clase = 'bg-gray-200 text-gray-800 border-gray-300';
@@ -190,5 +190,8 @@ class PartidaController
         header("Location: /editor/lobbyEditor");
         exit;
     }
+
+    // Supongamos que en tu lógica ya tenés algo como:
+
 
 }

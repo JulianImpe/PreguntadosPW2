@@ -29,7 +29,7 @@ class EditorModel
     {
         $resultado = $this->conexion->query("
             SELECT ps.ID as id, ps.Texto as texto, m.Nombre as medalla_nombre,
-                   u.usuario as sugerida_por
+            u.usuario as sugerida_por
             FROM Pregunta_sugerida ps
             JOIN Medallas m ON ps.Medalla_ID = m.ID
             JOIN usuarios u ON ps.Sugerida_por_usuario_ID = u.ID
