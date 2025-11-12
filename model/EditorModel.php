@@ -1,32 +1,24 @@
 <?php
 
-class EditorModel
-{
+class EditorModel{
     private $conexion;
-
-    public function __construct($conexion)
-    {
+    public function __construct($conexion){
         $this->conexion = $conexion;
     }
 
-    public function obtenerDatosUsuario($usuarioId)
-    {
+    public function obtenerDatosUsuario($usuarioId){
         $usuarioId = (int)$usuarioId;
         $result = $this->conexion->query("
             SELECT ID, usuario, foto_perfil, nombre_completo, email, fecha_nac
             FROM usuarios WHERE ID = $usuarioId LIMIT 1
         ");
-
         if (!empty($result)) {
             $result[0]['usuario_id'] = $result[0]['ID'];
             return $result[0];
         }
         return [];
     }
-
-    //solo muestra 3 en la pantalla priicpal, se puede quitar pero queda menos estetico--
-    public function obtenerPreguntasSugeridas($limite = 3)
-    {
+    public function obtenerPreguntasSugeridas($limite = 3){
         $resultado = $this->conexion->query("
             SELECT ps.ID as id, ps.Texto as texto, m.Nombre as medalla_nombre,
             u.usuario as sugerida_por
@@ -41,8 +33,7 @@ class EditorModel
         return $this->formatearPreguntas($resultado, 'sugerida');
     }
 
-    public function obtenerPreguntasReportadas($limite = 3)
-    {
+    public function obtenerPreguntasReportadas($limite = 3){
         $resultado = $this->conexion->query("
             SELECT p.ID as id, p.Texto as texto, m.Nombre as medalla_nombre,
                    COUNT(r.ID) as cantidad_reportes,
@@ -59,13 +50,11 @@ class EditorModel
         return $this->formatearPreguntas($resultado, 'reportada');
     }
 
-    public function obtenerTodasLasPreguntasReportadas()
-    {
+    public function obtenerTodasLasPreguntasReportadas(){
         return $this->obtenerPreguntasReportadas(999999);
     }
 
-    public function obtenerEstadisticasEditor($editorId)
-    {
+    public function obtenerEstadisticasEditor($editorId){
         $editorId = (int)$editorId;
         $resultado = $this->conexion->query("
             SELECT COUNT(CASE WHEN Estado = 'Aprobada' THEN 1 END) as aprobadas,
@@ -77,19 +66,14 @@ class EditorModel
         return $resultado[0] ?? ['aprobadas' => 0, 'rechazadas' => 0, 'editadas' => 0, 'total' => 0];
     }
 
-    public function aprobarPreguntaSugerida($preguntaId, $editorId)
-    {
+    public function aprobarPreguntaSugerida($preguntaId, $editorId){
         $preguntaId = (int)$preguntaId;
         $editorId = (int)$editorId;
-
-
         $result = $this->conexion->query("SELECT * FROM Pregunta_sugerida WHERE ID = $preguntaId");
         $sugerida = !empty($result) ? $result[0] : null;
-
         if (!$sugerida) {
             return false;
         }
-
 
         $texto = $this->conexion->getConexion()->real_escape_string($sugerida['Texto']);
         $medallaId = (int)$sugerida['Medalla_ID'];
@@ -102,13 +86,10 @@ class EditorModel
         $this->conexion->query($sqlInsertPregunta);
         $nuevaPreguntaId = $this->conexion->lastInsertId();
 
-
         $respuestas = $this->conexion->query("SELECT * FROM Respuesta_sugerida WHERE Pregunta_sugerida_ID = $preguntaId");
-
         foreach ($respuestas as $resp) {
             $textoResp = $this->conexion->getConexion()->real_escape_string($resp['Texto']);
             $esCorrecta = $resp['Es_Correcta'] ? 1 : 0;
-
             $this->conexion->query("
             INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta)
             VALUES ($nuevaPreguntaId, '$textoResp', $esCorrecta)
@@ -116,24 +97,16 @@ class EditorModel
         }
         return $this->actualizarEstadoSugerida($preguntaId, $editorId, 'Aprobada');
     }
-
-    public function rechazarPreguntaSugerida($preguntaId, $editorId)
-    {
+    public function rechazarPreguntaSugerida($preguntaId, $editorId){
         return $this->actualizarEstadoSugerida($preguntaId, $editorId, 'Rechazada');
     }
-
-    public function aprobarPreguntaReportada($preguntaId, $editorId)
-    {
+    public function aprobarPreguntaReportada($preguntaId, $editorId){
         return $this->resolverReporte($preguntaId, $editorId, 2, 'Aprobada por editor');
     }
-
-    public function eliminarPreguntaReportada($preguntaId, $editorId)
-    {
+    public function eliminarPreguntaReportada($preguntaId, $editorId){
         return $this->resolverReporte($preguntaId, $editorId, 3, 'Eliminada por editor');
     }
-
-    public function actualizarPreguntaCompleta($preguntaId, $textoPregunta, $respuestas)
-    {
+    public function actualizarPreguntaCompleta($preguntaId, $textoPregunta, $respuestas){
         $preguntaId = (int)$preguntaId;
         $conn = $this->conexion->getConexion();
         $textoEscapado = $conn->real_escape_string($textoPregunta);
@@ -150,15 +123,12 @@ class EditorModel
                 WHERE ID = $respuestaId
             ");
         }
-
         if (isset($_SESSION['usuario_id'])) {
             $this->resolverReporte($preguntaId, (int)$_SESSION['usuario_id'], 2, 'Editada y aprobada por editor');
         }
-
         return true;
     }
-    private function formatearPreguntas($resultado, $tipo)
-    {
+    private function formatearPreguntas($resultado, $tipo){
         $preguntas = [];
         foreach ($resultado as $row) {
             $respuestas = $tipo === 'sugerida'
@@ -187,18 +157,15 @@ class EditorModel
         return $preguntas;
     }
 
-    private function obtenerRespuestasSugeridas($preguntaId)
-    {
+    private function obtenerRespuestasSugeridas($preguntaId){
         return $this->obtenerRespuestas($preguntaId, 'Respuesta_sugerida', 'Pregunta_sugerida_ID');
     }
 
-    private function obtenerRespuestasPregunta($preguntaId)
-    {
+    private function obtenerRespuestasPregunta($preguntaId){
         return $this->obtenerRespuestas($preguntaId, 'Respuesta', 'Pregunta_ID');
     }
 
-    private function obtenerRespuestas($preguntaId, $tabla, $campo)
-    {
+    private function obtenerRespuestas($preguntaId, $tabla, $campo){
         $preguntaId = (int)$preguntaId;
         $resultado = $this->conexion->query("
             SELECT ID, Texto as texto, Es_Correcta as es_correcta
@@ -217,8 +184,7 @@ class EditorModel
         return $respuestas;
     }
 
-    private function actualizarEstadoSugerida($preguntaId, $editorId, $estado)
-    {
+    private function actualizarEstadoSugerida($preguntaId, $editorId, $estado){
         $preguntaId = (int)$preguntaId;
         $editorId = (int)$editorId;
 
@@ -234,9 +200,7 @@ class EditorModel
         $preguntaId = (int)$preguntaId;
         $editorId = (int)$editorId;
         $estadoId = (int)$estadoId;
-
         $this->conexion->query("UPDATE Pregunta SET Estado_ID = $estadoId WHERE ID = $preguntaId");
-
         $this->conexion->query("
             UPDATE Reporte 
             SET Estado = 'Resuelto', Revisado = 1, Revisado_por = $editorId,
@@ -246,9 +210,7 @@ class EditorModel
 
         return true;
     }
-
-    private function getMedallaClase($nombre)
-    {
+    private function getMedallaClase($nombre){
         $clases = [
             'Medalla Roca' => 'roca', 'Medalla Cascada' => 'cascada',
             'Medalla Trueno' => 'trueno', 'Medalla Arcoíris' => 'arcoiris',
@@ -258,8 +220,7 @@ class EditorModel
         return $clases[$nombre] ?? 'roca';
     }
 //cambiarlo por las fotos q tnemos descargadas
-    private function getMedallaEmoji($nombre)
-    {
+    private function getMedallaEmoji($nombre){
         $emojis = [
             'Medalla Roca' => '🪨', 'Medalla Cascada' => '💧',
             'Medalla Trueno' => '⚡', 'Medalla Arcoíris' => '🌈',
