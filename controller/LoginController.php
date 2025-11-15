@@ -21,18 +21,6 @@ class LoginController
         $this->renderer->render("login");
     }
 
-   /* public function login()
-    {
-        $resultado = $this->model->getUserWith($_POST["usuario"], $_POST["password"]);
-
-        if (sizeof($resultado) > 0) {
-            $_SESSION["usuario"] = $_POST["usuario"];
-            $this->redirectToIndex();
-        } else {
-            $this->renderer->render("login", ["error" => "Usuario o clave incorrecta"]);
-        }
-    }*/
-
     public function login()
     {
         $usuario = trim($_POST["usuario"] ?? '');
@@ -50,8 +38,7 @@ class LoginController
 
             $_SESSION["usuario_id"] = $resultado[0]['ID'];
             $_SESSION["usuario"] = $resultado[0]['usuario'];
-
-
+            $_SESSION["rol"] = $resultado[0]['rol'];
 
 
             $this->redirectToIndex();
@@ -72,11 +59,23 @@ class LoginController
         $this->model->registrarUsuario($_POST["usuario"], $_POST["password"]);
         $this->redirectToIndex();
     }
-    public function redirectToIndex()
-    {
-        header("Location: /lobby/base");
+public function redirectToIndex()
+{
+    if ($_SESSION["rol"] === "admin") {
+        header("Location: /admin/dashboard");
         exit;
     }
+
+    if ($_SESSION["rol"] === "editor") {
+        header("Location: /editor/lobbyEditor");
+        exit;
+    }
+
+    // Si es jugador común
+    header("Location: /lobby/base");
+    exit;
+}
+
 
 
 

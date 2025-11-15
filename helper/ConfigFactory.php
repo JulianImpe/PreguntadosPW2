@@ -20,7 +20,8 @@ include_once("controller/EditorController.php");
 include_once("model/EditorModel.php");
 include_once("controller/SugerenciaController.php");
 include_once("model/SugerenciaModel.php");
-
+include_once("controller/AdminController.php");
+include_once("model/AdminModel.php");
 
 
 
@@ -68,7 +69,7 @@ class ConfigFactory
 
         $this->objetos["SugerenciaController"] = new SugerenciaController(new SugerenciaModel($this->conexion), $this->renderer);
 
-
+        $this->objetos["AdminController"] = new AdminController(new AdminModel($this->conexion), $this->renderer);
     }
 
     public function get($objectName)

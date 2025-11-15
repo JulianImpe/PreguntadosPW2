@@ -17,14 +17,13 @@ class NewRouter
     {
         $controllerName = strtolower($controllerParam ?? '');
 
+        // CASO 1: Si ya hay sesión y entran a login/registro → redirigir según rol
         switch ($controllerName) {
             case 'login':
             case 'registrarse':
-                case 'homevista':
-                // Si ya está logueado → no tiene sentido ver login o registrarse
+            case 'homevista':
                 if (isset($_SESSION['usuario_id'])) {
-                    header("Location: /lobby/base");
-                    exit;
+                    $this->redirectByRole();
                 }
                 break;
 
@@ -33,8 +32,43 @@ class NewRouter
                 header("Location: /homeVista");
                 exit;
 
+            // CASO 2: Rutas protegidas por rol
+            case 'admin':
+                if (!isset($_SESSION['usuario_id']) || $_SESSION["rol"] !== "admin") {
+                    header("Location: /login/loginForm");
+                    exit;
+                }
+                break;
+
+            case 'editor':
+                if (!isset($_SESSION['usuario_id']) || $_SESSION["rol"] !== "editor") {
+                    header("Location: /login/loginForm");
+                    exit;
+                }
+                break;
+
+            // CASO 3: Rutas de jugadores (lobby, partida, perfil, ranking)
+            case 'lobby':
+            case 'partida':
+            case 'perfil':
+            case 'ranking':
+                if (!isset($_SESSION['usuario_id'])) {
+                    header("Location: /login/loginForm");
+                    exit;
+                }
+                // Si es admin o editor, redirigir a su dashboard
+                if ($_SESSION["rol"] === "admin") {
+                    header("Location: /admin/dashboard");
+                    exit;
+                }
+                if ($_SESSION["rol"] === "editor") {
+                    header("Location: /editor/lobbyEditor");
+                    exit;
+                }
+                break;
+
             default:
-                // Si intenta entrar a cualquier otro controlador sin sesión → al login
+                // Cualquier otra ruta requiere sesión
                 if (!isset($_SESSION['usuario_id'])) {
                     header("Location: /login/loginForm");
                     exit;
@@ -44,6 +78,23 @@ class NewRouter
 
         $controller = $this->getControllerFrom($controllerParam);
         $this->executeMethodFromController($controller, $methodParam);
+    }
+
+    private function redirectByRole()
+    {
+        if ($_SESSION["rol"] === "admin") {
+            header("Location: /admin/dashboard");
+            exit;
+        }
+
+        if ($_SESSION["rol"] === "editor") {
+            header("Location: /editor/lobbyEditor");
+            exit;
+        }
+
+        // Jugador común
+        header("Location: /lobby/base");
+        exit;
     }
 
     private function getControllerFrom($controllerName)

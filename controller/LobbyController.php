@@ -19,10 +19,10 @@ class LobbyController
 
     public function index()
     {
-        if (!isset($_SESSION["usuario_id"])) {
-            header("Location:login/loginForm");
-            exit;
-        }
+       // if (!isset($_SESSION["usuario_id"])) {
+         //   header("Location:login/loginForm");
+           // exit;
+        //}
 
         $usuario = $_SESSION["usuario_id"];
         $datosUsuario = $this->model->obtenerDatosUsuario($usuario);

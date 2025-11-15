@@ -10,25 +10,33 @@ class LoginModel
         $this->conexion = $conexion;
     }
 
-    public function getUserWith($usuario, $password)
-    {
-        if (empty($usuario) || empty($password)) {
-            return [];
-        }
-
-        $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario' LIMIT 1";
-        $result = $this->conexion->query($sql);
-
-
-        if (!empty($result)) {
-            $user = $result[0];
-            if ($user['password'] === $password) {
-                return [$user];
-            }
-        }
-
+ public function getUserWith($usuario, $password)
+{
+    if (empty($usuario) || empty($password)) {
         return [];
     }
+
+    $sql = "
+        SELECT u.*, r.nombre AS rol
+        FROM usuarios u
+        INNER JOIN Rol r ON r.ID = u.Rol_ID
+        WHERE u.usuario = '$usuario'
+        LIMIT 1
+    ";
+
+    $result = $this->conexion->query($sql);
+
+    if (!empty($result)) {
+        $user = $result[0];
+
+        if ($user['password'] === $password) {
+            return [$user];
+        }
+    }
+
+    return [];
+}
+
 
 
 }

@@ -15,6 +15,14 @@ class PartidaController
         }
     }
 
+    private function soloJugadores()
+{
+    if ($_SESSION["rol"] === "admin") {
+        header("Location: /admin/dashboard");
+        exit;
+    }
+}
+
     public function base()
     {
         if (!isset($_SESSION['usuario_id'])) {
@@ -29,7 +37,9 @@ class PartidaController
     }
 
     function mostrarPartida()
+    
     {
+        $this->soloJugadores();
         if (isset($_SESSION['pregunta_activa'])) {
             $inicio = $_SESSION['pregunta_activa']['inicio'];
             $duracion = 15;
