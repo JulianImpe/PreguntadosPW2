@@ -38,7 +38,6 @@ class LobbyController
             ];
         }
 
-//llamo la foto del usuario
         if (!empty($datosUsuario['foto_perfil'])) {
             $datosUsuario['foto_perfil'] = '/public/img/' . basename($datosUsuario['foto_perfil']);
             $datosUsuario['tiene_foto'] = true;
@@ -65,7 +64,4 @@ class LobbyController
         header("Location: /partida/base");
         exit;
     }
-
-
-
 }

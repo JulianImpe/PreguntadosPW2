@@ -138,15 +138,10 @@ class PerfilModel
     }
 
 
-    //generador de qr de google use
     public function obtenerUrlQR($usuarioId)
     {
         if (!$usuarioId) return null;
-
-        // URL exacta de tu perfil compartido
         $urlPerfil = "http://localhost/perfil/perfilCompartidoVista?id={$usuarioId}";
-
-        // URL del QR generado por Google
         return "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" . urlencode($urlPerfil) . "&choe=UTF-8";
     }
 }

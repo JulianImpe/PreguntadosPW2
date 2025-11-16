@@ -1,0 +1,104 @@
+
+<div class="min-h-screen bg-[url('/public/img/pika-pregunta.png')] bg-cover bg-center flex items-center justify-center p-5">
+
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl relative overflow-hidden">
+
+        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
+
+        <div class="p-10">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-red-700 uppercase tracking-wider mb-2"
+                    style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+                    Sugerir Pregunta
+                </h1>
+                <p class="text-gray-600 text-sm">Completá los campos para proponer una nueva pregunta</p>
+            </div>
+
+            {{#error}}
+                <div class="bg-red-50 border-l-4 border-red-700 text-red-800 p-3 rounded mb-5 text-sm">
+                    {{error}}
+                </div>
+            {{/error}}
+
+            {{#exito}}
+                <div class="bg-green-50 border-l-4 border-green-600 text-green-800 p-3 rounded mb-5 text-sm">
+                    {{exito}}
+                </div>
+            {{/exito}}
+
+            <form method="POST" action="/sugerencia/guardar" id="sugerirForm" class="space-y-6">
+
+                <div>
+                    <label for="texto" class="block text-gray-800 font-semibold mb-2 text-sm">
+                        Pregunta
+                    </label>
+                    <textarea
+                            id="texto"
+                            name="texto"
+                            placeholder="Ej: ¿Cuál es la última evolución de Staryu?"
+                            rows="3"
+                            required
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base resize-none transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-gray-800 font-semibold mb-2 text-sm">Respuestas</label>
+                    <div class="space-y-2">
+                        <input type="text" name="respuestas[]" placeholder="Opción 1"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700">
+
+                        <input type="text" name="respuestas[]" placeholder="Opción 2"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700">
+
+                        <input type="text" name="respuestas[]" placeholder="Opción 3"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700">
+
+                        <input type="text" name="respuestas[]" placeholder="Opción 4"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="correcta" class="block text-gray-800 font-semibold mb-2 text-sm">
+                            Respuesta correcta
+                        </label>
+                        <select name="correcta" id="correcta"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700">
+                            <option value="0">Opción 1</option>
+                            <option value="1">Opción 2</option>
+                            <option value="2">Opción 3</option>
+                            <option value="3">Opción 4</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="medallaId" class="block text-gray-800 font-semibold mb-2 text-sm">
+                            Medalla asociada
+                        </label>
+                        <select name="medallaId" id="medallaId" required
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700">
+                            {{#medallas}}
+                                <option value="{{ID}}">{{Nombre}}</option>
+                            {{/medallas}}
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="w-full py-3 px-6 bg-green-600 text-white font-bold uppercase tracking-wide text-lg border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150 mt-4">
+                    Enviar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('sugerirForm').addEventListener('submit', function (e) {
+            const btn = this.querySelector('button[type="submit"]');
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+            btn.innerHTML = 'Enviando... <span class="inline-block animate-spin ml-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 1 10 10h-2a8 8 0 0 0-8-8z"/></svg></span>';
+        });
+    </script>
+</div>

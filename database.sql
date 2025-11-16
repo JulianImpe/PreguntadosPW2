@@ -76,6 +76,8 @@ CREATE TABLE usuarios (
                           FOREIGN KEY (Mapa_ID) REFERENCES Mapa(ID) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+
+
 -- ==============================
 -- PARTIDAS
 -- ==============================
@@ -490,3 +492,33 @@ SET Dificultad = ROUND(1 - ((Cant_veces_correcta + 1) / (GREATEST(Cant_veces_res
             WHEN (1 - ((Cant_veces_correcta + 1) / (Cant_veces_respondida + 2))) <= 0.66 THEN 'Medio'
             ELSE 'Difícil'
             END;
+
+
+CREATE TABLE Pregunta_sugerida (
+                                   ID INT AUTO_INCREMENT PRIMARY KEY,
+                                   Texto TEXT NOT NULL,
+                                   Medalla_ID INT NOT NULL,
+                                   Sugerida_por_usuario_ID INT NOT NULL,
+                                   Fecha_sugerencia DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                   Estado ENUM('Pendiente', 'Aprobada', 'Rechazada') DEFAULT 'Pendiente',
+                                   Revisada_por INT NULL,
+                                   Fecha_revision DATETIME NULL,
+                                   Motivo_rechazo TEXT NULL,
+                                   FOREIGN KEY (Medalla_ID) REFERENCES Medallas(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (Sugerida_por_usuario_ID) REFERENCES usuarios(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (Revisada_por) REFERENCES usuarios(ID) ON DELETE SET NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Tabla para respuestas de preguntas sugeridas
+CREATE TABLE Respuesta_sugerida (
+                                    ID INT AUTO_INCREMENT PRIMARY KEY,
+                                    Pregunta_sugerida_ID INT NOT NULL,
+                                    Texto VARCHAR(255) NOT NULL,
+                                    Es_Correcta BOOLEAN NOT NULL DEFAULT FALSE,
+                                    FOREIGN KEY (Pregunta_sugerida_ID) REFERENCES Pregunta_sugerida(ID) ON DELETE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Modificar tabla Reporte para agregar más información
+ALTER TABLE Reporte
+    ADD COLUMN Estado ENUM('Pendiente', 'En_revision', 'Resuelto', 'Rechazado') DEFAULT 'Pendiente' AFTER Motivo,
+ADD COLUMN Fecha_resolucion DATETIME NULL AFTER Estado;

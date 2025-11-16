@@ -17,13 +17,10 @@ class PartidaController
 
     public function base()
     {
-
         if (!isset($_SESSION['usuario_id'])) {
             header("Location: /login/loginForm");
             exit;
         }
-
-
 
         $partidaId = $this->model->crearPartida($_SESSION['usuario_id']);
         $_SESSION['partida_id'] = $partidaId;
@@ -33,45 +30,54 @@ class PartidaController
 
     function mostrarPartida()
     {
-
         if (isset($_SESSION['pregunta_activa'])) {
             $inicio = $_SESSION['pregunta_activa']['inicio'];
-            $duracion = 15; // segundos de limite
+            $duracion = 15;
+            $duracion = 15;
             $transcurrido = time() - $inicio;
 
             if ($transcurrido > $duracion) {
-
+                $preguntaId = $_SESSION['pregunta_activa']['id'];
+                $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaId, 0);
+                
+                $respuestaCorrecta = $this->model->getRespuestaCorrecta($preguntaId);
+                $respuestaCorrectaId = $respuestaCorrecta[0]['ID'] ?? 0;
+                
+                $data = $this->model->procesarRespuesta($preguntaId, $respuestaCorrectaId, true);
+                
+                $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje']);
+                unset($_SESSION['puntaje']);
+                unset($_SESSION['partida_id']);
+                unset($_SESSION['pregunta_activa']);
+                
                 $this->renderer->render('partidaFinalizada', [
                     'esCorrecta' => false,
                     'mensaje' => '¡Tiempo agotado!',
-                    'puntaje' => $_SESSION['puntaje'],
+                    'puntaje' => 0,
                     'pregunta' => null,
                     'partida_terminada' => true
                 ]);
-
-                unset($_SESSION['pregunta_activa']); // limpiar estado
+                unset($_SESSION['pregunta_activa']);
                 return;
             }
         }
 
+        $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id']);
 
-        if (isset($_SESSION['pregunta_activa'])) {
+        if (!$preguntaRender) {
             $this->renderer->render('partidaFinalizada', [
                 'esCorrecta' => false,
-                'mensaje' => 'Trampa detectada o recarga de página',
-                'puntaje' => $_SESSION['puntaje'],
+                'mensaje' => 'No hay preguntas disponibles',
+                'puntaje' => $_SESSION['puntaje'] ?? 0,
                 'pregunta' => null,
                 'partida_terminada' => true
             ]);
-            unset($_SESSION['pregunta_activa']);
             return;
         }
 
-
-        $preguntaRender = $this->model->getPreguntaRender();
+        $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id']);
         $medallas = $this->model->getMedallaDeLaPregunta($preguntaRender['id']);
 
-        // estilos para dificultad
         $clase = 'bg-gray-200 text-gray-800 border-gray-300';
         $nivel = $preguntaRender['nivel_dificultad'] ?? null;
         if ($nivel === 'Fácil') {
@@ -82,23 +88,32 @@ class PartidaController
             $clase = 'bg-red-100 text-red-800 border-red-300';
         }
 
-        if ($preguntaRender) {
-            $preguntaRender['dificultad_clase'] = $clase;
-        }
+        $preguntaRender['dificultad_clase'] = $clase;
 
         $_SESSION['pregunta_activa'] = [
             'id' => $preguntaRender['id'],
             'inicio' => time()
         ];
 
+        $data = ["pregunta" => $preguntaRender];
 
-        $this->renderer->render("crearPartida", [
-            "pregunta" => $preguntaRender,
-            "medallas" => [$medallas]
+        if (isset($_SESSION['exito_reporte'])) {
+            $data['exito_reporte'] = $_SESSION['exito_reporte'];
+            unset($_SESSION['exito_reporte']);
+        }
+
+        if (isset($_SESSION['error_reporte'])) {
+            $data['error_reporte'] = $_SESSION['error_reporte'];
+            unset($_SESSION['error_reporte']);
+        }
+
+        $data = array_merge($data, [
+            "medallas" => $medallas
         ]);
+
+        $this->renderer->render("crearPartida", $data);
+
     }
-
-
     public function responder()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -114,10 +129,20 @@ class PartidaController
             exit;
         }
 
+        $tiempoAgotado = false;
+        if (isset($_SESSION['pregunta_activa'])) {
+            $inicio = $_SESSION['pregunta_activa']['inicio'];
+            $transcurrido = time() - $inicio;
+            if ($transcurrido > 18) {
+                $tiempoAgotado = true;
+            }
+        }
+
         unset($_SESSION['pregunta_activa']);
 
 
-        $data = $this->model->procesarRespuesta($preguntaId, $respuestaId);
+        $data = $this->model->procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado);
+        $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaId, $data['esCorrecta'] ? 1 : 0);
 
         if (isset($data['partida_terminada']) && $data['partida_terminada'] === true) {
             $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje']);
@@ -126,5 +151,40 @@ class PartidaController
         }
 
         $this->renderer->render('partidaFinalizada', $data);
+    }
+    public function enviarReporte()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /lobby/base');
+            exit;
+        }
+
+        $resultado = $this->model->enviarReporte(
+            $_POST['pregunta_id'] ?? null,
+            $_SESSION['usuario_id'] ?? null,
+            trim($_POST['motivo'] ?? '')
+        );
+
+        $_SESSION[$resultado['ok'] ? 'exito_reporte' : 'error_reporte'] = $resultado['msg'];
+        header('Location: /partida/base');
+        exit;
+    }
+
+    public function actualizarPreguntaCompleta()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /editor/lobbyEditor");
+            exit;
+        }
+
+        $resultado = $this->model->actualizarPreguntaCompleta(
+            $_POST['pregunta_id'] ?? null,
+            $_POST['texto'] ?? '',
+            $_POST['respuestas'] ?? []
+        );
+
+        $_SESSION[$resultado['ok'] ? 'mensaje' : 'error'] = $resultado['msg'];
+        header("Location: /editor/lobbyEditor");
+        exit;
     }
 }

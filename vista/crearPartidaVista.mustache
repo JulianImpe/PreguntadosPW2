@@ -6,6 +6,61 @@
     <title>Pokémon Trivia - Partida</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/public/js/temporizador.js"></script>
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    backgroundImage: {
+                        'custom-gradient': 'linear-gradient(to bottom, var(--tw-gradient-from), var(--tw-gradient-to))',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .background-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Tamaño recomendado para la imagen: 1920x1080px */
+            max-width: 1920px;
+            max-height: 1080px;
+        }
+
+        .btn-pokemon {
+            transition: all 0.3s ease;
+        }
+        .btn-pokemon:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+
+    <style>
+        /* Estilos existentes */
+        .btn-pokemon {
+            transition: all 0.3s ease;
+        }
+        .btn-pokemon:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Agregar estilo de fondo como respaldo */
+        body {
+            background-image: url('/public/img/vsMisty.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
 
     <style>
         .btn-pokemon {
@@ -16,9 +71,11 @@
         }
     </style>
 </head>
+    <div class="background-container">
 
-<body class="bg-gradient-to-b from-gray-100 to-gray-300 min-h-screen p-4">
 
+<body class="bg-gradient-to-b from-red-100 to-red-300 min-h-screen p-4">
+    </div>
 <!-- Mensaje de feedback flotante -->
 <div id="feedbackMessage" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 px-12 py-8 rounded-3xl shadow-2xl text-white text-4xl font-bold border-4 border-white animate-pulse">
 </div>
@@ -27,8 +84,8 @@
     <!-- Título Medalla Cascada -->
     {{#medallas}}
         <div class="mb-8 text-center">
-            <div class="inline-block bg-gradient-to-r from-cyan-500 to-red-600 rounded-xl px-10 py-4 shadow-xl border-4 border-white mt-5 flex flex-col items-center">
-                    <img src="/public/{{imagen_url}}" alt="{{nombre}}" class="w-16 h-16 rounded-full border-2 border-white shadow-md mb-3">
+            <div class="inline-block bg-gray-800 rounded-xl px-5 py-4 shadow-xl border-4 border-white mt-5 flex flex-row items-center justify-center gap-5">
+                <img src="/public/{{imagen_url}}" alt="{{nombre}}" class="w-16 h-16 rounded-full border-2 border-white shadow-md mb-3">
                 <h1 class="text-white text-2xl font-bold">{{nombre}}</h1>
             </div>
         </div>
@@ -91,6 +148,41 @@
             </div>
         {{/pregunta}}
     </div>
-</div>
+
+
+
+
 </body>
+<!--mensajito de exito-->
+{{#exito_reporte}}
+    <div id="mensajeExito" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>{{exito_reporte}}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            const msg = document.getElementById('mensajeExito');
+            msg.style.opacity = '0';
+            setTimeout(() => msg.remove(), 300);
+        }, 3000);
+    </script>
+{{/exito_reporte}}
+
+{{#error_reporte}}
+    <div id="mensajeError" class="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        <span>{{error_reporte}}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            const msg = document.getElementById('mensajeError');
+            msg.style.opacity = '0';
+            setTimeout(() => msg.remove(), 300);
+        }, 3000);
+    </script>
+{{/error_reporte}}
 </html>

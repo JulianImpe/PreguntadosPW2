@@ -10,8 +10,8 @@
         <div class="flex flex-col items-center">
 
             <!-- Badge ENTRENADOR -->
-            <div class="bg-red-100 px-4 py-2 rounded-full mb-3">
-                <span class="text-red-700 font-bold text-sm">⚡ ENTRENADOR</span>
+            <div class="bg-red-100 px-6 py-2 rounded-full mb-3 align-middle flex items-center justify-center border-4 border-red-700 shadow-lg">
+                <span class="text-red-700 font-bold text-sm align-middle flex items-center justify-center gap-2"><?xml version="1.0" encoding="UTF-8"?><svg class="w-12 h-12 fill-red-700" id="newspaper-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m22,6v-1H3v1h-1v1h-1v11h1v1h20v-1h1V6h-1ZM4,17h-1V7h1v10Zm8-2h-6v-5h6v5Zm9,0h-8v-1h8v1Zm-8-2v-1h7v1h-7Zm8-2h-8v-1h8v1Zm0-2H6v-2h15v2Z"/><rect x="7" y="11" width="4" height="3"/></svg> ENTRENADOR</span>
             </div>
 
             <!-- Logo Pokéball -->
@@ -20,18 +20,16 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" class="text-red-700"></svg>
                 </div>
             </div>
+            
 
             <!-- Avatar y Nombre -->
-            <div class="w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-red-700 shadow-lg bg-white">
+            <div class="w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-red-700 shadow-lg bg-white mb-2">
                 {{#tiene_foto}}
                     <img src="{{foto_perfil}}" alt="Foto de perfil" class="w-full h-full object-cover">
                 {{/tiene_foto}}
                 {{^tiene_foto}}
-                    <div class="w-full h-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
+                    <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-150 flex items-center justify-center">
+                    <img src="/public/img/missingo.png" alt="Avatar por defecto" class="w-25 h-25">
                     </div>
                 {{/tiene_foto}}
             </div>
@@ -39,48 +37,46 @@
 
 
                 <h1 class="text-2xl md:text-3xl font-bold text-red-700 uppercase tracking-wider mb-1">{{nombre_completo}}</h1>
-                <p class="text-gray-600 font-semibold text-sm">@{{usuario}}</p>
+                <p class="text-gray-600 font-semibold text-sm mb-2">@{{usuario}}</p>
             </div>
 
             <!-- Información del Usuario -->
             <div class="space-y-4 w-full">
 
                 <!-- Email -->
-                <div class="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
-                    <label class="block text-blue-700 font-semibold mb-1 text-xs uppercase tracking-wider">📧 Email</label>
+                <div class="bg-gradient-to-br from-blue-200 to-blue-300 pokemon-border rounded-xl p-4 text-center  transition-transform">
+                    <label class="block text-blue-700 font-semibold mb-1 text-xs uppercase tracking-wider flex justify-center items-center gap-2"><?xml version="1.0" encoding="UTF-8"?><svg class="w-6 h-6 fill-gray-100" id="envelope-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="21 4 21 5 20 5 20 6 19 6 19 7 18 7 18 8 17 8 17 9 16 9 16 10 15 10 15 11 14 11 14 12 13 12 13 13 11 13 11 12 10 12 10 11 9 11 9 10 8 10 8 9 7 9 7 8 6 8 6 7 5 7 5 6 4 6 4 5 3 5 3 4 21 4"/><polygon points="23 5 23 19 22 19 22 20 2 20 2 19 1 19 1 5 3 5 3 6 4 6 4 7 5 7 5 8 6 8 6 9 7 9 7 10 8 10 8 11 9 11 9 12 10 12 10 13 11 13 11 14 13 14 13 13 14 13 14 12 15 12 15 11 16 11 16 10 17 10 17 9 18 9 18 8 19 8 19 7 20 7 20 6 21 6 21 5 23 5"/></svg> Email</label>
                     <p class="text-gray-800 font-bold text-sm break-all">{{email}}</p>
                 </div>
 
                 <!-- Edad y Fecha de Nacimiento -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
-                        <label class="block text-purple-700 font-semibold mb-1 text-xs uppercase tracking-wider">🎂 Edad</label>
+                    <div class="bg-gradient-to-br from-purple-200 to-purple-300 pokemon-border rounded-xl p-4 text-center  transition-transform">
+                        <label class="block text-purple-700 font-semibold mb-1 text-xs uppercase tracking-wider flex justify-center items-center gap-2"><?xml version="1.0" encoding="UTF-8"?><svg class="w-6 h-6 fill-purple-700" id="seedlings-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="12 11 13 11 13 22 11 22 11 15 7 15 7 14 5 14 5 13 4 13 4 12 3 12 3 10 2 10 2 8 1 8 1 5 6 5 6 6 8 6 8 7 10 7 10 8 11 8 11 9 12 9 12 11"/><polygon points="23 2 23 6 22 6 22 8 21 8 21 9 20 9 20 10 18 10 18 11 16 11 16 12 14 12 14 10 13 10 13 8 12 8 12 6 13 6 13 5 14 5 14 4 16 4 16 3 18 3 18 2 23 2"/></svg> Edad</label>
                         <p class="text-gray-800 font-black text-sm">{{edad}} años</p>
                     </div>
-                    <div class="bg-gradient-to-br from-green-50 to-green-100 border-l-4 border-green-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
-                        <label class="block text-green-700 font-semibold mb-1 text-xs uppercase tracking-wider">📅 Nacimiento</label>
+                    <div class="bg-gradient-to-br from-green-200 to-green-300 pokemon-border rounded-xl p-4 text-center  transition-transform">
+                        <label class="block text-green-700 font-semibold mb-1 text-xs uppercase tracking-wider flex justify-center items-center gap-2"><?xml version="1.0" encoding="UTF-8"?><svg class="w-6 h-6 fill-green-700" id="calender-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="1" width="2" height="1"/><rect x="16" y="1" width="2" height="1"/><path d="m22,5v-1h-3v-2h-1v5h-2V2h-1v2h-6v-2h-1v5h-2V2h-1v2h-3v1h-1v17h1v1h20v-1h1V5h-1Zm-1,3v3h-3v-3h3Zm0,8h-3v-3h3v3Zm0,5h-3v-3h3v3Zm-18-3h3v3h-3v-3Zm0-5h3v3h-3v-3Zm13,3h-3v-3h3v3Zm-5,0h-3v-3h3v3Zm-3,2h3v3h-3v-3Zm5,0h3v3h-3v-3Zm3-7h-3v-3h3v3Zm-5-3v3h-3v-3h3Zm-5,3h-3v-3h3v3Z"/></svg> Nacimiento</label>
                         <p class="text-gray-800 font-bold text-sm">{{fecha_nacimiento}}</p>
                     </div>
                 </div>
 
                 <!-- Sexo -->
-                <div class="bg-gradient-to-r from-pink-50 to-pink-100 border-l-4 border-pink-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
-                    <label class="block text-pink-700 font-semibold mb-1 text-xs uppercase tracking-wider">⚧ Género</label>
+                <div class="bg-gradient-to-br from-pink-200 to-pink-300 pokemon-border rounded-xl p-4 text-center  transition-transform">
+                    <label class="block text-pink-700 font-semibold mb-1 text-xs uppercase tracking-wider flex justify-center items-center gap-2"><?xml version="1.0" encoding="UTF-8"?><svg class="w-6 h-6 fill-pink-700" id="chart-network-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17,14v-4h1v-1h1v-1h2v-1h1v-2h-1v-1h-2v1h-1v2h-1v1h-1v1h-2v-1h-4v-1h-1v-1h-1v-2h-1v-1h-2v1h-1v2h1v1h2v1h1v1h1v2h-1v1h-2v-1h-1v-1h-3v1h-1v3h1v1h3v-1h4v1h1v1h1v1h3v-1h1v1h1v1h1v3h1v1h3v-1h1v-3h-1v-1h-3v-1h-1v-1h-1v-1h1Zm-3,0h-3v-3h3v3Z"/></svg> Género</label>
                     <p class="text-gray-800 font-bold text-sm">{{sexo}}</p>
                 </div>
 
                 <!-- Contraseña -->
-                <div class="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 rounded-lg p-4 transition-all duration-300 hover:shadow-md flex items-center justify-between">
-                    <div>
-                        <label class="block text-red-700 font-semibold mb-1 text-xs uppercase tracking-wider">🔒 Contraseña</label>
-                        <p class="text-gray-600 font-bold text-sm tracking-widest">........</p>
-                    </div>
-                    <button id="btnEditarPassword" type="button" class="text-red-600 hover:text-red-800 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M16.5 3.5l4 4L13 15H9v-4L16.5 3.5z"/>
-                        </svg>
+                <div class="bg-gradient-to-br from-red-200 to-red-300 pokemon-border rounded-xl p-4 text-center  transition-transform flex justify-center items-center ">
+                    <div class="">
+                        <label class="block text-red-700 font-semibold mb-1 text-xs uppercase tracking-wider flex justify-center items-center gap-2"><?xml version="1.0" encoding="UTF-8"?><svg id="lock-alt-solid" class="w-6 h-6 fill-red-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20,12v-1h-1v-5h-1v-2h-1v-1h-1v-1h-2v-1h-4v1h-2v1h-1v1h-1v2h-1v5h-1v1h-1v10h1v1h16v-1h1v-10h-1Zm-12-6h1v-1h1v-1h4v1h1v1h1v5h-8v-5Z"/></svg> Contraseña</label>
+                        <p class="text-gray-600 font-bold text-sm tracking-widest">********</p>
+                                        </div>
+                    <button id="btnEditarPassword" type="button" class="text-red-600 hover:text-red-900 transition-colors bg-red-100 hover:bg-red-200 hover:scale-105 transition-all rounded-full drop-shadow-md pokemon-border p-3 flex space-between ml-3">
+                    <?xml version="1.0" encoding="UTF-8"?><svg id="pencil-solid" class="w-6 h-6 fill-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="8 20 9 20 9 21 8 21 8 22 7 22 7 23 1 23 1 17 2 17 2 16 3 16 3 15 4 15 4 16 5 16 5 17 6 17 6 18 7 18 7 19 8 19 8 20"/><polygon points="17 10 18 10 18 12 17 12 17 13 16 13 16 14 15 14 15 15 14 15 14 16 13 16 13 17 12 17 12 18 11 18 11 19 10 19 10 18 9 18 9 17 8 17 8 16 7 16 7 15 6 15 6 14 5 14 5 13 6 13 6 12 7 12 7 11 8 11 8 10 9 10 9 9 10 9 10 8 11 8 11 7 12 7 12 6 14 6 14 7 15 7 15 8 16 8 16 9 17 9 17 10"/><polygon points="23 4 23 7 22 7 22 8 21 8 21 9 19 9 19 8 18 8 18 7 17 7 17 6 16 6 16 5 15 5 15 3 16 3 16 2 17 2 17 1 20 1 20 2 21 2 21 3 22 3 22 4 23 4"/></svg>
                     </button>
+
                 </div>
 
                 <!-- Formulario oculto -->
@@ -128,8 +124,8 @@
             <!-- Footer Card -->
             <div class="mt-6 pt-4 text-center">
                 <p class="text-gray-500 text-xs mb-2 uppercase tracking-wider">¡Sigue capturando conocimiento!</p>
-                <a href="/lobby/base" class="w-full sm:w-auto py-2 px-6 bg-green-600 text-white font-bold uppercase tracking-wide text-sm rounded-lg hover:bg-green-700 transition-colors">
-                    🎮 VOLVER AL LOBBY
+                <a href="/lobby/base" class="block bg-gray-800 hover:bg-green-800 text-white text-center px-6 py-3 font-bold hover:-translate-y-1 transition-all cursor-pointer drop-shadow-md pokemon-border">
+                    VOLVER AL LOBBY
                 </a>
             </div>
 
