@@ -229,4 +229,75 @@ class EditorModel{
         ];
         return $emojis[$nombre] ?? '🏅';
     }
+
+
+
+
+
+    public function getAllMedallas()
+    {
+        return $this->conexion->query("SELECT * FROM Medallas");
+    }
+
+
+    public function getMedallaById($id)
+    {
+        $id = (int)$id;
+        $resultado = $this->conexion->query("SELECT * FROM Medallas WHERE ID = $id LIMIT 1");
+        return !empty($resultado) ? $resultado[0] : null;
+    }
+
+
+    public function createMedalla($data)
+    {
+        $nombre = $this->conexion->getConexion()->real_escape_string($data['Nombre']);
+        $color = $this->conexion->getConexion()->real_escape_string($data['Color']);
+        $imagen = $this->conexion->getConexion()->real_escape_string($data['Imagen_url']);
+
+        $sql = "INSERT INTO Medallas (Nombre, Color, Imagen_url) VALUES ('$nombre', '$color', '$imagen')";
+        return $this->conexion->query($sql);
+    }
+
+
+    public function updateMedalla($id, $data)
+    {
+        $id = (int)$id;
+        $nombre = $this->conexion->getConexion()->real_escape_string($data['Nombre']);
+        $color = $this->conexion->getConexion()->real_escape_string($data['Color']);
+        $imagen = $this->conexion->getConexion()->real_escape_string($data['Imagen_url']);
+
+        $sql = "UPDATE Medallas SET Nombre = '$nombre', Color = '$color', Imagen_url = '$imagen' WHERE ID = $id";
+        return $this->conexion->query($sql);
+    }
+
+
+    public function deleteMedalla($id)
+    {
+        $id = (int)$id;
+        return $this->conexion->query("DELETE FROM Medallas WHERE ID = $id");
+    }
+
+
+    public function getTodasLasMedallas()
+    {
+        $query = "SELECT ID, Nombre, Color, Imagen_url FROM medallas";
+        $result = $this->conexion->query($query);
+
+        $medallas = [];
+        while ($row = $result->fetch_assoc()) {
+            $medallas[] = $row;
+        }
+
+        return $medallas;
+    }
+
+    public function eliminarMedallaPorId($id)
+    {
+        $id = (int)$id;
+        return $this->conexion->query("DELETE FROM medallas WHERE ID = $id");
+    }
+
+
+
+
 }

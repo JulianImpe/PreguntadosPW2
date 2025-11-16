@@ -161,6 +161,129 @@ class EditorController
         header("Location: /editor/lobbyEditor");
         exit;
     }
+
+
+    public function gestionarMedallas()
+    {
+        $medallas = $this->model->getAllMedallas();
+
+
+        $medallasNormalizadas = [];
+        foreach ($medallas as $medalla) {
+            $medallasNormalizadas[] = [
+                'ID' => $medalla['ID'],
+                'Nombre' => $medalla['Nombre'],
+                'Color' => $medalla['Color'],
+                'imagen_url' => $medalla['Imagen_url']
+            ];
+        }
+
+        $this->renderer->render("medallas", [
+            "medallas" => $medallasNormalizadas
+        ]);
+    }
+
+
+
+    public function crearMedalla()
+    {
+        $this->renderer->render("crearMedallas");
+    }
+
+
+
+
+    public function editarMedalla()
+    {
+        $id = $_GET['id'] ?? null;
+
+        if (!$id) {
+            header("Location: /editor/medallas");
+            exit;
+        }
+
+        $medalla = $this->model->getMedallaById($id);
+
+        if (!$medalla) {
+            header("Location: /editor/medallas");
+            exit;
+        }
+
+        $this->renderer->render("editarMedalla", [
+            "es_creacion" => false,
+            "medalla" => $medalla
+        ]);
+    }
+
+
+
+
+
+    public function guardarMedalla()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /editor/medallas");
+            exit;
+        }
+
+        $id = $_POST["id"] ?? null;
+        $imagenUrl = null;
+
+        if (isset($_FILES["Imagen"]) && $_FILES["Imagen"]["error"] === 0) {
+
+            $carpetaDestino = "public/img/categorias/";
+
+            if (!file_exists($carpetaDestino)) {
+                mkdir($carpetaDestino, 0777, true);
+            }
+
+            $nombreArchivo = time() . "_" . basename($_FILES["Imagen"]["name"]);
+            $rutaDestino = $carpetaDestino . $nombreArchivo;
+
+            if (move_uploaded_file($_FILES["Imagen"]["tmp_name"], $rutaDestino)) {
+
+                $imagenUrl = "img/categorias/" . $nombreArchivo;
+            }
+        } else {
+
+            $imagenUrl = $_POST["Imagen_url_actual"] ?? null;
+        }
+
+        $data = [
+            "Nombre" => $_POST["Nombre"] ?? "",
+            "Color" => $_POST["Color"] ?? "",
+            "Imagen_url" => $imagenUrl
+        ];
+
+        if ($id) {
+            $this->model->updateMedalla($id, $data);
+        } else {
+            $this->model->createMedalla($data);
+        }
+
+        header("Location: /editor/medallas");
+        exit;
+    }
+
+
+
+
+
+    public function eliminarMedalla()
+    {
+        if (!isset($_POST["id"])) {
+            echo "Error: falta el ID";
+            return;
+        }
+
+        $id = $_POST["id"];
+
+        $this->model->eliminarMedallaPorId($id);
+
+        header("Location: /editor/medallas");
+        exit;
+    }
+}
     
     /**
      * Formatea la fecha de nacimiento al formato DD/MM/YYYY

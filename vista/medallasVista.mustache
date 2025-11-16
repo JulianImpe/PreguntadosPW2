@@ -1,0 +1,81 @@
+<div class="min-h-screen bg-[url('/public/img/fondo.jpg')] bg-fixed bg-cover bg-center p-6">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+        <!-- Barra superior -->
+        <div class="h-2 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500"></div>
+
+        <div class="p-8">
+
+            <!-- Título -->
+            <h2 class="text-center text-3xl font-bold text-yellow-600 mb-8 uppercase tracking-wider"
+                style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+                Gestión de Medallas
+            </h2>
+
+            <!-- Tabla -->
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse rounded-xl overflow-hidden shadow-lg">
+                    <thead>
+                    <tr class="bg-yellow-500 text-white text-lg">
+                        <th class="px-4 py-3 text-left">Nombre</th>
+                        <th class="px-4 py-3 text-left">Color</th>
+                        <th class="px-4 py-3 text-left">Imagen</th>
+                        <th class="px-4 py-3 text-center">Acciones</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="bg-white divide-y divide-gray-200 text-gray-700">
+                    {{#medallas}}
+                        <tr class="hover:bg-yellow-50 transition">
+                            <td class="px-4 py-3 font-semibold">{{Nombre}}</td>
+
+                            <td class="px-4 py-3">
+                                <span class="inline-block w-8 h-8 rounded-full border"
+                                      style="background-color: {{Color}};">
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <img src="/public/{{imagen_url}}" class="w-14 h-14 object-cover rounded-lg shadow">
+                            </td>
+
+                            <td class="px-4 py-3 text-center">
+
+
+                                <a href="/editor/editarMedalla?id={{ID}}"
+                                class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg
+                                font-bold shadow-md transition active:scale-95 mr-2">
+                                Editar
+                                </a>
+
+
+                                <form method="POST" action="/editor/eliminarMedalla" class="inline-block">
+                                    <input type="hidden" name="id" value="{{ID}}">
+
+                                    <button onclick="return confirm('¿Seguro que quieres eliminar esta medalla?')"
+                                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg
+                                                   font-bold shadow-md transition active:scale-95">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {{/medallas}}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="mt-8 text-center">
+                <a href="/index.php?controller=editor&method=crearMedalla"
+                   class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-bold
+                          shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)]
+                          active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition">
+                    ➕ Crear nueva medalla
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
