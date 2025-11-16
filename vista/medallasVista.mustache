@@ -1,44 +1,81 @@
-<h2>Gestión de Medallas</h2>
+<div class="min-h-screen bg-[url('/public/img/fondo.jpg')] bg-fixed bg-cover bg-center p-6">
 
-<table>
-    <thead>
-    <tr>
-        <th>Nombre</th>
-        <th>Color</th>
-        <th>Imagen</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#medallas}}
-        <tr>
-            <td>{{Nombre}}</td>
-            <td><span style="background-color:{{Color}};">&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-            <td><img src="{{Imagen_url}}" width="50"></td>
-            <td>
+    <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
 
-                <a href="/editor/editarMedalla?id={{ID}}" class="btn-editar">Editar</a>
+        <!-- Barra superior -->
+        <div class="h-2 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500"></div>
 
-                <!--<a href="/editor/medalla/eliminar?id={{ID}}" onclick="return confirm('¿Seguro que quieres eliminar esta medalla?')">Eliminar</a>-->
-                <form method="POST" action="/editor/eliminarMedalla">
-                    <input type="hidden" name="id" value="{{ID}}">
-                    <button onclick="return confirm('¿Seguro que quieres eliminar esta medalla?')"
-                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-                        Eliminar
-                    </button>
-                </form>
+        <div class="p-8">
 
+            <!-- Título -->
+            <h2 class="text-center text-3xl font-bold text-yellow-600 mb-8 uppercase tracking-wider"
+                style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+                Gestión de Medallas
+            </h2>
 
+            <!-- Tabla -->
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse rounded-xl overflow-hidden shadow-lg">
+                    <thead>
+                    <tr class="bg-yellow-500 text-white text-lg">
+                        <th class="px-4 py-3 text-left">Nombre</th>
+                        <th class="px-4 py-3 text-left">Color</th>
+                        <th class="px-4 py-3 text-left">Imagen</th>
+                        <th class="px-4 py-3 text-center">Acciones</th>
+                    </tr>
+                    </thead>
 
+                    <tbody class="bg-white divide-y divide-gray-200 text-gray-700">
+                    {{#medallas}}
+                        <tr class="hover:bg-yellow-50 transition">
+                            <td class="px-4 py-3 font-semibold">{{Nombre}}</td>
 
-            </td>
-        </tr>
-    {{/medallas}}
-    </tbody>
-</table>
+                            <td class="px-4 py-3">
+                                <span class="inline-block w-8 h-8 rounded-full border"
+                                      style="background-color: {{Color}};">
+                                </span>
+                            </td>
 
-<!--<a href="/editor/medalla/crear">Crear nueva medalla</a>-->
-<a href="/index.php?controller=editor&method=crearMedalla">
-    Crear nueva medalla
-</a>
+                            <td class="px-4 py-3">
+                                <img src="{{Imagen_url}}" class="w-14 h-14 object-cover rounded-lg shadow">
+                            </td>
 
+                            <td class="px-4 py-3 text-center">
+
+                                <!-- Botón Editar -->
+                                <a href="/editor/editarMedalla?id={{ID}}"
+                                class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg
+                                font-bold shadow-md transition active:scale-95 mr-2">
+                                Editar
+                                </a>
+
+                                <!-- Botón Eliminar -->
+                                <form method="POST" action="/editor/eliminarMedalla" class="inline-block">
+                                    <input type="hidden" name="id" value="{{ID}}">
+
+                                    <button onclick="return confirm('¿Seguro que quieres eliminar esta medalla?')"
+                                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg
+                                                   font-bold shadow-md transition active:scale-95">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {{/medallas}}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Botón Crear nueva medalla -->
+            <div class="mt-8 text-center">
+                <a href="/index.php?controller=editor&method=crearMedalla"
+                   class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-bold
+                          shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)]
+                          active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition">
+                    ➕ Crear nueva medalla
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
