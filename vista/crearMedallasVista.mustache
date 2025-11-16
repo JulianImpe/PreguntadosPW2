@@ -1,0 +1,14 @@
+<h2>Crear nueva medalla</h2>
+
+<form action="/editor/guardarMedalla" method="POST" enctype="multipart/form-data">
+    <label>Nombre:</label>
+    <input type="text" name="Nombre" required>
+
+    <label>Color:</label>
+    <input type="color" name="Color" required>
+
+    <label>Imagen:</label>
+    <input type="file" name="Imagen" accept="image/*" required>
+
+    <button type="submit">Guardar</button>
+</form>

@@ -122,13 +122,26 @@ class EditorController
     }
 
     // Crear medalla (formulario)
+   /* public function crearMedalla()
+    {
+        $this->renderer->render("editarMedalla", [
+            'medalla' => [
+                'ID' => '',
+                'Nombre' => '',
+                'Color' => '#000000',
+                'Imagen_url' => ''
+            ],
+            'es_creacion' => true
+        ]);
+    }*/
+
     public function crearMedalla()
     {
-        $this->renderer->render("editarMedallaVista", [
-            'medalla' => null,
-            'medallas' => $this->model->getTodasLasMedallas()
-        ]);
+        // Solo muestra la vista vacía
+        $this->renderer->render("crearMedallas");
     }
+
+
 
     // Editar medalla (formulario)
     public function editarMedalla()
@@ -141,21 +154,44 @@ class EditorController
             exit;
         }
 
-        $this->renderer->render("editarMedallaVista", [
+        $this->renderer->render("editarMedalla", [
             'medalla' => $medalla,
-            'medallas' => $this->model->getTodasLasMedallas()
+            'es_creacion' => false
         ]);
     }
+
 
     // Guardar medalla (crear o actualizar)
     public function guardarMedalla()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            // Subir imagen
+            $imagenUrl = null;
+
+            if (isset($_FILES['Imagen']) && $_FILES['Imagen']['error'] === 0) {
+
+                $carpetaDestino = "public/medallas/";
+
+                if (!file_exists($carpetaDestino)) {
+                    mkdir($carpetaDestino, 0777, true);
+                }
+
+                $nombreArchivo = time() . "_" . basename($_FILES["Imagen"]["name"]);
+                $rutaDestino = $carpetaDestino . $nombreArchivo;
+
+                if (move_uploaded_file($_FILES["Imagen"]["tmp_name"], $rutaDestino)) {
+                    // Guardar URL relativa
+                    $imagenUrl = "/" . $rutaDestino;
+                }
+            }
+
             $id = $_POST['id'] ?? null;
+
             $data = [
                 'Nombre' => $_POST['Nombre'] ?? '',
                 'Color' => $_POST['Color'] ?? '',
-                'Imagen_url' => $_POST['Imagen_url'] ?? ''
+                'Imagen_url' => $imagenUrl
             ];
 
             if ($id) {
@@ -168,6 +204,7 @@ class EditorController
             exit;
         }
     }
+
 
     // Eliminar medalla
     /*public function eliminarMedalla()

@@ -1,18 +1,20 @@
-<h2>{{#medalla}}Editar Medalla{{/medalla}}{{^medalla}}Crear Medalla{{/medalla}}</h2>
+<h2>{{#es_creacion}}Crear Medalla{{/es_creacion}}{{^es_creacion}}Editar Medalla{{/es_creacion}}</h2>
 
 <form method="POST" action="/editor/medalla/guardar">
-    {{#medalla}}
-        <input type="hidden" name="id" value="{{ID}}">
-    {{/medalla}}
+
+    {{^es_creacion}}
+        <input type="hidden" name="id" value="{{medalla.ID}}">
+    {{/es_creacion}}
 
     <label>Nombre:</label>
-    <input type="text" name="Nombre" value="{{Nombre}}" required>
+    <input type="text" name="Nombre" value="{{medalla.Nombre}}" required>
 
     <label>Color (HEX):</label>
-    <input type="color" name="Color" value="{{Color}}" required>
+    <input type="color" name="Color" value="{{medalla.Color}}" required>
 
     <label>Imagen URL:</label>
-    <input type="text" name="Imagen_url" value="{{Imagen_url}}" required>
+    <input type="text" name="Imagen_url" value="{{medalla.Imagen_url}}" required>
 
     <button type="submit">Guardar</button>
 </form>
+
