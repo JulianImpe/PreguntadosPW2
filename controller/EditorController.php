@@ -112,12 +112,21 @@ class EditorController
 
     public function gestionarMedallas()
     {
-
         $medallas = $this->model->getAllMedallas();
 
 
+        $medallasNormalizadas = [];
+        foreach ($medallas as $medalla) {
+            $medallasNormalizadas[] = [
+                'ID' => $medalla['ID'],
+                'Nombre' => $medalla['Nombre'],
+                'Color' => $medalla['Color'],
+                'imagen_url' => $medalla['Imagen_url']
+            ];
+        }
+
         $this->renderer->render("medallas", [
-            "medallas" => $medallas
+            "medallas" => $medallasNormalizadas
         ]);
     }
 
@@ -125,7 +134,6 @@ class EditorController
 
     public function crearMedalla()
     {
-        // Solo muestra la vista vacía
         $this->renderer->render("crearMedallas");
     }
 
@@ -141,14 +149,12 @@ class EditorController
             exit;
         }
 
-
         $medalla = $this->model->getMedallaById($id);
 
         if (!$medalla) {
             header("Location: /editor/medallas");
             exit;
         }
-
 
         $this->renderer->render("editarMedalla", [
             "es_creacion" => false,
@@ -168,14 +174,11 @@ class EditorController
         }
 
         $id = $_POST["id"] ?? null;
-
-
-        $imagenUrl = $_POST["Imagen_url_actual"] ?? null;
-
+        $imagenUrl = null;
 
         if (isset($_FILES["Imagen"]) && $_FILES["Imagen"]["error"] === 0) {
 
-            $carpetaDestino = "public/medallas/";
+            $carpetaDestino = "public/img/categorias/";
 
             if (!file_exists($carpetaDestino)) {
                 mkdir($carpetaDestino, 0777, true);
@@ -185,8 +188,12 @@ class EditorController
             $rutaDestino = $carpetaDestino . $nombreArchivo;
 
             if (move_uploaded_file($_FILES["Imagen"]["tmp_name"], $rutaDestino)) {
-                $imagenUrl = "/" . $rutaDestino;
+
+                $imagenUrl = "img/categorias/" . $nombreArchivo;
             }
+        } else {
+
+            $imagenUrl = $_POST["Imagen_url_actual"] ?? null;
         }
 
         $data = [
@@ -218,16 +225,9 @@ class EditorController
 
         $id = $_POST["id"];
 
-
         $this->model->eliminarMedallaPorId($id);
 
         header("Location: /editor/medallas");
         exit;
     }
-
-
-
-
-
-
 }

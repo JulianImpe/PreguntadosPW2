@@ -24,7 +24,7 @@ class EditorModel
         return [];
     }
 
-    //solo muestra 3 en la pantalla priicpal, se puede quitar pero queda menos estetico--
+
     public function obtenerPreguntasSugeridas($limite = 3)
     {
         $resultado = $this->conexion->query("
@@ -270,8 +270,7 @@ class EditorModel
     }
 
 
-    // CRUD de Medallas
-    // --------------------
+
 
 
     public function getAllMedallas()
