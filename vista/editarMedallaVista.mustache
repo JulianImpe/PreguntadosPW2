@@ -1,10 +1,9 @@
-<h2>{{#es_creacion}}Crear Medalla{{/es_creacion}}{{^es_creacion}}Editar Medalla{{/es_creacion}}</h2>
+<h2>Editar Medalla</h2>
 
-<form method="POST" action="/editor/medalla/guardar">
+<form method="POST" action="/editor/guardarMedalla" enctype="multipart/form-data">
 
-    {{^es_creacion}}
-        <input type="hidden" name="id" value="{{medalla.ID}}">
-    {{/es_creacion}}
+
+    <input type="hidden" name="id" value="{{medalla.ID}}">
 
     <label>Nombre:</label>
     <input type="text" name="Nombre" value="{{medalla.Nombre}}" required>
@@ -12,9 +11,13 @@
     <label>Color (HEX):</label>
     <input type="color" name="Color" value="{{medalla.Color}}" required>
 
-    <label>Imagen URL:</label>
-    <input type="text" name="Imagen_url" value="{{medalla.Imagen_url}}" required>
+    <label>Imagen actual:</label>
+    <img src="{{medalla.Imagen_url}}" width="100">
+
+    <input type="hidden" name="Imagen_url_actual" value="{{medalla.Imagen_url}}">
+
+    <label>Subir nueva imagen:</label>
+    <input type="file" name="Imagen">
 
     <button type="submit">Guardar</button>
 </form>
-

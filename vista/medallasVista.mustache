@@ -16,7 +16,9 @@
             <td><span style="background-color:{{Color}};">&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
             <td><img src="{{Imagen_url}}" width="50"></td>
             <td>
-                <a href="/editor/medalla/editar?id={{ID}}">Editar</a>
+
+                <a href="/editor/editarMedalla?id={{ID}}" class="btn-editar">Editar</a>
+
                 <!--<a href="/editor/medalla/eliminar?id={{ID}}" onclick="return confirm('¿Seguro que quieres eliminar esta medalla?')">Eliminar</a>-->
                 <form method="POST" action="/editor/eliminarMedalla">
                     <input type="hidden" name="id" value="{{ID}}">

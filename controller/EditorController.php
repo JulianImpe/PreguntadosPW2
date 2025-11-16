@@ -146,7 +146,14 @@ class EditorController
     // Editar medalla (formulario)
     public function editarMedalla()
     {
-        $id = $_GET['id'] ?? 0;
+        $id = $_GET['id'] ?? null;
+
+        if (!$id) {
+            header("Location: /editor/medallas");
+            exit;
+        }
+
+        // OJO: este método debe existir en EditorModel
         $medalla = $this->model->getMedallaById($id);
 
         if (!$medalla) {
@@ -154,56 +161,63 @@ class EditorController
             exit;
         }
 
+        // Renderiza correctamente la vista y los datos
         $this->renderer->render("editarMedalla", [
-            'medalla' => $medalla,
-            'es_creacion' => false
+            "es_creacion" => false,
+            "medalla" => $medalla
         ]);
     }
+
+
 
 
     // Guardar medalla (crear o actualizar)
     public function guardarMedalla()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            // Subir imagen
-            $imagenUrl = null;
-
-            if (isset($_FILES['Imagen']) && $_FILES['Imagen']['error'] === 0) {
-
-                $carpetaDestino = "public/medallas/";
-
-                if (!file_exists($carpetaDestino)) {
-                    mkdir($carpetaDestino, 0777, true);
-                }
-
-                $nombreArchivo = time() . "_" . basename($_FILES["Imagen"]["name"]);
-                $rutaDestino = $carpetaDestino . $nombreArchivo;
-
-                if (move_uploaded_file($_FILES["Imagen"]["tmp_name"], $rutaDestino)) {
-                    // Guardar URL relativa
-                    $imagenUrl = "/" . $rutaDestino;
-                }
-            }
-
-            $id = $_POST['id'] ?? null;
-
-            $data = [
-                'Nombre' => $_POST['Nombre'] ?? '',
-                'Color' => $_POST['Color'] ?? '',
-                'Imagen_url' => $imagenUrl
-            ];
-
-            if ($id) {
-                $this->model->updateMedalla($id, $data);
-            } else {
-                $this->model->createMedalla($data);
-            }
-
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header("Location: /editor/medallas");
             exit;
         }
+
+        $id = $_POST["id"] ?? null;
+
+        // Imagen actual (si no suben una nueva)
+        $imagenUrl = $_POST["Imagen_url_actual"] ?? null;
+
+        // Si suben una imagen nueva
+        if (isset($_FILES["Imagen"]) && $_FILES["Imagen"]["error"] === 0) {
+
+            $carpetaDestino = "public/medallas/";
+
+            if (!file_exists($carpetaDestino)) {
+                mkdir($carpetaDestino, 0777, true);
+            }
+
+            $nombreArchivo = time() . "_" . basename($_FILES["Imagen"]["name"]);
+            $rutaDestino = $carpetaDestino . $nombreArchivo;
+
+            if (move_uploaded_file($_FILES["Imagen"]["tmp_name"], $rutaDestino)) {
+                $imagenUrl = "/" . $rutaDestino;
+            }
+        }
+
+        $data = [
+            "Nombre" => $_POST["Nombre"] ?? "",
+            "Color" => $_POST["Color"] ?? "",
+            "Imagen_url" => $imagenUrl
+        ];
+
+        if ($id) {
+            $this->model->updateMedalla($id, $data);
+        } else {
+            $this->model->createMedalla($data);
+        }
+
+        header("Location: /editor/medallas");
+        exit;
     }
+
+
 
 
     // Eliminar medalla
