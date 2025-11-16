@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Editores - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .pokemon-border {
+            border: 4px solid #2c3e50;
+            box-shadow:
+                inset -4px -4px 0px rgba(0,0,0,0.3),
+                inset 4px 4px 0px rgba(255,255,255,0.3),
+                4px 4px 0px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-b from-purple-400 to-indigo-300">
+
+<header class="bg-white shadow-2xl mb-8">
+    <div class="container mx-auto px-5 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <svg id="crown-solid" class="w-8 h-8 fill-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="23 7 23 9 22 9 22 10 21 10 21 14 20 14 20 17 19 17 19 19 18 19 18 21 6 21 6 19 5 19 5 17 4 17 4 14 3 14 3 10 2 10 2 9 1 9 1 7 2 7 2 6 4 6 4 7 5 7 5 9 4 9 4 10 5 10 5 11 6 11 6 12 8 12 8 11 9 11 9 9 10 9 10 7 11 7 11 6 10 6 10 4 11 4 11 3 13 3 13 4 14 4 14 6 13 6 13 7 14 7 14 9 15 9 15 11 16 11 16 12 18 12 18 11 19 11 19 10 20 10 20 9 19 9 19 7 20 7 20 6 22 6 22 7 23 7"/></svg>
+            <div>
+                <h1 class="text-2xl font-bold">Gestionar Editores</h1>
+                <p class="text-sm text-gray-600">Promover jugadores a editores</p>
+            </div>
+        </div>
+        <a href="/admin/dashboard" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-bold pokemon-border transition-all">
+            Volver al Dashboard
+        </a>
+    </div>
+</header>
+
+<main class="container mx-auto px-5">
+    
+    {{#mensaje_exito}}
+    <div class="bg-green-100 border-4 border-green-500 text-green-800 px-6 py-4 rounded-xl mb-6 pokemon-border">
+        ✅ {{mensaje_exito}}
+    </div>
+    {{/mensaje_exito}}
+
+    <div class="bg-white rounded-2xl p-6 pokemon-border">
+        <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+            <svg class="w-6 h-6 fill-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polygon points="7 9 6 9 6 5 7 5 7 3 8 3 8 2 10 2 10 1 14 1 14 2 16 2 16 3 17 3 17 5 18 5 18 9 17 9 17 11 16 11 16 12 14 12 14 13 10 13 10 12 8 12 8 11 7 11 7 9"/>
+                <polygon points="22 19 22 22 21 22 21 23 3 23 3 22 2 22 2 19 3 19 3 18 4 18 4 17 5 17 5 16 7 16 7 15 17 15 17 16 19 16 19 17 20 17 20 18 21 18 21 19 22 19"/>
+            </svg>
+            Top 20 Jugadores por Ranking
+        </h2>
+
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gradient-to-r from-purple-500 to-purple-700 text-white">
+                    <tr>
+                        <th class="px-4 py-3 text-left">#</th>
+                        <th class="px-4 py-3 text-left">Usuario</th>
+                        <th class="px-4 py-3 text-center">Mejor Puntaje</th>
+                        <th class="px-4 py-3 text-center">Rol Actual</th>
+                        <th class="px-4 py-3 text-center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#ranking}}
+                    <tr class="border-b hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-4 font-bold text-gray-700">{{posicion}}</td>
+                        <td class="px-4 py-4">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 fill-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <polygon points="7 9 6 9 6 5 7 5 7 3 8 3 8 2 10 2 10 1 14 1 14 2 16 2 16 3 17 3 17 5 18 5 18 9 17 9 17 11 16 11 16 12 14 12 14 13 10 13 10 12 8 12 8 11 7 11 7 9"/>
+                                    <polygon points="22 19 22 22 21 22 21 23 3 23 3 22 2 22 2 19 3 19 3 18 4 18 4 17 5 17 5 16 7 16 7 15 17 15 17 16 19 16 19 17 20 17 20 18 21 18 21 19 22 19"/>
+                                </svg>
+                                <span class="font-semibold">{{usuario}}</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 text-center">
+                            <span class="inline-block bg-yellow-400 px-3 py-1 rounded-full font-bold">
+                                {{mejor_puntaje}} pts
+                            </span>
+                        </td>
+                        <td class="px-4 py-4 text-center">
+                            {{#es_editor}}
+                                <span class="inline-block bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm">
+                                    ✓ EDITOR
+                                </span>
+                            {{/es_editor}}
+                            {{^es_editor}}
+                                <span class="inline-block bg-gray-400 text-white px-3 py-1 rounded-full font-bold text-sm">
+                                    JUGADOR
+                                </span>
+                            {{/es_editor}}
+                        </td>
+                        <td class="px-4 py-4 text-center">
+                            {{^es_editor}}
+                                <form method="POST" action="/admin/promoverEditor" class="inline">
+                                    <input type="hidden" name="usuario_id" value="{{id}}">
+                                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold pokemon-border transition-all hover:scale-105">
+                                        Promover a Editor
+                                    </button>
+                                </form>
+                            {{/es_editor}}
+                            {{#es_editor}}
+                                <span class="text-gray-400 text-sm">Ya es editor</span>
+                            {{/es_editor}}
+                        </td>
+                    </tr>
+                    {{/ranking}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

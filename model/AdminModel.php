@@ -9,13 +9,13 @@ class AdminModel
         $this->conexion = $conexion;
     }
 
-    public function obtenerCantidadJugadores($filtro = null)
+    public function obtenerCantidadUsuarios($filtro = null)
     {
-        $where = $this->construirFiltroFecha("Fecha_registro", $filtro);
+        $where = $this->construirFiltroFecha("u.Fecha_creacion", $filtro);
 
         $resultado = $this->conexion->query("
             SELECT COUNT(*) AS total
-            FROM usuarios
+            FROM usuarios u
             $where
         ");
 
@@ -24,11 +24,11 @@ class AdminModel
 
     public function obtenerCantidadPartidas($filtro = null)
     {
-        $where = $this->construirFiltroFecha("Fecha_inicio", $filtro);
+        $where = $this->construirFiltroFecha("p.Hora_inicio", $filtro);
 
         $resultado = $this->conexion->query("
             SELECT COUNT(*) AS total
-            FROM Partida
+            FROM Partida p
             $where
         ");
 
@@ -47,72 +47,79 @@ class AdminModel
 
     public function obtenerCantidadPreguntasCreadas($filtro = null)
     {
-        $where = $this->construirFiltroFecha("Fecha_creacion", $filtro);
+        $where = $this->construirFiltroFecha("p.Fecha_creacion", $filtro);
 
         $resultado = $this->conexion->query("
             SELECT COUNT(*) AS total
-            FROM Pregunta
+            FROM Pregunta p
             $where
         ");
 
         return $resultado[0]['total'] ?? 0;
     }
-    public function obtenerUsuariosNuevos($filtro)
+
+    public function obtenerPorcentajeAciertosPorUsuario($filtro)
     {
-        return $this->obtenerCantidadJugadores($filtro);
+        // Este método no tiene sentido con el filtro así
+        // Lo dejo retornando 0 por ahora
+        return 0;
     }
 
-    public function obtenerPorcentajeCorrectasPorUsuario($usuarioId)
+    public function obtenerUsuariosPorPais($filtro)
     {
-        $usuarioId = (int)$usuarioId;
-
+        $where = $this->construirFiltroFecha("u.Fecha_creacion", $filtro);
+        
         $resultado = $this->conexion->query("
-            SELECT 
-                SUM(CASE WHEN Correcta = 1 THEN 1 END) AS correctas,
-                COUNT(*) AS total
-            FROM Pregunta_partida
-            WHERE Usuario_ID = $usuarioId
-        ");
-
-        if (empty($resultado) || $resultado[0]['total'] == 0) {
-            return 0;
-        }
-
-        return round(($resultado[0]['correctas'] / $resultado[0]['total']) * 100, 2);
-    }
-
-    public function obtenerUsuariosPorPais()
-    {
-        return $this->conexion->query("
-            SELECT Pais, COUNT(*) AS total
-            FROM usuarios
-            GROUP BY Pais
+            SELECT p.Nombre AS nombre, COUNT(u.ID) AS total
+            FROM usuarios u
+            INNER JOIN Mapa m ON u.Mapa_ID = m.ID
+            INNER JOIN Provincia prov ON m.Provincia_ID = prov.ID
+            INNER JOIN Pais p ON prov.Pais_ID = p.ID
+            $where
+            GROUP BY p.Nombre
             ORDER BY total DESC
         ");
+
+        return $resultado ?? [];
     }
 
-    public function obtenerUsuariosPorSexo()
+    public function obtenerUsuariosPorSexo($filtro)
     {
-        return $this->conexion->query("
-            SELECT Sexo, COUNT(*) AS total
-            FROM usuarios
-            GROUP BY Sexo
+        $where = $this->construirFiltroFecha("u.Fecha_creacion", $filtro);
+        
+        $resultado = $this->conexion->query("
+            SELECT s.Nombre AS nombre, COUNT(u.ID) AS total
+            FROM usuarios u
+            INNER JOIN Sexo s ON u.Sexo_ID = s.ID
+            $where
+            GROUP BY s.Nombre
         ");
+
+        return $resultado ?? [];
     }
 
-    public function obtenerUsuariosPorGrupoEdad()
+    public function obtenerUsuariosPorGrupoEdad($filtro)
     {
-        return $this->conexion->query("
+        $where = $this->construirFiltroFecha("u.Fecha_creacion", $filtro);
+        
+        $resultado = $this->conexion->query("
             SELECT 
-                SUM(CASE WHEN TIMESTAMPDIFF(YEAR, Fecha_nac, CURDATE()) < 18 THEN 1 END) AS menores,
-                SUM(CASE WHEN TIMESTAMPDIFF(YEAR, Fecha_nac, CURDATE()) BETWEEN 18 AND 65 THEN 1 END) AS medio,
-                SUM(CASE WHEN TIMESTAMPDIFF(YEAR, Fecha_nac, CURDATE()) > 65 THEN 1 END) AS jubilados
-            FROM usuarios
-        ")[0] ?? ['menores'=>0, 'medio'=>0, 'jubilados'=>0];
+                SUM(CASE WHEN TIMESTAMPDIFF(YEAR, u.fecha_nac, CURDATE()) < 18 THEN 1 ELSE 0 END) AS menores,
+                SUM(CASE WHEN TIMESTAMPDIFF(YEAR, u.fecha_nac, CURDATE()) BETWEEN 18 AND 65 THEN 1 ELSE 0 END) AS medio,
+                SUM(CASE WHEN TIMESTAMPDIFF(YEAR, u.fecha_nac, CURDATE()) > 65 THEN 1 ELSE 0 END) AS jubilados
+            FROM usuarios u
+            $where
+        ");
+
+        return $resultado[0] ?? ['menores'=>0, 'medio'=>0, 'jubilados'=>0];
     }
 
     private function construirFiltroFecha($campo, $filtro)
     {
+        if (empty($filtro)) {
+            return "";
+        }
+
         switch ($filtro) {
             case 'dia':
                 return "WHERE DATE($campo) = CURDATE()";
@@ -124,6 +131,7 @@ class AdminModel
                 return "WHERE YEAR($campo) = YEAR(CURDATE())
                         AND MONTH($campo) = MONTH(CURDATE())";
 
+            case 'año':
             case 'anio':
                 return "WHERE YEAR($campo) = YEAR(CURDATE())";
 
@@ -131,4 +139,32 @@ class AdminModel
                 return "";
         }
     }
+    // Agregar estos métodos a AdminModel.php
+
+public function obtenerRankingParaEditores()
+{
+    $sql = "SELECT
+        u.ID as id,
+        u.usuario, 
+        u.Rol_ID as rol_id,
+        MAX(p.Puntaje_obtenido) AS mejor_puntaje
+    FROM Partida p
+    INNER JOIN usuarios u ON p.Usuario_ID = u.ID
+    GROUP BY u.ID, u.usuario, u.Rol_ID
+    ORDER BY mejor_puntaje DESC
+    LIMIT 20";
+
+    return $this->conexion->query($sql);
+}
+
+public function promoverAEditor($usuarioId)
+{
+    $usuarioId = (int)$usuarioId;
+    
+    $this->conexion->query("
+        UPDATE usuarios 
+        SET Rol_ID = 2 
+        WHERE ID = $usuarioId
+    ");
+}
 }
