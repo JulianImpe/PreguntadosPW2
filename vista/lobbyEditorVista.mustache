@@ -32,9 +32,8 @@
     <div class="container mx-auto px-5 py-3 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center pokemon-border">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="white" fill="none" stroke-width="2">
-                    <path d="M12 20h9"></path>
-                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="white" d="M18 2h-2v2h-2v2h-2v2h-2v2H8v2H6v2H4v2H2v6h6v-2h2v-2h2v-2h2v-2h2v-2h2v-2h2V8h2V6h-2V4h-2zm0 8h-2v2h-2v2h-2v2h-2v2H8v-2H6v-2h2v-2h2v-2h2V8h2V6h2v2h2zM6 16H4v4h4v-2H6z"/>
                 </svg>
             </div>
             <div>
@@ -42,8 +41,18 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <div class="badge-pending text-white px-4 py-2 rounded-lg font-bold pokemon-border"> {{total_sugeridas}} Pendientes</div>
-            <div class="badge-reported text-white px-4 py-2 rounded-lg font-bold pokemon-border"> {{total_reportadas}} Reportadas</div>
+            <div class="badge-pending text-white px-4 py-2 rounded-lg font-bold pokemon-border flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="white" d="M18 5v6h-1v1h-2v1h-1v2H9v-3h1v-1h1v-1h2V9h1V7h-1V6h-2v1h-1v1H9v1H8V8H7V7H6V6H5V5h1V4h1V3h2V2h6v1h1v1h1v1zm-5 13h1v3h-1v1h-3v-1H9v-3h1v-1h3z"/>
+                </svg>
+                {{total_sugeridas}} Pendientes
+            </div>
+            <div class="badge-reported text-white px-4 py-2 rounded-lg font-bold pokemon-border flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="white" d="M1 21L12 2l11 19zm11-3q.425 0 .713-.288T13 17t-.288-.712T12 16t-.712.288T11 17t.288.713T12 18m-1-3h2v-5h-2z"/>
+                </svg>
+                {{total_reportadas}} Reportadas
+            </div>
         </div>
     </div>
 </header>
@@ -52,7 +61,12 @@
 
     <!-- SECCIÓN SUGERIDAS -->
     <section class="bg-white pokemon-border rounded-2xl p-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-4 border-yellow-300 pb-3">⏳ Preguntas Sugeridas</h2>
+        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-4 border-yellow-300 pb-3 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M18 5v6h-1v1h-2v1h-1v2H9v-3h1v-1h1v-1h2V9h1V7h-1V6h-2v1h-1v1H9v1H8V8H7V7H6V6H5V5h1V4h1V3h2V2h6v1h1v1h1v1zm-5 13h1v3h-1v1h-3v-1H9v-3h1v-1h3z"/>
+            </svg>
+            Preguntas Sugeridas
+        </h2>
 
         {{#preguntas_sugeridas}}
             <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 pokemon-border rounded-xl p-4 mb-4 hover:from-yellow-100 hover:to-yellow-200 transition-all">
@@ -65,8 +79,14 @@
                         <p class="text-gray-800 font-bold mb-3">{{texto}}</p>
                         <div class="grid grid-cols-2 gap-2 text-sm bg-white p-3 rounded-lg">
                             {{#respuestas}}
-                                <p class="{{#es_correcta}}text-green-600 font-bold{{/es_correcta}}{{^es_correcta}}text-gray-600{{/es_correcta}}">
-                                    {{#es_correcta}}✓{{/es_correcta}}{{^es_correcta}}○{{/es_correcta}} {{texto}}
+                                <p class="{{#es_correcta}}text-green-600 font-bold{{/es_correcta}}{{^es_correcta}}text-gray-600{{/es_correcta}} flex items-center gap-1">
+                                    {{#es_correcta}}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1ZM5,11h1v-1h1v-1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1Z"/>
+                                        </svg>
+                                    {{/es_correcta}}
+                                    {{^es_correcta}}○{{/es_correcta}} 
+                                    {{texto}}
                                 </p>
                             {{/respuestas}}
                         </div>
@@ -74,11 +94,21 @@
                     <div class="flex flex-col gap-2">
                         <form action="/editor/aprobarSugerida" method="POST">
                             <input type="hidden" name="pregunta_id" value="{{id}}">
-                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border">✅ Aprobar</button>
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="white" d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1ZM5,11h1v-1h1v-1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1Z"/>
+                                </svg>
+                                Aprobar
+                            </button>
                         </form>
                         <form action="/editor/rechazarSugerida" method="POST">
                             <input type="hidden" name="pregunta_id" value="{{id}}">
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border">❌ Rechazar</button>
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="white" d="M20 6v8h-1v8h-1v1H6v-1H5v-8H4V6zm1-3v2H3V3h1V2h5V1h6v1h5v1z"/>
+                                </svg>
+                                Rechazar
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -92,7 +122,12 @@
 
     <!-- SECCIÓN REPORTADAS -->
     <section class="bg-white pokemon-border rounded-2xl p-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-4 border-red-300 pb-3">⚠️ Preguntas Reportadas</h2>
+        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-4 border-red-300 pb-3 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M1 21L12 2l11 19zm11-3q.425 0 .713-.288T13 17t-.288-.712T12 16t-.712.288T11 17t.288.713T12 18m-1-3h2v-5h-2z"/>
+            </svg>
+            Preguntas Reportadas
+        </h2>
 
         {{#preguntas_reportadas}}
             <div class="bg-gradient-to-r from-red-50 to-red-100 pokemon-border rounded-xl p-4 mb-4 hover:from-red-100 hover:to-red-200 transition-all">
@@ -110,22 +145,43 @@
 
                         <div class="grid grid-cols-2 gap-2 text-sm bg-white p-3 rounded-lg">
                             {{#respuestas}}
-                                <p class="{{#es_correcta}}text-green-600 font-bold{{/es_correcta}}{{^es_correcta}}text-gray-600{{/es_correcta}}">
-                                    {{#es_correcta}}✓{{/es_correcta}}{{^es_correcta}}○{{/es_correcta}} {{texto}}
+                                <p class="{{#es_correcta}}text-green-600 font-bold{{/es_correcta}}{{^es_correcta}}text-gray-600{{/es_correcta}} flex items-center gap-1">
+                                    {{#es_correcta}}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1ZM5,11h1v-1h1v-1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1Z"/>
+                                        </svg>
+                                    {{/es_correcta}}
+                                    {{^es_correcta}}○{{/es_correcta}} 
+                                    {{texto}}
                                 </p>
                             {{/respuestas}}
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <button onclick="abrirModal({{id}})" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border">✏️ Editar</button>
+                        <button onclick="abrirModal({{id}})" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                <path fill="white" d="M18 2h-2v2h-2v2h-2v2h-2v2H8v2H6v2H4v2H2v6h6v-2h2v-2h2v-2h2v-2h2v-2h2v-2h2V8h2V6h-2V4h-2zm0 8h-2v2h-2v2h-2v2h-2v2H8v-2H6v-2h2v-2h2v-2h2V8h2V6h2v2h2zM6 16H4v4h4v-2H6z"/>
+                            </svg>
+                            Editar
+                        </button>
                         <form action="/editor/aprobarReportada" method="POST">
                             <input type="hidden" name="pregunta_id" value="{{id}}">
-                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border">✅ Aprobar</button>
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="white" d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1ZM5,11h1v-1h1v-1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1Z"/>
+                                </svg>
+                                Aprobar
+                            </button>
                         </form>
                         <form action="/editor/eliminarReportada" method="POST">
                             <input type="hidden" name="pregunta_id" value="{{id}}">
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border">🗑️ Dar de Baja</button>
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="white" d="M20 6v8h-1v8h-1v1H6v-1H5v-8H4V6zm1-3v2H3V3h1V2h5V1h6v1h5v1z"/>
+                                </svg>
+                                Dar de Baja
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -133,9 +189,14 @@
 
             <!-- Modal de edición -->
             <div id="modalEditarPregunta{{id}}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div class="bg-white rounded-2xl w-full max-w-3xl p-6 relative max-h-[90vh] overflow-y-auto">
+                <div class="bg-white rounded-2xl w-full max-w-3xl p-6 relative max-h-[90vh] overflow-y-auto pokemon-border">
                     <button onclick="cerrarModal({{id}})" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 font-bold text-xl">&times;</button>
-                    <h2 class="text-2xl font-bold mb-4">✏️ Editar Pregunta y Respuestas</h2>
+                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M18 2h-2v2h-2v2h-2v2h-2v2H8v2H6v2H4v2H2v6h6v-2h2v-2h2v-2h2v-2h2v-2h2v-2h2V8h2V6h-2V4h-2zm0 8h-2v2h-2v2h-2v2h-2v2H8v-2H6v-2h2v-2h2v-2h2V8h2V6h2v2h2zM6 16H4v4h4v-2H6z"/>
+                        </svg>
+                        Editar Pregunta y Respuestas
+                    </h2>
                     <form method="POST" action="/editor/actualizarPreguntaCompleta">
                         <input type="hidden" name="pregunta_id" value="{{id}}">
                         <label class="font-bold">Pregunta:</label>

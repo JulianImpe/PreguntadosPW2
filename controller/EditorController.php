@@ -30,13 +30,36 @@ class EditorController
         $preguntasReportadas = $this->model->obtenerPreguntasReportadas();
         $estadisticas = $this->model->obtenerEstadisticasEditor($usuarioId);
 
+        // Procesar toast si existe
+        $toast = null;
+        if (isset($_SESSION['toast'])) {
+            $toast = $_SESSION['toast'];
+            unset($_SESSION['toast']);
+        }
+
         $data = [
+            // Datos del editor
+            'ID' => $datosUsuario['ID'] ?? $usuarioId,
+            'usuario_id' => $datosUsuario['usuario_id'] ?? $usuarioId,
+            'usuario' => $datosUsuario['usuario'] ?? 'Editor',
+            'nombre_completo' => $datosUsuario['nombre_completo'] ?? '',
+            'email' => $datosUsuario['email'] ?? '',
+            'fecha_nacimiento' => $this->formatearFecha($datosUsuario['fecha_nac'] ?? null),
+            'foto_perfil' => !empty($datosUsuario['foto_perfil'])
+                ? '/public/img/' . basename($datosUsuario['foto_perfil'])
+                : '/public/img/default-avatar.png',
+            'tiene_foto' => !empty($datosUsuario['foto_perfil']),
+            
+            // Datos de la vista
             'nombre_editor' => $datosUsuario['usuario'] ?? 'Editor',
             'total_sugeridas' => count($preguntasSugeridas),
             'total_reportadas' => count($preguntasReportadas),
             'estadisticas' => $estadisticas,
             'preguntas_sugeridas' => $preguntasSugeridas,
-            'preguntas_reportadas' => $preguntasReportadas
+            'preguntas_reportadas' => $preguntasReportadas,
+            
+            // Toast notification
+            'toast' => $toast
         ];
 
         $this->renderer->render("lobbyEditor", $data);
@@ -46,7 +69,15 @@ class EditorController
     {
         $preguntaId = $_POST['pregunta_id'] ?? $_POST['id'] ?? null;
         $editorId = $_SESSION['usuario_id'];
-        $this->model->aprobarPreguntaSugerida($preguntaId, $editorId);
+        
+        $resultado = $this->model->aprobarPreguntaSugerida($preguntaId, $editorId);
+        
+        if ($resultado) {
+            $_SESSION['toast'] = [
+                'tipo' => 'success',
+                'clase' => 'bg-green-600'
+            ];
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
@@ -56,7 +87,15 @@ class EditorController
     {
         $preguntaId = $_POST['pregunta_id'] ?? $_POST['id'] ?? null;
         $editorId = $_SESSION['usuario_id'];
-        $this->model->rechazarPreguntaSugerida($preguntaId, $editorId);
+        
+        $resultado = $this->model->rechazarPreguntaSugerida($preguntaId, $editorId);
+        
+        if ($resultado) {
+            $_SESSION['toast'] = [
+                'tipo' => 'success',
+                'clase' => 'bg-green-600'
+            ];
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
@@ -66,7 +105,15 @@ class EditorController
     {
         $preguntaId = $_POST['pregunta_id'] ?? $_POST['id'] ?? null;
         $editorId = $_SESSION['usuario_id'];
-        $this->model->aprobarPreguntaReportada($preguntaId, $editorId);
+        
+        $resultado = $this->model->aprobarPreguntaReportada($preguntaId, $editorId);
+        
+        if ($resultado) {
+            $_SESSION['toast'] = [
+                'tipo' => 'success',
+                'clase' => 'bg-green-600'
+            ];
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
@@ -76,7 +123,15 @@ class EditorController
     {
         $preguntaId = $_POST['pregunta_id'] ?? $_POST['id'] ?? null;
         $editorId = $_SESSION['usuario_id'];
-        $this->model->eliminarPreguntaReportada($preguntaId, $editorId);
+        
+        $resultado = $this->model->eliminarPreguntaReportada($preguntaId, $editorId);
+        
+        if ($resultado) {
+            $_SESSION['toast'] = [
+                'tipo' => 'success',
+                'clase' => 'bg-red-600'
+            ];
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
@@ -103,9 +158,49 @@ class EditorController
             }
         }
 
-        $this->model->actualizarPreguntaCompleta($preguntaId, $textoPregunta, $respuestas);
+        $resultado = $this->model->actualizarPreguntaCompleta($preguntaId, $textoPregunta, $respuestas);
+        
+        if ($resultado) {
+            $_SESSION['toast'] = [
+                'tipo' => 'success',
+                'clase' => 'bg-green-600'
+            ];
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
+    }
+    
+    /**
+     * Formatea la fecha de nacimiento al formato DD/MM/YYYY
+     */
+    private function formatearFecha($fecha)
+    {
+        if (empty($fecha)) {
+            return '';
+        }
+        
+        $timestamp = strtotime($fecha);
+        if ($timestamp === false) {
+            return $fecha;
+        }
+        
+        return date('d/m/Y', $timestamp);
+    }
+    
+    /**
+     * Calcula la edad a partir de la fecha de nacimiento
+     */
+    private function calcularEdad($fechaNacimiento)
+    {
+        if (empty($fechaNacimiento)) {
+            return 0;
+        }
+        
+        $nacimiento = new DateTime($fechaNacimiento);
+        $hoy = new DateTime();
+        $edad = $hoy->diff($nacimiento);
+        
+        return $edad->y;
     }
 }
