@@ -527,3 +527,49 @@ ADD COLUMN Fecha_resolucion DATETIME NULL AFTER Estado;
 ALTER TABLE Reporte
     ADD COLUMN Partida_ID INT NULL AFTER Pregunta_ID,
 ADD FOREIGN KEY (Partida_ID) REFERENCES Partida(ID) ON DELETE SET NULL;
+
+INSERT INTO usuarios (
+    usuario,
+    password,
+    email,
+    fecha_nac,
+    foto_perfil,
+    nombre_completo,
+    Sexo_ID,
+    Rol_ID,
+    Puntaje_total,
+    Mapa_ID
+) VALUES (
+    'admin',
+    'admin123', 
+    'admin@preguntados.com',
+    '1990-01-01',
+    NULL,
+    'Administrador del Sistema',
+    1,     -- Sexo_ID (Masculino, o cambiá al que quieras)
+    3,     -- Rol_ID = Administrador
+    0,
+    NULL
+);
+INSERT INTO usuarios (
+    usuario, password, email, fecha_nac, nombre_completo, Sexo_ID, Rol_ID
+) VALUES (
+    'editor', 'editor123', 'editor@preguntados.com', '1992-06-15', 
+    'Editor del Sistema', 1, 2
+);
+
+-- Jugador de prueba
+INSERT INTO usuarios (
+    usuario, password, email, fecha_nac, nombre_completo, Sexo_ID, Rol_ID
+) VALUES (
+    'jugador', 'jugador123', 'jugador@preguntados.com', '1995-03-20', 
+    'Jugador Normal', 1, 1
+);
+
+ALTER TABLE usuarios 
+ADD COLUMN Fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP AFTER Mapa_ID;
+
+-- Actualizar las fechas de los usuarios existentes
+UPDATE usuarios 
+SET Fecha_creacion = CURRENT_TIMESTAMP 
+WHERE Fecha_creacion IS NULL;

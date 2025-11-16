@@ -1,32 +1,33 @@
 <?php
 
-class EditorController{
+class EditorController
+{
     private $model;
     private $renderer;
-    public function __construct($model, $renderer){
+
+    public function __construct($model, $renderer)
+    {
         $this->model = $model;
         $this->renderer = $renderer;
     }
-    public function base(){
+
+    public function base()
+    {
         $this->lobbyEditor();
     }
-    public function lobbyEditor(){
+
+    public function lobbyEditor()
+    {
         if (!isset($_SESSION["usuario_id"])) {
             header("Location: /login/loginForm");
             exit;
         }
+
         $usuarioId = $_SESSION["usuario_id"];
         $datosUsuario = $this->model->obtenerDatosUsuario($usuarioId);
+
         $preguntasSugeridas = $this->model->obtenerPreguntasSugeridas();
         $preguntasReportadas = $this->model->obtenerPreguntasReportadas();
-        $estadisticas = $this->model->obtenerEstadisticasEditor($usuarioId);
-
-        // Procesar toast si existe
-        $toast = null;
-        if (isset($_SESSION['toast'])) {
-            $toast = $_SESSION['toast'];
-            unset($_SESSION['toast']);
-        }
 
         $data = [
             // Datos del editor
@@ -46,55 +47,99 @@ class EditorController{
             'total_sugeridas' => count($preguntasSugeridas),
             'total_reportadas' => count($preguntasReportadas),
             'preguntas_sugeridas' => $preguntasSugeridas,
-            'preguntas_reportadas' => $preguntasReportadas
+            'preguntas_reportadas' => $preguntasReportadas,
+            
+            // ✅ Mensajes de notificación (ANTES de borrarlos)
+            'exito_reporte' => $_SESSION['exito_reporte'] ?? null,
+            'error_reporte' => $_SESSION['error_reporte'] ?? null
         ];
+
+        // ✅ AHORA SÍ los borramos DESPUÉS de agregarlos a $data
         unset($_SESSION['exito_reporte']);
+        unset($_SESSION['error_reporte']);
+
         $this->renderer->render("lobbyEditor", $data);
     }
 
-    public function aprobarSugerida(){
+    public function aprobarSugerida()
+    {
         $preguntaId = $_POST['pregunta_id'] ?? $_POST['id'] ?? null;
         $editorId = $_SESSION['usuario_id'];
-        $this->model->aprobarPreguntaSugerida($preguntaId, $editorId);
+        
+        $resultado = $this->model->aprobarPreguntaSugerida($preguntaId, $editorId);
+        
+        if ($resultado) {
+            $_SESSION['exito_reporte'] = "Pregunta sugerida aprobada exitosamente";
+        } else {
+            $_SESSION['error_reporte'] = "Error al aprobar la pregunta sugerida";
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
     }
 
-    public function rechazarSugerida(){
+    public function rechazarSugerida()
+    {
         $preguntaId = $_POST['pregunta_id'] ?? $_POST['id'] ?? null;
         $editorId = $_SESSION['usuario_id'];
-        $this->model->rechazarPreguntaSugerida($preguntaId, $editorId);
+        
+        $resultado = $this->model->rechazarPreguntaSugerida($preguntaId, $editorId);
+        
+        if ($resultado) {
+            $_SESSION['exito_reporte'] = "Pregunta sugerida rechazada exitosamente";
+        } else {
+            $_SESSION['error_reporte'] = "Error al rechazar la pregunta sugerida";
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
     }
 
-    public function aprobarReportada(){
+    public function aprobarReportada()
+    {
         $preguntaId = $_POST['pregunta_id'] ?? $_POST['id'] ?? null;
         $editorId = $_SESSION['usuario_id'];
-        $this->model->aprobarPreguntaReportada($preguntaId, $editorId);
+        
+        $resultado = $this->model->aprobarPreguntaReportada($preguntaId, $editorId);
+        
+        if ($resultado) {
+            $_SESSION['exito_reporte'] = "Pregunta reportada aprobada exitosamente";
+        } else {
+            $_SESSION['error_reporte'] = "Error al aprobar la pregunta reportada";
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
     }
 
-    public function eliminarReportada(){
+    public function eliminarReportada()
+    {
         $preguntaId = $_POST['pregunta_id'] ?? $_POST['id'] ?? null;
         $editorId = $_SESSION['usuario_id'];
-        $this->model->eliminarPreguntaReportada($preguntaId, $editorId);
+        
+        $resultado = $this->model->eliminarPreguntaReportada($preguntaId, $editorId);
+        
+        if ($resultado) {
+            $_SESSION['exito_reporte'] = "Pregunta reportada eliminada exitosamente";
+        } else {
+            $_SESSION['error_reporte'] = "Error al eliminar la pregunta reportada";
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
     }
-    public function actualizarPreguntaCompleta(){
+
+    public function actualizarPreguntaCompleta()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: /editor/lobbyEditor');
             exit;
         }
+
         $preguntaId = $_POST['pregunta_id'] ?? 0;
         $textoPregunta = trim($_POST['texto'] ?? '');
         $respuestasPost = $_POST['respuestas'] ?? [];
+
         $respuestas = [];
         foreach ($respuestasPost as $respuestaId => $datos) {
             if (is_array($datos) && !empty($datos['texto'])) {
@@ -105,7 +150,13 @@ class EditorController{
             }
         }
 
-        $this->model->actualizarPreguntaCompleta($preguntaId, $textoPregunta, $respuestas);
+        $resultado = $this->model->actualizarPreguntaCompleta($preguntaId, $textoPregunta, $respuestas);
+        
+        if ($resultado) {
+            $_SESSION['exito_reporte'] = "Pregunta actualizada y aprobada exitosamente";
+        } else {
+            $_SESSION['error_reporte'] = "Error al actualizar la pregunta";
+        }
 
         header("Location: /editor/lobbyEditor");
         exit;
@@ -126,21 +177,5 @@ class EditorController{
         }
         
         return date('d/m/Y', $timestamp);
-    }
-    
-    /**
-     * Calcula la edad a partir de la fecha de nacimiento
-     */
-    private function calcularEdad($fechaNacimiento)
-    {
-        if (empty($fechaNacimiento)) {
-            return 0;
-        }
-        
-        $nacimiento = new DateTime($fechaNacimiento);
-        $hoy = new DateTime();
-        $edad = $hoy->diff($nacimiento);
-        
-        return $edad->y;
     }
 }
