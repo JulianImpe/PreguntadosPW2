@@ -257,7 +257,7 @@ class EditorModel
         ];
         return $clases[$nombre] ?? 'roca';
     }
-//cambiarlo por las fotos q tnemos descargadas
+
     private function getMedallaEmoji($nombre)
     {
         $emojis = [
@@ -273,13 +273,13 @@ class EditorModel
     // CRUD de Medallas
     // --------------------
 
-    // Obtener todas las medallas
+
     public function getAllMedallas()
     {
         return $this->conexion->query("SELECT * FROM Medallas");
     }
 
-    // Obtener una medalla por ID
+
     public function getMedallaById($id)
     {
         $id = (int)$id;
@@ -287,7 +287,7 @@ class EditorModel
         return !empty($resultado) ? $resultado[0] : null;
     }
 
-    // Crear una medalla nueva
+
     public function createMedalla($data)
     {
         $nombre = $this->conexion->getConexion()->real_escape_string($data['Nombre']);
@@ -298,7 +298,7 @@ class EditorModel
         return $this->conexion->query($sql);
     }
 
-    // Actualizar medalla existente
+
     public function updateMedalla($id, $data)
     {
         $id = (int)$id;
@@ -310,7 +310,7 @@ class EditorModel
         return $this->conexion->query($sql);
     }
 
-    // Eliminar medalla
+
     public function deleteMedalla($id)
     {
         $id = (int)$id;

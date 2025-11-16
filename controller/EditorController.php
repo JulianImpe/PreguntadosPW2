@@ -109,31 +109,19 @@ class EditorController
         exit;
     }
 
-    // Método para mostrar la vista de gestión de medallas
+
     public function gestionarMedallas()
     {
-        // Trae todas las medallas desde el modelo
+
         $medallas = $this->model->getAllMedallas();
 
-        // Renderiza la vista medallasVista.mustache con los datos
+
         $this->renderer->render("medallas", [
             "medallas" => $medallas
         ]);
     }
 
-    // Crear medalla (formulario)
-   /* public function crearMedalla()
-    {
-        $this->renderer->render("editarMedalla", [
-            'medalla' => [
-                'ID' => '',
-                'Nombre' => '',
-                'Color' => '#000000',
-                'Imagen_url' => ''
-            ],
-            'es_creacion' => true
-        ]);
-    }*/
+
 
     public function crearMedalla()
     {
@@ -143,7 +131,7 @@ class EditorController
 
 
 
-    // Editar medalla (formulario)
+
     public function editarMedalla()
     {
         $id = $_GET['id'] ?? null;
@@ -153,7 +141,7 @@ class EditorController
             exit;
         }
 
-        // OJO: este método debe existir en EditorModel
+
         $medalla = $this->model->getMedallaById($id);
 
         if (!$medalla) {
@@ -161,7 +149,7 @@ class EditorController
             exit;
         }
 
-        // Renderiza correctamente la vista y los datos
+
         $this->renderer->render("editarMedalla", [
             "es_creacion" => false,
             "medalla" => $medalla
@@ -171,7 +159,7 @@ class EditorController
 
 
 
-    // Guardar medalla (crear o actualizar)
+
     public function guardarMedalla()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -181,10 +169,10 @@ class EditorController
 
         $id = $_POST["id"] ?? null;
 
-        // Imagen actual (si no suben una nueva)
+
         $imagenUrl = $_POST["Imagen_url_actual"] ?? null;
 
-        // Si suben una imagen nueva
+
         if (isset($_FILES["Imagen"]) && $_FILES["Imagen"]["error"] === 0) {
 
             $carpetaDestino = "public/medallas/";
@@ -220,17 +208,7 @@ class EditorController
 
 
 
-    // Eliminar medalla
-    /*public function eliminarMedalla()
-    {
-        $id = $_GET['id'] ?? 0;
-        if ($id) {
-            $this->model->deleteMedalla($id);
-        }
 
-        header("Location: /editor/medallas");
-        exit;
-    }*/
     public function eliminarMedalla()
     {
         if (!isset($_POST["id"])) {
@@ -240,7 +218,7 @@ class EditorController
 
         $id = $_POST["id"];
 
-        // Llamamos al método que agregamos en EditorModel
+
         $this->model->eliminarMedallaPorId($id);
 
         header("Location: /editor/medallas");
