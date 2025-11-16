@@ -108,4 +108,97 @@ class EditorController
         header("Location: /editor/lobbyEditor");
         exit;
     }
+
+    // Método para mostrar la vista de gestión de medallas
+    public function gestionarMedallas()
+    {
+        // Trae todas las medallas desde el modelo
+        $medallas = $this->model->getAllMedallas();
+
+        // Renderiza la vista medallasVista.mustache con los datos
+        $this->renderer->render("medallas", [
+            "medallas" => $medallas
+        ]);
+    }
+
+    // Crear medalla (formulario)
+    public function crearMedalla()
+    {
+        $this->renderer->render("editarMedallaVista", [
+            'medalla' => null,
+            'medallas' => $this->model->getTodasLasMedallas()
+        ]);
+    }
+
+    // Editar medalla (formulario)
+    public function editarMedalla()
+    {
+        $id = $_GET['id'] ?? 0;
+        $medalla = $this->model->getMedallaById($id);
+
+        if (!$medalla) {
+            header("Location: /editor/medallas");
+            exit;
+        }
+
+        $this->renderer->render("editarMedallaVista", [
+            'medalla' => $medalla,
+            'medallas' => $this->model->getTodasLasMedallas()
+        ]);
+    }
+
+    // Guardar medalla (crear o actualizar)
+    public function guardarMedalla()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? null;
+            $data = [
+                'Nombre' => $_POST['Nombre'] ?? '',
+                'Color' => $_POST['Color'] ?? '',
+                'Imagen_url' => $_POST['Imagen_url'] ?? ''
+            ];
+
+            if ($id) {
+                $this->model->updateMedalla($id, $data);
+            } else {
+                $this->model->createMedalla($data);
+            }
+
+            header("Location: /editor/medallas");
+            exit;
+        }
+    }
+
+    // Eliminar medalla
+    /*public function eliminarMedalla()
+    {
+        $id = $_GET['id'] ?? 0;
+        if ($id) {
+            $this->model->deleteMedalla($id);
+        }
+
+        header("Location: /editor/medallas");
+        exit;
+    }*/
+    public function eliminarMedalla()
+    {
+        if (!isset($_POST["id"])) {
+            echo "Error: falta el ID";
+            return;
+        }
+
+        $id = $_POST["id"];
+
+        // Llamamos al método que agregamos en EditorModel
+        $this->model->eliminarMedallaPorId($id);
+
+        header("Location: /editor/medallas");
+        exit;
+    }
+
+
+
+
+
+
 }

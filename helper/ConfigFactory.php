@@ -69,6 +69,8 @@ class ConfigFactory
         $this->objetos["SugerenciaController"] = new SugerenciaController(new SugerenciaModel($this->conexion), $this->renderer);
 
 
+
+
     }
 
     public function get($objectName)

@@ -1,0 +1,38 @@
+<h2>Gestión de Medallas</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Color</th>
+        <th>Imagen</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#medallas}}
+        <tr>
+            <td>{{Nombre}}</td>
+            <td><span style="background-color:{{Color}};">&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+            <td><img src="{{Imagen_url}}" width="50"></td>
+            <td>
+                <a href="/editor/medalla/editar?id={{ID}}">Editar</a>
+                <!--<a href="/editor/medalla/eliminar?id={{ID}}" onclick="return confirm('¿Seguro que quieres eliminar esta medalla?')">Eliminar</a>-->
+                <form method="POST" action="/editor/eliminarMedalla">
+                    <input type="hidden" name="id" value="{{ID}}">
+                    <button onclick="return confirm('¿Seguro que quieres eliminar esta medalla?')"
+                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                        Eliminar
+                    </button>
+                </form>
+
+
+
+
+            </td>
+        </tr>
+    {{/medallas}}
+    </tbody>
+</table>
+
+<a href="/editor/medalla/crear">Crear nueva medalla</a>
