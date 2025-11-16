@@ -1,23 +1,139 @@
-<h2>Editar Medalla</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Medalla - Pokémon Trivia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .pokemon-border {
+            border: 4px solid #2c3e50;
+            box-shadow:
+                inset -4px -4px 0px rgba(0,0,0,0.3),
+                inset 4px 4px 0px rgba(255,255,255,0.3),
+                4px 4px 0px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-purple-400 to-indigo-300 py-8">
 
-<form method="POST" action="/editor/guardarMedalla" enctype="multipart/form-data">
+<div class="container mx-auto px-5 max-w-2xl mt-3">
+    <!-- Header -->
+    <div class="bg-white pokemon-border rounded-2xl p-6 mb-6">
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M18 2h-2v2h-2v2h-2v2h-2v2H8v2H6v2H4v2H2v6h6v-2h2v-2h2v-2h2v-2h2v-2h2v-2h2V8h2V6h-2V4h-2zm0 8h-2v2h-2v2h-2v2h-2v2H8v-2H6v-2h2v-2h2v-2h2V8h2V6h2v2h2zM6 16H4v4h4v-2H6z"/>
+            </svg>
+            <h2 class="text-3xl font-bold text-gray-800">Editar Medalla</h2>
+        </div>
+    </div>
 
+    <!-- Formulario -->
+    <form method="POST" action="/editor/guardarMedalla" enctype="multipart/form-data" class="bg-white pokemon-border rounded-2xl p-6 space-y-6 mb-6">
+        
+        <input type="hidden" name="id" value="{{medalla.ID}}">
+        <input type="hidden" name="Imagen_url_actual" value="{{medalla.Imagen_url}}">
 
-    <input type="hidden" name="id" value="{{medalla.ID}}">
+        <!-- Nombre -->
+        <div class="space-y-2">
+            <label class="block text-gray-800 font-bold text-lg flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+                Nombre de la Medalla
+            </label>
+            <input 
+                type="text" 
+                name="Nombre" 
+                value="{{medalla.Nombre}}" 
+                required
+                class="w-full px-4 py-3 border-4 border-gray-300 rounded-lg font-bold focus:border-purple-500 focus:outline-none transition-colors"
+                placeholder="Ej: Medalla Roca"
+            >
+        </div>
 
-    <label>Nombre:</label>
-    <input type="text" name="Nombre" value="{{medalla.Nombre}}" required>
+        <!-- Color -->
+        <div class="space-y-2">
+            <label class="block text-gray-800 font-bold text-lg flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                </svg>
+                Color de la Medalla
+            </label>
+            <div class="flex items-center gap-3">
+                <input 
+                    type="color" 
+                    name="Color" 
+                    value="{{medalla.Color}}" 
+                    required
+                    class="w-20 h-20 border-4 border-gray-300 rounded-lg cursor-pointer pokemon-border"
+                >
+                <div class="flex-1 px-4 py-3 bg-gray-100 rounded-lg font-bold text-gray-700">
+                    Color seleccionado: <span class="text-purple-600">{{medalla.Color}}</span>
+                </div>
+            </div>
+        </div>
 
-    <label>Color (HEX):</label>
-    <input type="color" name="Color" value="{{medalla.Color}}" required>
+        <!-- Imagen Actual -->
+        <div class="space-y-2">
+            <label class="block text-gray-800 font-bold text-lg flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                </svg>
+                Imagen Actual
+            </label>
+            <div class="bg-gradient-to-br from-purple-100 to-indigo-100 pokemon-border rounded-xl p-6 flex justify-center">
+                <img 
+                    src="/public/{{medalla.Imagen_url}}" 
+                    alt="{{medalla.Nombre}}"
+                    class="w-32 h-32 object-contain pokemon-border bg-white rounded-lg p-2"
+                >
+            </div>
+        </div>
 
-    <label>Imagen actual:</label>
-    <img src="{{medalla.Imagen_url}}" width="100">
+        <!-- Subir Nueva Imagen -->
+        <div class="space-y-2">
+            <label class="block text-gray-800 font-bold text-lg flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                </svg>
+                Subir Nueva Imagen (Opcional)
+            </label>
+            <div class="relative">
+                <input 
+                    type="file" 
+                    name="Imagen"
+                    accept="image/*"
+                    class="block w-full text-gray-700 file:mr-4 file:py-3 file:px-6 file:rounded-lg file:border-0 file:font-bold file:bg-purple-500 file:text-white hover:file:bg-purple-600 file:cursor-pointer file:pokemon-border cursor-pointer border-4 border-dashed border-gray-300 rounded-lg p-4 hover:border-purple-400 transition-colors"
+                >
+            </div>
+            <p class="text-sm text-gray-500 italic">* Si no seleccionas una imagen, se mantendrá la actual</p>
+        </div>
 
-    <input type="hidden" name="Imagen_url_actual" value="{{medalla.Imagen_url}}">
+        <!-- Botones -->
+        <div class="flex gap-3 pt-4">
+            <button 
+                type="submit" 
+                class="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-4 rounded-lg font-bold pokemon-border transition-all hover:scale-105 flex items-center justify-center gap-2"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="white" d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1ZM5,11h1v-1h1v-1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1Z"/>
+                </svg>
+                Guardar Cambios
+            </button>
+            
+            <a 
+                href="/editor/lobbyEditor" 
+                class="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-6 py-4 rounded-lg font-bold pokemon-border transition-all hover:scale-105 flex items-center justify-center gap-2"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="white" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
 
-    <label>Subir nueva imagen:</label>
-    <input type="file" name="Imagen">
-
-    <button type="submit">Guardar</button>
-</form>
+</body>
+</html>
