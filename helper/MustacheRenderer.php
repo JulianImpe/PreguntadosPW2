@@ -23,4 +23,11 @@ class MustacheRenderer{
         $contentAsString .= file_get_contents($this->viewsFolder . '/footer.mustache');
         return $this->mustache->render($contentAsString, $data);
     }
+    private function getSessionData() {
+        return [
+            'usuario_id' => $_SESSION['usuario_id'] ?? null,
+            'usuario' => $_SESSION['usuario'] ?? null,
+            'rol' => $_SESSION['rol'] ?? null
+        ];
+    }
 }
