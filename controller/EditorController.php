@@ -283,12 +283,7 @@ class EditorController
         header("Location: /editor/medallas");
         exit;
     }
-}
-    
-    /**
-     * Formatea la fecha de nacimiento al formato DD/MM/YYYY
-     */
-    private function formatearFecha($fecha)
+        public function formatearFecha($fecha)
     {
         if (empty($fecha)) {
             return '';
