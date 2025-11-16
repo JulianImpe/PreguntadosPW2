@@ -56,10 +56,43 @@
         </div>
     </div>
 </header>
+{{#exito_reporte}}
+    <div id="mensajeExito" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3 transition-opacity duration-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>{{exito_reporte}}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            const msg = document.getElementById('mensajeExito');
+            if (msg) {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            }
+        }, 3000);
+    </script>
+{{/exito_reporte}}
+
+{{#error_reporte}}
+    <div id="mensajeError" class="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3 transition-opacity duration-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        <span>{{error_reporte}}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            const msg = document.getElementById('mensajeError');
+            if (msg) {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            }
+        }, 3000);
+    </script>
+{{/error_reporte}}
 
 <main class="container mx-auto px-5 py-8 space-y-10">
-
-    <!-- SECCIÓN SUGERIDAS -->
     <section class="bg-white pokemon-border rounded-2xl p-6">
         <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-4 border-yellow-300 pb-3 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -114,13 +147,10 @@
                 </div>
             </div>
         {{/preguntas_sugeridas}}
-
         {{^preguntas_sugeridas}}
-            <p class="text-center text-gray-500 font-semibold py-6">✨ No hay sugerencias pendientes</p>
+            <p class="text-center text-gray-500 font-semibold py-6">No hay sugerencias pendientes</p>
         {{/preguntas_sugeridas}}
     </section>
-
-    <!-- SECCIÓN REPORTADAS -->
     <section class="bg-white pokemon-border rounded-2xl p-6">
         <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-4 border-red-300 pb-3 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -187,7 +217,6 @@
                 </div>
             </div>
 
-            <!-- Modal de edición -->
             <div id="modalEditarPregunta{{id}}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div class="bg-white rounded-2xl w-full max-w-3xl p-6 relative max-h-[90vh] overflow-y-auto pokemon-border">
                     <button onclick="cerrarModal({{id}})" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 font-bold text-xl">&times;</button>
@@ -222,13 +251,10 @@
         {{/preguntas_reportadas}}
 
         {{^preguntas_reportadas}}
-            <p class="text-center text-gray-500 font-semibold py-6">✅ No hay reportes pendientes</p>
+            <p class="text-center text-gray-500 font-semibold py-6">No hay reportes pendientes</p>
         {{/preguntas_reportadas}}
     </section>
-
 </main>
-
-<!-- Script modal -->
 <script>
     function abrirModal(id) {
         document.getElementById('modalEditarPregunta' + id)?.classList.remove('hidden');
@@ -237,6 +263,5 @@
         document.getElementById('modalEditarPregunta' + id)?.classList.add('hidden');
     }
 </script>
-
 </body>
 </html>

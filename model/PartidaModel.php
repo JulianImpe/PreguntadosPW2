@@ -12,9 +12,9 @@ class PartidaModel
     public function getPreguntaYRespuesta($usuarioId, $medallaId = null)
     {
         $usuarioId = (int)$usuarioId;
-        
+
         $nivelJugador = $this->obtenerNivelJugador($usuarioId);
-        
+
         if ($nivelJugador <= 0.33) {
             $minDif = 0;
             $maxDif = 0.5;
@@ -25,9 +25,9 @@ class PartidaModel
             $minDif = 0.5;
             $maxDif = 1;
         }
-        
+
         $sqlMedalla = $medallaId ? "AND p.Medalla_ID = " . intval($medallaId) : "";
-        
+
         $pregunta = $this->database->query("
             SELECT 
                 p.ID AS preguntaId,
@@ -47,7 +47,7 @@ class PartidaModel
 
         if (empty($pregunta)) {
             $this->database->query("DELETE FROM Usuario_pregunta_vista WHERE Usuario_ID = $usuarioId");
-            
+
             $pregunta = $this->database->query("
                 SELECT 
                     p.ID AS preguntaId,
@@ -66,7 +66,7 @@ class PartidaModel
         if (empty($pregunta)) return [];
 
         $preguntaId = $pregunta[0]['preguntaId'];
-        
+
         $this->marcarPreguntaVista($usuarioId, $preguntaId);
 
         $respuestas = $this->database->query("
@@ -100,7 +100,7 @@ class PartidaModel
     {
         $usuarioId = (int)$usuarioId;
         $preguntaId = (int)$preguntaId;
-        
+
         $this->database->query("
             INSERT IGNORE INTO Usuario_pregunta_vista (Usuario_ID, Pregunta_ID)
             VALUES ($usuarioId, $preguntaId)
@@ -110,7 +110,7 @@ class PartidaModel
     public function obtenerNivelJugador($usuarioId)
     {
         $usuarioId = (int)$usuarioId;
-        
+
         $resultado = $this->database->query("
             SELECT 
                 COUNT(DISTINCT pp.Partida_ID) as partidas_totales,
@@ -120,14 +120,14 @@ class PartidaModel
             INNER JOIN Partida p ON pp.Partida_ID = p.ID
             WHERE p.Usuario_ID = $usuarioId
         ");
-        
+
         if (empty($resultado) || $resultado[0]['respuestas_totales'] == 0) {
-            return 0.5; 
+            return 0.5;
         }
-        
+
         $correctas = (int)$resultado[0]['respuestas_correctas'];
         $totales = (int)$resultado[0]['respuestas_totales'];
-        
+
         return $correctas / $totales;
     }
 
@@ -149,7 +149,7 @@ class PartidaModel
     public function getPreguntaRender($usuarioId)
     {
         $preguntaYRespuestas = $this->getPreguntaYRespuesta($usuarioId);
-        
+
         if (empty($preguntaYRespuestas)) {
             return null;
         }
@@ -193,83 +193,83 @@ class PartidaModel
         ];
     }
 
-public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = false)
-{
-    $preguntaId = (int)$preguntaId;
-    $respuestaId = (int)$respuestaId;
+    public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = false)
+    {
+        $preguntaId = (int)$preguntaId;
+        $respuestaId = (int)$respuestaId;
 
-    $respuestaCorrecta = $this->getRespuestaCorrecta($preguntaId);
-    $esCorrecta = !empty($respuestaCorrecta) && $respuestaId == $respuestaCorrecta[0]['ID'];
+        $respuestaCorrecta = $this->getRespuestaCorrecta($preguntaId);
+        $esCorrecta = !empty($respuestaCorrecta) && $respuestaId == $respuestaCorrecta[0]['ID'];
 
-    if ($tiempoAgotado) {
-        $esCorrecta = false;
-    }
+        if ($tiempoAgotado) {
+            $esCorrecta = false;
+        }
 
-    $datosPrevios = $this->database->query("
+        $datosPrevios = $this->database->query("
         SELECT COALESCE(Dificultad, 0.5) AS Dificultad
         FROM Pregunta
         WHERE ID = $preguntaId
     ");
-    $dificultadAnterior = (float)($datosPrevios[0]['Dificultad'] ?? 0.5);
+        $dificultadAnterior = (float)($datosPrevios[0]['Dificultad'] ?? 0.5);
 
-    $sumarCorrecta = $esCorrecta ? 1 : 0;
+        $sumarCorrecta = $esCorrecta ? 1 : 0;
 
-    $this->database->query("
+        $this->database->query("
         UPDATE Pregunta
         SET Cant_veces_respondida = Cant_veces_respondida + 1,
             Cant_veces_correcta = Cant_veces_correcta + $sumarCorrecta
         WHERE ID = $preguntaId
     ");
 
-    $datosPregunta = $this->database->query("
+        $datosPregunta = $this->database->query("
         SELECT Cant_veces_respondida, Cant_veces_correcta
         FROM Pregunta
         WHERE ID = $preguntaId
     ");
 
-    $cantidadRespondidas = (int)($datosPregunta[0]['Cant_veces_respondida'] ?? 0);
-    $cantidadCorrectas = (int)($datosPregunta[0]['Cant_veces_correcta'] ?? 0);
+        $cantidadRespondidas = (int)($datosPregunta[0]['Cant_veces_respondida'] ?? 0);
+        $cantidadCorrectas = (int)($datosPregunta[0]['Cant_veces_correcta'] ?? 0);
 
-    if ($cantidadRespondidas === 0) {
-        $dificultad = 0.5;
-        $nivelDificultad = 'Medio';
-    } else {
-        $probabilidadDeAcierto = $cantidadCorrectas / $cantidadRespondidas;
-        $dificultad = 1 - $probabilidadDeAcierto;
-
-        if ($dificultad <= 0.33) {
-            $nivelDificultad = 'Fácil';
-        } elseif ($dificultad <= 0.66) {
+        if ($cantidadRespondidas === 0) {
+            $dificultad = 0.5;
             $nivelDificultad = 'Medio';
         } else {
-            $nivelDificultad = 'Difícil';
-        }
+            $probabilidadDeAcierto = $cantidadCorrectas / $cantidadRespondidas;
+            $dificultad = 1 - $probabilidadDeAcierto;
 
-        $this->database->query("
+            if ($dificultad <= 0.33) {
+                $nivelDificultad = 'Fácil';
+            } elseif ($dificultad <= 0.66) {
+                $nivelDificultad = 'Medio';
+            } else {
+                $nivelDificultad = 'Difícil';
+            }
+
+            $this->database->query("
             UPDATE Pregunta
             SET Dificultad = $dificultad,
                 DificultadNivel = '{$nivelDificultad}'
             WHERE ID = $preguntaId
         ");
-    }
-
-    if ($esCorrecta) {
-        if ($dificultadAnterior <= 0.33) {
-            $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 10;
-        } elseif ($dificultadAnterior <= 0.66) {
-            $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 20;
-        } else {
-            $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 30;
         }
-    }
 
-    return [
-        'esCorrecta' => $esCorrecta,
-        'puntaje' => $_SESSION['puntaje'] ?? 0,
-        'pregunta' => $this->getPreguntaPorId($preguntaId),
-        'partida_terminada' => !$esCorrecta || $tiempoAgotado
-    ];
-}
+        if ($esCorrecta) {
+            if ($dificultadAnterior <= 0.33) {
+                $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 10;
+            } elseif ($dificultadAnterior <= 0.66) {
+                $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 20;
+            } else {
+                $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 30;
+            }
+        }
+
+        return [
+            'esCorrecta' => $esCorrecta,
+            'puntaje' => $_SESSION['puntaje'] ?? 0,
+            'pregunta' => $this->getPreguntaPorId($preguntaId),
+            'partida_terminada' => !$esCorrecta || $tiempoAgotado
+        ];
+    }
 
 
     public function registrarRespuesta($partidaId, $preguntaId, $esCorrecta)
@@ -277,7 +277,7 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
         $partidaId = (int)$partidaId;
         $preguntaId = (int)$preguntaId;
         $esCorrecta = (int)$esCorrecta;
-        
+
         $orden = $this->database->query("SELECT COUNT(*) AS n FROM Pregunta_partida WHERE Partida_ID = $partidaId")[0]["n"] + 1;
 
         $this->database->query("
@@ -290,7 +290,7 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
     {
         $partidaId = (int)$partidaId;
         $puntaje = (int)$puntaje;
-        
+
         $sql = "UPDATE Partida 
                 SET Puntaje_obtenido = $puntaje, Estado_ID = 2, Hora_finalizacion = NOW() 
                 WHERE ID = $partidaId";
@@ -311,9 +311,6 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
 
         return $this->database->lastInsertId();
     }
-
-
-
 
 
     public function traerPreguntasDificilesRandom($medallaId = null)
@@ -338,40 +335,55 @@ public function procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado = fa
 
         return $this->database->query($query);
     }
-    public function enviarReporte($preguntaId, $usuarioId, $motivo)
-    {
-        if (!$preguntaId || !$usuarioId || empty($motivo)) {
-            return ['ok' => false, 'msg' => "Debes completar el motivo del reporte."];
-        }
-
-        $ok = $this->guardarReporte($preguntaId, $usuarioId, $motivo);
-        return $ok
-            ? ['ok' => true, 'msg' => "Tu reporte fue enviado correctamente. ¡Gracias por colaborar!"]
-            : ['ok' => false, 'msg' => "Ocurrió un error al enviar el reporte."];
+    public function enviarReporte($preguntaId, $usuarioId, $motivo) {
+    if (!$preguntaId || !$usuarioId || empty(trim($motivo))) {
+        return ['ok' => false, 'msg' => 'Debes escribir un motivo.'];
     }
+    $usuarioId = (int)$usuarioId;
+    $partida = $this->database->query("
+        SELECT ID 
+        FROM Partida 
+        WHERE Usuario_ID = $usuarioId 
+          AND Estado_ID = 1 
+        ORDER BY ID DESC 
+        LIMIT 1
+    ");
 
-    public function guardarReporte($preguntaId, $usuarioId, $motivo)
-    {
-        $preguntaId = (int)$preguntaId;
-        $usuarioId = (int)$usuarioId;
+    if (empty($partida)) {
+        return ['ok' => false, 'msg' => 'No tienes una partida activa.'];
+    }
+    $partidaId = (int)$partida[0]['ID'];
 
+    $r = $this->database->query("
+        SELECT COUNT(*) AS total 
+        FROM Reporte 
+        WHERE Usuario_ID = $usuarioId 
+          AND Partida_ID = $partidaId
+    ");
+
+    $totalReportes = (int)($r[0]['total'] ?? 0);
+    if ($totalReportes >= 1) {
+        return ['ok' => false, 'msg' => 'Solo puedes hacer 2 reportes por partida.'];
+    }
+    $guardado = $this->guardarReporte($preguntaId, $usuarioId, $motivo, $partidaId);
+
+    if ($guardado) {
+        return ['ok' => true, 'msg' => 'Reporte enviado. ¡Gracias!'];
+    } else {
+        return ['ok' => false, 'msg' => 'Error al enviar el reporte.'];
+    }
+}
+    public function guardarReporte($preguntaId, $usuarioId, $motivo, $partidaId = null) {
         $conexion = $this->database->getConexion();
         $motivo = $conexion->real_escape_string($motivo);
+        $partidaIdSQL = $partidaId ? (int)$partidaId : "NULL";
 
-        $conexion->query("
-        INSERT INTO Reporte (Pregunta_ID, Usuario_ID, Motivo, Estado, Fecha_reporte)
-        VALUES ($preguntaId, $usuarioId, '$motivo', 'Pendiente', NOW())
-    ");
+        $query = "
+        INSERT INTO Reporte (Pregunta_ID, Usuario_ID, Partida_ID, Motivo, Estado, Fecha_reporte)
+        VALUES ($preguntaId, $usuarioId, $partidaIdSQL, '$motivo', 'Pendiente', NOW())";
 
-        $conexion->query("
-        UPDATE Pregunta
-        SET Estado_ID = 1
-        WHERE ID = $preguntaId
-    ");
-
-        return true;
+        return $conexion->query($query);
     }
-
 
     public function getMedallaDeLaPregunta($preguntaId) {
         $preguntaId = (int)$preguntaId;

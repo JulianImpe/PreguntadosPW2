@@ -522,3 +522,8 @@ CREATE TABLE Respuesta_sugerida (
 ALTER TABLE Reporte
     ADD COLUMN Estado ENUM('Pendiente', 'En_revision', 'Resuelto', 'Rechazado') DEFAULT 'Pendiente' AFTER Motivo,
 ADD COLUMN Fecha_resolucion DATETIME NULL AFTER Estado;
+
+-- uni el reporte a la partida asi se pueden contrar por partida
+ALTER TABLE Reporte
+    ADD COLUMN Partida_ID INT NULL AFTER Pregunta_ID,
+ADD FOREIGN KEY (Partida_ID) REFERENCES Partida(ID) ON DELETE SET NULL;

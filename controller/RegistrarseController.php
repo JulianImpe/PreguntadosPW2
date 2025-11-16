@@ -121,4 +121,15 @@ $this->mostrarMailEnviado();
         $data['success'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
             $this->renderer->render("mailEnviado", $data); // sin datos por ahora
     }
+    //valido con AJAX
+    public function validarEmail()
+    {
+        $email = $_GET["email"] ?? "";
+
+        $existe = $this->model->existeEmail($email);
+
+        header("Content-Type: application/json");
+        echo json_encode(["existe" => $existe]);
+    }
+
 }

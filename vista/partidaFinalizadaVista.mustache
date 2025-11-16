@@ -46,19 +46,13 @@
             </div>
         {{/esCorrecta}}
     </div>
-
-    <!-- Contenedor principal -->
     <div class="bg-white rounded-2xl shadow-2xl p-12 mb-6 border-4 border-gray-300">
-
-        <!-- Puntaje -->
         <div class="mb-8">
             <div class="text-center mb-6">
                 <p class="text-gray-600 text-lg mb-2">Puntaje actual</p>
                 <p id="puntajeDisplay" class="text-5xl font-bold text-yellow-500">{{puntaje}}</p>
             </div>
         </div>
-
-        <!-- Imagen centrada -->
         <div class="text-center float">
             {{#esCorrecta}}
                 <img src="/public/img/Lideres/snorlaxFeliz.png"  alt="Snorlax" class="mx-auto w-40 h-40 object-contain">
@@ -68,8 +62,6 @@
             {{/esCorrecta}}
         </div>
     </div>
-
-    <!-- Botones de acción  -->
     <div class="grid grid-cols-2 gap-4 mb-8">
         <button onclick="abrirModalReporte()" class="bg-white hover:bg-gray-50 text-gray-800 px-6 py-5 rounded-xl font-bold flex flex-col items-center justify-center gap-2 shadow-lg border-4 border-gray-400 btn-pokemon">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
@@ -98,8 +90,6 @@
         {{/esCorrecta}}
     </div>
 </div>
-
-<!-- Modal de Reporte -->
 <div id="modalReporte" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl pokemon-border max-w-lg w-full p-6 relative animate-scale">
         <button onclick="cerrarModalReporte()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold leading-none">
@@ -174,7 +164,6 @@
     </div>
 </div>
 
-<!-- MENSAJES DE ÉXITO / ERROR -->
 {{#exito_reporte}}
     <div id="mensajeExito" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,7 +193,6 @@
         }, 3000);
     </script>
 {{/error_reporte}}
-<!--escritura en vivo-->
 <script>
     const motivoTextarea = document.getElementById('motivo');
     const caracteresRestantes = document.getElementById('caracteresRestantes');
@@ -242,7 +230,6 @@
         if (e.key === 'Escape') cerrarModalReporte();
     });
 </script>
-
 <style>
     @keyframes scale {
         from { transform: scale(0.9); opacity: 0; }
@@ -250,6 +237,5 @@
     }
     .animate-scale { animation: scale 0.2s ease-out; }
 </style>
-
 </body>
 </html>
