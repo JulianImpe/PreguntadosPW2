@@ -1,16 +1,11 @@
 <?php
-
-class PerfilController
-{
+class PerfilController{
     private $model;
     private $renderer;
-
-    public function __construct($model, $renderer)
-    {
+    public function __construct($model, $renderer){
         $this->model = $model;
         $this->renderer = $renderer;
     }
-
     public function ver()
     {
         $data = $this->model->obtenerPerfil();
@@ -20,22 +15,17 @@ class PerfilController
         }
         $this->renderer->render("perfil", $data);
     }
-
     public function cambiarPassword()
     {
         $redirect = $this->model->cambiarPassword();
         header("Location: $redirect");
         exit;
     }
-
-    public function volverLobby()
-    {
+    public function volverLobby(){
         header("Location: /lobby/base");
         exit;
     }
-
-    public function perfilCompartidoVista()
-    {
+    public function perfilCompartidoVista(){
         $data = $this->model->obtenerPerfilCompartido();
         if (isset($data['error'])) {
             echo $data['error'];
@@ -43,18 +33,22 @@ class PerfilController
         }
         $this->renderer->render("perfilCompartido", $data);
     }
-    public function generarQR()
+    public function actualizarCampo()
     {
+        $redirect = $this->model->actualizarCampo();
+
+
+        header("Location: $redirect");
+        exit;
+    }
+    public function generarQR(){
         $usuarioId = $_GET['ID'] ?? null;
         if (!$usuarioId) {
             echo "Falta el ID del usuario";
             exit;
         }
-
         $qrUrl = $this->model->obtenerUrlQR($usuarioId);
         header("Location: $qrUrl");
         exit;
     }
-
-
 }

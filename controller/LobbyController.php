@@ -37,7 +37,7 @@ class LobbyController
                 'ranking' => '-'
             ];
         }
-
+        $datosUsuario['usuario_id'] = $usuario;
         if (!empty($datosUsuario['foto_perfil'])) {
             $datosUsuario['foto_perfil'] = '/public/img/' . basename($datosUsuario['foto_perfil']);
             $datosUsuario['tiene_foto'] = true;
@@ -59,8 +59,6 @@ class LobbyController
             header("Location: /login/loginForm");
             exit;
         }
-
-
         header("Location: /partida/base");
         exit;
     }
