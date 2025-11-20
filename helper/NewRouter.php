@@ -24,6 +24,11 @@ class NewRouter
                 $this->redirectByRole();
                 exit;
             }
+            if (in_array($controllerName, ['login', 'registrarse', 'homevista', 'reverseGeocode'])) {
+                $controller = $this->getControllerFrom($controllerParam);
+                $this->executeMethodFromController($controller, $methodParam);
+                return;
+            }
             // Si no tiene sesión o está en homeVista, dejar pasar
             $controller = $this->getControllerFrom($controllerParam);
             $this->executeMethodFromController($controller, $methodParam);

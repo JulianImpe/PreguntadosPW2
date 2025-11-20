@@ -131,5 +131,35 @@ $this->mostrarMailEnviado();
         header("Content-Type: application/json");
         echo json_encode(["existe" => $existe]);
     }
+    public function reverseGeocode()
+    {
+        $lat = $_GET['lat'] ?? null;
+        $lon = $_GET['lon'] ?? null;
+
+        if (!$lat || !$lon) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Faltan latitud o longitud']);
+            return;
+        }
+        $url = "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json&accept-language=es";
+
+        $options = [
+            "http" => [
+                "header" => "User-Agent: MiAppAquaNet/1.0 (contacto: camila@ejemplo.com)\r\n"
+            ]
+        ];
+        $context = stream_context_create($options);
+
+        $result = file_get_contents($url, false, $context);
+
+        if ($result === false) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Error al obtener datos']);
+            return;
+        }
+
+        header("Content-Type: application/json");
+        echo $result;
+    }
 
 }
