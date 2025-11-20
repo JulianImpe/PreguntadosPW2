@@ -20,6 +20,7 @@ class RegistrarseController
     {
         $this->renderer->render("registrarse");
     }
+
     public function registrarse()
     {
         $usuario = trim($_POST["usuario"]);
@@ -29,9 +30,6 @@ class RegistrarseController
         $fecha = $_POST["fecha_nac"];
         $nombre = trim($_POST["nombre_completo"]);
         $sexo = trim($_POST["sexo"]);
-
-
-
 
         // 1. Campos vacíos
         if (empty($usuario) || empty($password) || empty($repetir) || empty($email) || empty($fecha) || empty($nombre)|| empty($sexo)) {
@@ -46,7 +44,6 @@ class RegistrarseController
             $this->renderer->render("registrarse", $data);
             return;
         }
-
 
         // 3. Longitud y complejidad
         if (strlen($password) < 6 || !preg_match('/[A-Z]/', $password)) {
@@ -74,26 +71,110 @@ class RegistrarseController
             $this->renderer->render("registrarse", $data);
             return;
         }
+
         // --- Si pasa todas las validaciones ---
-$foto_perfil = $this->subirFoto();
+        $foto_perfil = $this->subirFoto();
+        $sexo_id = $this->model->getSexoIdByNombre($sexo);
 
-// Obtener el ID del sexo (a partir del nombre)
-$sexo_id = $this->model->getSexoIdByNombre($sexo);
+        if (!$sexo_id) {
+            $data['error'] = "Sexo inválido.";
+            $this->renderer->render("registrarse", $data);
+            return;
+        }
 
-// Si no existe el ID, error
-if (!$sexo_id) {
-    $data['error'] = "Sexo inválido.";
-    $this->renderer->render("registrarse", $data);
-    return;
-}
+        // GENERAR TOKEN DE 6 DÍGITOS
+        $token = sprintf("%06d", mt_rand(0, 999999));
 
-// Registrar usuario con el ID correcto
-$this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre, $sexo_id);
+        // Registrar usuario con token
+        $this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre, $sexo_id, $token);
 
-include 'helper/enviarEmail.php';
-$this->mostrarMailEnviado();
+        // Enviar email con el token (modificar tu helper)
+        $this->enviarEmailConToken($email, $nombre, $token);
 
+        // Mostrar formulario de validación (modificar este método)
+        $this->mostrarMailEnviado($email);
     }
+
+    private function enviarEmailConToken($email, $nombre, $token)
+    {
+        // Incluir PHPMailer
+        require __DIR__ . '/../helper/PHPMailer-master/src/PHPMailer.php';
+        require __DIR__ . '/../helper/PHPMailer-master/src/SMTP.php';
+        require __DIR__ . '/../helper/PHPMailer-master/src/Exception.php';
+
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'julian.m.imperiale@gmail.com';
+            $mail->Password   = 'jisb uvwz igee qsih';
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->setFrom('julian.m.imperiale@gmail.com', 'Pokémon Trivia');
+            $mail->addAddress($email, $nombre);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Código de validación - PokeTrivia';
+            $mail->Body = "
+                <div style='font-family: Arial, sans-serif;'>
+                    <h2>¡Hola, $nombre!</h2>
+                    <p>Gracias por registrarte en <b>PokeTrivia</b>.</p>
+                    <p>Tu código de validación es:</p>
+                    <div style='background: #f0f0f0; padding: 20px; text-align: center; margin: 20px 0;'>
+                        <h1 style='letter-spacing: 8px; color: #333; margin: 0;'>$token</h1>
+                    </div>
+                    <p><strong>Este código expira en 30 minutos.</strong></p>
+                    <p>Ingresa este código en la página de validación para activar tu cuenta.</p>
+                </div>
+            ";
+            $mail->AltBody = "Hola $nombre, tu código de validación es: $token. Este código expira en 30 minutos.";
+
+            $mail->send();
+        } catch (\Exception $e) {
+            // Log del error pero no mostrar al usuario
+            error_log("Error enviando email: " . $e->getMessage());
+        }
+    }
+
+    public function mostrarMailEnviado($email = null)
+    {
+        // Pasar el email para el formulario de validación
+        $data['email'] = $email;
+        $data['success'] = "Te hemos enviado un correo con un código de validación. Por favor, revisa tu bandeja de entrada.";
+        $this->renderer->render("mailEnviado", $data);
+    }
+
+    // NUEVO MÉTODO: Validar el código que ingresa el usuario
+// NUEVO MÉTODO: Validar el código que ingresa el usuario
+public function validarCodigo()
+{
+    $email = trim($_POST['email'] ?? '');
+    $token = trim($_POST['token'] ?? '');
+
+    if (empty($email) || empty($token)) {
+        $data['error'] = "Por favor ingresa el código de validación.";
+        $data['email'] = $email;
+        $this->renderer->render("mailEnviado", $data);
+        return;
+    }
+
+    // Validar token en la base de datos
+    if ($this->model->validarToken($email, $token)) {
+        // Activar cuenta
+        $this->model->activarCuenta($email);
+        
+        // CAMBIO: Renderizar la vista cuentaActivada en lugar de redirigir
+        $data['success'] = "¡Tu cuenta ha sido activada exitosamente! Ya puedes iniciar sesión.";
+        $this->renderer->render("cuentaActivada", $data);
+    } else {
+        $data['error'] = "Código inválido o expirado. Por favor verifica e intenta nuevamente.";
+        $data['email'] = $email;
+        $this->renderer->render("mailEnviado", $data);
+    }
+}
 
     public function getSexoIdByNombre($sexo)
     {
@@ -115,21 +196,13 @@ $this->mostrarMailEnviado();
         return null;
     }
 
-
-    public function mostrarMailEnviado()
-    {
-        $data['success'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
-            $this->renderer->render("mailEnviado", $data); // sin datos por ahora
-    }
     //valido con AJAX
     public function validarEmail()
     {
         $email = $_GET["email"] ?? "";
-
         $existe = $this->model->existeEmail($email);
 
         header("Content-Type: application/json");
         echo json_encode(["existe" => $existe]);
     }
-
 }
