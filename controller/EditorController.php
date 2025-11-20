@@ -29,8 +29,9 @@ class EditorController
         $preguntasSugeridas = $this->model->obtenerPreguntasSugeridas();
         $preguntasReportadas = $this->model->obtenerPreguntasReportadas();
 
+
         $data = [
-            // Datos del editor
+
             'ID' => $datosUsuario['ID'] ?? $usuarioId,
             'usuario_id' => $datosUsuario['usuario_id'] ?? $usuarioId,
             'usuario' => $datosUsuario['usuario'] ?? 'Editor',
@@ -42,21 +43,25 @@ class EditorController
                 : '/public/img/default-avatar.png',
             'tiene_foto' => !empty($datosUsuario['foto_perfil']),
             
-            // Datos de la vista
+
             'nombre_editor' => $datosUsuario['usuario'] ?? 'Editor',
             'total_sugeridas' => count($preguntasSugeridas),
             'total_reportadas' => count($preguntasReportadas),
             'preguntas_sugeridas' => $preguntasSugeridas,
             'preguntas_reportadas' => $preguntasReportadas,
             
-            // ✅ Mensajes de notificación (ANTES de borrarlos)
+
             'exito_reporte' => $_SESSION['exito_reporte'] ?? null,
             'error_reporte' => $_SESSION['error_reporte'] ?? null
         ];
 
-        // ✅ AHORA SÍ los borramos DESPUÉS de agregarlos a $data
+
+
+
         unset($_SESSION['exito_reporte']);
         unset($_SESSION['error_reporte']);
+
+        $data["preguntasTodas"] = $this->model->obtenerTodasLasPreguntas();
 
         $this->renderer->render("lobbyEditor", $data);
     }
@@ -296,4 +301,21 @@ class EditorController
         
         return date('d/m/Y', $timestamp);
     }
+
+
+
+    public function preguntasTodas()
+    {
+        if (!isset($_SESSION["usuario_id"])) {
+            header("Location: /login");
+            exit();
+        }
+
+        $preguntas = $this->model->obtenerTodasLasPreguntas();
+
+        $this->renderer->render("lobbyEditorVista.mustache", [
+            "preguntasTodas" => $preguntas
+        ]);
+    }
+
 }

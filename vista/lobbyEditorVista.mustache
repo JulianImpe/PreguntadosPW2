@@ -269,6 +269,67 @@
             <p class="text-center text-gray-500 font-semibold py-6">No hay reportes pendientes</p>
         {{/preguntas_reportadas}}
     </section>
+
+
+    <section class="bg-white pokemon-border rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-4 border-green-300 pb-3 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M1 21L12 2l11 19zm11-3q.425 0 .713-.288T13 17t-.288-.712T12 16t-.712.288T11 17t.288.713T12 18m-1-3h2v-5h-2z"/>
+            </svg>
+            📚 Todas las Preguntas
+        </h2>
+
+
+    {{#preguntasTodas}}
+        <div class="pregunta-box" style="background: #f9ffe8; border-left: 6px solid #28a745; padding: 15px; margin-bottom: 25px; border-radius: 6px;">
+
+
+            <div class="pregunta-header" style="display:flex; justify-content:space-between; align-items:center;">
+
+                <span class="pregunta-estado" style="font-size:13px; opacity:.8;">Estado: {{Estado}}</span>
+
+                <div class="actions">
+                    {{#esActiva}}
+                        <form action="/editor/desactivarPregunta" method="POST" style="display:inline;">
+                            <input type="hidden" name="idPregunta" value="{{ID}}">
+                            <button class="btn-desactivar" style="padding:6px 12px; background:#d9534f; color:white; border:none; border-radius:5px;">Desactivar</button>
+                        </form>
+                    {{/esActiva}}
+
+                    {{^esActiva}}
+                        <form action="/editor/activarPregunta" method="POST" style="display:inline;">
+                            <input type="hidden" name="idPregunta" value="{{ID}}">
+                            <button class="btn-activar" style="padding:6px 12px; background:#5cb85c; color:white; border:none; border-radius:5px;">Activar</button>
+                        </form>
+                    {{/esActiva}}
+                </div>
+            </div>
+
+            <h3 class="titulo-pregunta" style="margin:10px 0;">{{Texto}}</h3>
+
+            <ul style="margin-top:10px;">
+                {{#opciones}}
+                    <li style="margin-bottom:5px;">
+                        {{#EsCorrecta}}
+                            <strong style="color:#28a745;">✔ {{Texto}}</strong>
+                        {{/EsCorrecta}}
+                        {{^EsCorrecta}}
+                            {{Texto}}
+                        {{/EsCorrecta}}
+                    </li>
+                {{/opciones}}
+            </ul>
+
+        </div>
+    {{/preguntasTodas}}
+
+    {{^preguntasTodas}}
+        <p>No hay preguntas registradas.</p>
+    {{/preguntasTodas}}
+
+
+
+</section>
 </main>
 
 

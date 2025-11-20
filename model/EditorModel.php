@@ -299,5 +299,41 @@ class EditorModel{
 
 
 
+    public function obtenerTodasLasPreguntas()
+    {
+        $sql = "
+        SELECT 
+            P.ID,
+            P.Texto,
+            EP.Nombre as Estado
+        FROM Pregunta P
+        LEFT JOIN Estado_pregunta EP ON EP.ID = P.Estado_ID
+        ORDER BY P.ID DESC
+    ";
+
+        $resultado = $this->conexion->query($sql);
+
+        // SI ES ARRAY → LO DEVUELVE DIRECTO
+        if (is_array($resultado)) {
+            return $resultado;
+        }
+
+        // SI ES mysqli_result → LO PASA A ARRAY
+        if (is_object($resultado) && method_exists($resultado, "fetch_all")) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        }
+
+        return []; // por las dudas
+    }
+
+
+
+
+
+
+
+
+
+
 
 }
