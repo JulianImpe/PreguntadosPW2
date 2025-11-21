@@ -22,7 +22,6 @@ include_once("controller/SugerenciaController.php");
 include_once("model/SugerenciaModel.php");
 include_once("controller/AdminController.php");
 include_once("model/AdminModel.php");
-//include_once("config/config.php");
 
 
 
