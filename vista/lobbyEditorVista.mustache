@@ -284,26 +284,7 @@
         <div class="pregunta-box" style="background: #f9ffe8; border-left: 6px solid #28a745; padding: 15px; margin-bottom: 25px; border-radius: 6px;">
 
 
-            <div class="pregunta-header" style="display:flex; justify-content:space-between; align-items:center;">
 
-                <span class="pregunta-estado" style="font-size:13px; opacity:.8;">Estado: {{Estado}}</span>
-
-                <div class="actions">
-                    {{#esActiva}}
-                        <form action="/editor/desactivarPregunta" method="POST" style="display:inline;">
-                            <input type="hidden" name="idPregunta" value="{{ID}}">
-                            <button class="btn-desactivar" style="padding:6px 12px; background:#d9534f; color:white; border:none; border-radius:5px;">Desactivar</button>
-                        </form>
-                    {{/esActiva}}
-
-                    {{^esActiva}}
-                        <form action="/editor/activarPregunta" method="POST" style="display:inline;">
-                            <input type="hidden" name="idPregunta" value="{{ID}}">
-                            <button class="btn-activar" style="padding:6px 12px; background:#5cb85c; color:white; border:none; border-radius:5px;">Activar</button>
-                        </form>
-                    {{/esActiva}}
-                </div>
-            </div>
 
             <h3 class="titulo-pregunta" style="margin:10px 0;">{{Texto}}</h3>
 
@@ -319,6 +300,14 @@
                     </li>
                 {{/opciones}}
             </ul>
+
+            <form action="/editor/eliminarPregunta" method="POST" onsubmit="return confirm('¿Seguro que querés eliminar esta pregunta?')">
+                <input type="hidden" name="id" value="{{ID}}">
+                <button class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700">
+                    🗑 Eliminar
+                </button>
+            </form>
+
 
         </div>
     {{/preguntasTodas}}

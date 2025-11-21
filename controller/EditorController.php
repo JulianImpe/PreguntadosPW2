@@ -61,7 +61,18 @@ class EditorController
         unset($_SESSION['exito_reporte']);
         unset($_SESSION['error_reporte']);
 
-        $data["preguntasTodas"] = $this->model->obtenerTodasLasPreguntas();
+       // $data["preguntasTodas"] = $this->model->obtenerTodasLasPreguntas();
+
+        //$this->renderer->render("lobbyEditor", $data);
+
+        $preguntas = $this->model->obtenerTodasLasPreguntas();
+
+        foreach ($preguntas as &$pregunta) {
+            $pregunta["opciones"] = $this->model->obtenerOpcionesDePregunta($pregunta["ID"]);
+        }
+
+        $data["preguntasTodas"] = $preguntas;
+
 
         $this->renderer->render("lobbyEditor", $data);
     }
@@ -317,5 +328,28 @@ class EditorController
             "preguntasTodas" => $preguntas
         ]);
     }
+
+    public function eliminarPregunta()
+    {
+        if (!isset($_POST["id"])) {
+            $_SESSION['error_reporte'] = "Falta ID de la pregunta";
+            header("Location: /editor/lobbyEditor");
+            exit;
+        }
+
+        $id = (int)$_POST["id"];
+
+        $resultado = $this->model->eliminarPreguntaPorId($id);
+
+        if ($resultado) {
+            $_SESSION['exito_reporte'] = "Pregunta eliminada correctamente";
+        } else {
+            $_SESSION['error_reporte'] = "Error al eliminar la pregunta";
+        }
+
+        header("Location: /editor/lobbyEditor");
+        exit;
+    }
+
 
 }

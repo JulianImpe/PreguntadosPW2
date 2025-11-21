@@ -326,6 +326,38 @@ class EditorModel{
         return []; // por las dudas
     }
 
+    public function eliminarPreguntaPorId($id)
+    {
+        $id = (int)$id;
+
+
+        $this->conexion->query("DELETE FROM Respuesta WHERE Pregunta_ID = $id");
+
+
+        return $this->conexion->query("DELETE FROM Pregunta WHERE ID = $id");
+    }
+
+
+    public function obtenerOpcionesDePregunta($preguntaId)
+    {
+        $preguntaId = intval($preguntaId);
+
+        $query = "
+        SELECT 
+            ID,
+            Texto,
+            Es_Correcta AS EsCorrecta
+        FROM Respuesta
+        WHERE Pregunta_ID = $preguntaId
+    ";
+
+
+        return $this->conexion->query($query);
+    }
+
+
+
+
 
 
 
