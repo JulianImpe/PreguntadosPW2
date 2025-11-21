@@ -210,7 +210,7 @@ class EditorModel{
 
         return true;
     }
-    private function getMedallaClase($nombre){
+    public function getMedallaClase($nombre){
         $clases = [
             'Medalla Roca' => 'roca', 'Medalla Cascada' => 'cascada',
             'Medalla Trueno' => 'trueno', 'Medalla Arcoíris' => 'arcoiris',
@@ -220,7 +220,7 @@ class EditorModel{
         return $clases[$nombre] ?? 'roca';
     }
 //cambiarlo por las fotos q tnemos descargadas
-    private function getMedallaEmoji($nombre){
+    public function getMedallaEmoji($nombre){
         $emojis = [
             'Medalla Roca' => '🪨', 'Medalla Cascada' => '💧',
             'Medalla Trueno' => '⚡', 'Medalla Arcoíris' => '🌈',
@@ -302,28 +302,28 @@ class EditorModel{
     public function obtenerTodasLasPreguntas()
     {
         $sql = "
-        SELECT 
-            P.ID,
-            P.Texto,
-            EP.Nombre as Estado
-        FROM Pregunta P
-        LEFT JOIN Estado_pregunta EP ON EP.ID = P.Estado_ID
-        ORDER BY P.ID DESC
+    SELECT 
+        P.ID,
+        P.Texto,
+        EP.Nombre as Estado,
+        M.Nombre as medalla_nombre
+    FROM Pregunta P
+    LEFT JOIN Estado_pregunta EP ON EP.ID = P.Estado_ID
+    LEFT JOIN Medallas M ON M.ID = P.Medalla_ID
+    ORDER BY P.ID DESC
     ";
 
         $resultado = $this->conexion->query($sql);
 
-        // SI ES ARRAY → LO DEVUELVE DIRECTO
         if (is_array($resultado)) {
             return $resultado;
         }
 
-        // SI ES mysqli_result → LO PASA A ARRAY
         if (is_object($resultado) && method_exists($resultado, "fetch_all")) {
             return $resultado->fetch_all(MYSQLI_ASSOC);
         }
 
-        return []; // por las dudas
+        return [];
     }
 
     public function eliminarPreguntaPorId($id)

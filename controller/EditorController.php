@@ -69,10 +69,12 @@ class EditorController
 
         foreach ($preguntas as &$pregunta) {
             $pregunta["opciones"] = $this->model->obtenerOpcionesDePregunta($pregunta["ID"]);
+            $pregunta["medalla_clase"] = $this->model->getMedallaClase($pregunta["medalla_nombre"] ?? '');
+            $pregunta["medalla_emoji"] = $this->model->getMedallaEmoji($pregunta["medalla_nombre"] ?? '');
+            $pregunta["medalla_nombre"] = strtoupper($pregunta["medalla_nombre"] ?? 'SIN MEDALLA');
         }
 
         $data["preguntasTodas"] = $preguntas;
-
 
         $this->renderer->render("lobbyEditor", $data);
     }
