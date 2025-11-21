@@ -38,6 +38,8 @@ class PerfilModel{
                 : '/public/img/default-avatar.png',
             'tiene_foto' => !empty($datos['foto_perfil']),
             'puntaje_total' => $datos['Puntaje_total'] ?? 0,
+            'pais' => $datos['pais'] ?? '',        // <--- agregalo
+            'ciudad' => $datos['ciudad'] ?? '',
             'toast' => $toast
         ];
     }
@@ -51,7 +53,7 @@ class PerfilModel{
         $campo = $_POST['campo'] ?? '';
         $valor = $_POST['valor'] ?? '';
 
-        switch($campo) {
+        switch ($campo) {
             case 'email':
                 if (!filter_var($valor, FILTER_VALIDATE_EMAIL)) {
                     $_SESSION['toast'] = ['tipo' => 'error', 'mensaje' => 'Email inválido'];
@@ -113,7 +115,6 @@ class PerfilModel{
                 $this->actualizarDB($usuarioId, 'fecha_nac', $valor);
                 $_SESSION['toast'] = ['tipo' => 'success', 'mensaje' => 'Fecha de nacimiento actualizada'];
                 break;
-
             case 'sexo':
                 if (!in_array($valor, ['1', '2', '3'])) {
                     $_SESSION['toast'] = ['tipo' => 'error', 'mensaje' => 'Género inválido'];
@@ -123,7 +124,6 @@ class PerfilModel{
                 $this->actualizarDB($usuarioId, 'Sexo_ID', $valor);
                 $_SESSION['toast'] = ['tipo' => 'success', 'mensaje' => 'Género actualizado correctamente'];
                 break;
-
             case 'foto':
                 $resultado = $this->subirFoto($usuarioId);
 
@@ -132,6 +132,35 @@ class PerfilModel{
                 } else {
                     $_SESSION['toast'] = ['tipo' => 'error', 'mensaje' => $resultado['error']];
                 }
+                break;
+            case 'pais':
+                if (strlen($valor) < 2) {
+                    $_SESSION['toast'] = [
+                        'tipo' => 'error',
+                        'mensaje' => 'El país debe tener al menos 2 caracteres'
+                    ];
+                    return '/perfil/ver';
+                }
+                $this->actualizarDB($usuarioId, 'pais', $valor);
+                $_SESSION['toast'] = [
+                    'tipo' => 'success',
+                    'mensaje' => 'País actualizado correctamente'
+                ];
+                break;
+
+            case 'ciudad':
+                if (strlen($valor) < 2) {
+                    $_SESSION['toast'] = [
+                        'tipo' => 'error',
+                        'mensaje' => 'La ciudad debe tener al menos 2 caracteres'
+                    ];
+                    return '/perfil/ver';
+                }
+                $this->actualizarDB($usuarioId, 'ciudad', $valor);
+                $_SESSION['toast'] = [
+                    'tipo' => 'success',
+                    'mensaje' => 'Ciudad actualizada correctamente'
+                ];
                 break;
 
             default:
@@ -289,4 +318,15 @@ class PerfilModel{
         return "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" .
             urlencode($urlPerfil) . "&choe=UTF-8";
     }
+//    public function obtenerUrlQR($usuarioId){
+//        if (!$usuarioId) return null;
+//
+//        // Usamos constantes globales definidas en config.php
+//        $urlPerfil = APP_SCHEME . APP_HOST . '/perfil/perfilCompartidoVista?id=' . urlencode($usuarioId);
+//
+//        // URL del QR generado con Google Charts
+//        return "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" .
+//            urlencode($urlPerfil) . "&choe=UTF-8";
+//    }
+
 }

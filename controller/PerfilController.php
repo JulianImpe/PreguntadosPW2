@@ -51,4 +51,18 @@ class PerfilController{
         header("Location: $qrUrl");
         exit;
     }
+//    public function generarQR() {
+//        $usuarioId = $_GET['id'] ?? null; // ojo con mayúsculas
+//        if (!$usuarioId) {
+//            echo "Falta el ID del usuario";
+//            exit;
+//        }
+//
+//        // Generar URL segura con APP_HOST y APP_SCHEME
+//        $qrUrl = APP_SCHEME . APP_HOST . '/perfil/perfilCompartidoVista?id=' . urlencode($usuarioId);
+//
+//        // Redirigir
+//        header("Location: $qrUrl");
+//        exit;
+//    }
 }

@@ -16,10 +16,12 @@ class RegistrarseModel
         return $result ?? [];
     }
 
-public function registrarUsuario($usuario, $password, $email, $fecha_nac, $foto_perfil, $nombre_completo, $sexo_id)
+public function registrarUsuario($usuario, $password, $email, $fecha_nac, $foto_perfil, $nombre_completo,$sexo_id, $pais, $ciudad)
 {
-    $sql = "INSERT INTO usuarios (usuario, password, email, fecha_nac, foto_perfil, nombre_completo, Sexo_ID) 
-            VALUES ('$usuario', '$password', '$email', '$fecha_nac', '$foto_perfil', '$nombre_completo', '$sexo_id')";
+
+
+    $sql = "INSERT INTO usuarios (usuario, password, email, fecha_nac, foto_perfil, nombre_completo, Sexo_ID, pais, ciudad) 
+            VALUES ('$usuario', '$password', '$email', '$fecha_nac', '$foto_perfil', '$nombre_completo', '$sexo_id', ' $pais', '$ciudad')";
     $this->conexion->query($sql);
 }
 

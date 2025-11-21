@@ -25,6 +25,10 @@ class RegistrarseController{
         $nombre = trim($_POST["nombre_completo"]);
         $sexo = trim($_POST["sexo"]);
 
+        $pais = $_POST['pais'] ?? '';
+        $ciudad = $_POST['ciudad'] ?? '';
+
+
         // 1. Campos vacíos
         if (empty($usuario) || empty($password) || empty($repetir) || empty($email) || empty($fecha) || empty($nombre)|| empty($sexo)) {
             $data['error'] = "Todos los campos son obligatorios";
@@ -78,7 +82,7 @@ if (!$sexo_id) {
     $this->renderer->render("registrarse", $data);
     return;
 }
-$this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre, $sexo_id);
+$this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre, $sexo_id, $pais,$ciudad);
 
 include 'helper/enviarEmail.php';
 $this->mostrarMailEnviado();

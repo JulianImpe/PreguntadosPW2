@@ -1,11 +1,8 @@
-<script src="/public/js/perfil.js"></script>
 <div class="bg-[url('/public/img/fondo-perfil.jpg')] bg-fixed bg-cover bg-center min-h-screen flex justify-center">
 
     <div class="w-full max-w-2xl bg-white/50 backdrop-blur-sm rounded-3xl shadow-2xl relative overflow-hidden p-6 md:p-8 mx-auto my-6">
-        <!-- Barra superior decorativa -->
         <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
         <div class="flex flex-col items-center">
-            <!-- Badge ENTRENADOR -->
             <div class="bg-red-100 px-6 py-2 rounded-full mb-3 align-middle flex items-center justify-center border-4 border-red-700 shadow-lg">
                 <span class="text-red-700 font-bold text-sm align-middle flex items-center justify-center gap-2">
                     <svg class="w-12 h-12 fill-red-700" id="newspaper-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -123,6 +120,36 @@
                         </svg>
                     </button>
                 </div>
+                <div class="bg-gradient-to-br from-yellow-200 to-yellow-300 pokemon-border rounded-xl p-4 text-center transition-transform flex justify-between items-center">
+                    <div class="flex-1">
+                        <label class="block text-yellow-700 font-semibold mb-1 text-xs uppercase tracking-wider">País</label>
+                        <p class="text-gray-800 font-bold text-sm" data-pais>{{pais}}</p>
+                    </div>
+
+                    <button onclick="abrirModalEditar('pais')"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 pokemon-border ml-2">
+                        <svg id="pencil-solid" class="w-6 h-6 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <polygon points="8 20 9 20 9 21 8 21 8 22 7 22 7 23 1 23 1 17 2 17 2 16 3 16 3 15 4 15 4 16 5 16 5 17 6 17 6 18 7 18 7 19 8 19 8 20"/>
+                            <polygon points="17 10 18 10 18 12 17 12 17 13 16 13 16 14 15 14 15 15 14 15 14 16 13 16 13 17 12 17 12 18 11 18 11 19 10 19 10 18 9 18 9 17 8 17 8 16 7 16 7 15 6 15 6 14 5 14 5 13 6 13 6 12 7 12 7 11 8 11 8 10 9 10 9 9 10 9 10 8 11 8 11 7 12 7 12 6 14 6 14 7 15 7 15 8 16 8 16 9 17 9 17 10"/>
+                            <polygon points="23 4 23 7 22 7 22 8 21 8 21 9 19 9 19 8 18 8 18 7 17 7 17 6 16 6 16 5 15 5 15 3 16 3 16 2 17 2 17 1 20 1 20 2 21 2 21 3 22 3 22 4 23 4"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="bg-gradient-to-br from-teal-200 to-teal-300 pokemon-border rounded-xl p-4 text-center transition-transform flex justify-between items-center">
+                    <div class="flex-1">
+                        <label class="block text-teal-700 font-semibold mb-1 text-xs uppercase tracking-wider">Ciudad</label>
+                        <p class="text-gray-800 font-bold text-sm">{{ciudad}}</p>
+                    </div>
+                    <button onclick="abrirModalEditar('ciudad')"
+                            class="bg-teal-500 hover:bg-teal-600 text-white rounded-full p-2 pokemon-border ml-2">
+                        <svg id="pencil-solid" class="w-6 h-6 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <polygon points="8 20 9 20 9 21 8 21 8 22 7 22 7 23 1 23 1 17 2 17 2 16 3 16 3 15 4 15 4 16 5 16 5 17 6 17 6 18 7 18 7 19 8 19 8 20"/>
+                            <polygon points="17 10 18 10 18 12 17 12 17 13 16 13 16 14 15 14 15 15 14 15 14 16 13 16 13 17 12 17 12 18 11 18 11 19 10 19 10 18 9 18 9 17 8 17 8 16 7 16 7 15 6 15 6 14 5 14 5 13 6 13 6 12 7 12 7 11 8 11 8 10 9 10 9 9 10 9 10 8 11 8 11 7 12 7 12 6 14 6 14 7 15 7 15 8 16 8 16 9 17 9 17 10"/>
+                            <polygon points="23 4 23 7 22 7 22 8 21 8 21 9 19 9 19 8 18 8 18 7 17 7 17 6 16 6 16 5 15 5 15 3 16 3 16 2 17 2 17 1 20 1 20 2 21 2 21 3 22 3 22 4 23 4"/>
+                        </svg>
+                    </button>
+                </div>
 
                 <div class="bg-gradient-to-br from-red-200 to-red-300 pokemon-border rounded-xl p-4 text-center transition-transform flex justify-center items-center">
                     <div class="flex-1">
@@ -165,6 +192,125 @@
         </div>
     </div>
 </div>
+<script>document.addEventListener('DOMContentLoaded', () => {
+    const btnEditar = document.getElementById('btnEditarPassword');
+    const formPassword = document.getElementById('formCambiarPassword');
+
+    if (btnEditar && formPassword) {
+        btnEditar.addEventListener('click', () =>
+                formPassword.classList.toggle('hidden')
+        );
+    }
+    const toasts = document.querySelectorAll('.toast');
+    toasts.forEach(toastEl => {
+        setTimeout(() => {
+            toastEl.classList.add('opacity-0', 'transition', 'duration-500');
+            setTimeout(() => toastEl.remove(), 500);
+        }, 3000);
+    });
+    const modal = document.getElementById('modalEditar');
+    const btnCerrar = document.getElementById('btnCerrarModal');
+    const tituloModal = document.getElementById('tituloModal');
+    const campoInput = document.getElementById('campoEditar');
+    const contenedorInput = document.getElementById('contenedorInput');
+
+    if (btnCerrar) {
+        btnCerrar.addEventListener('click', () =>
+                modal.classList.add('hidden')
+        );
+    }
+    modal.addEventListener('click', e => {
+        if (e.target === modal) modal.classList.add('hidden');
+    });
+    window.abrirModalEditar = function(campo) {
+        const modal = document.getElementById('modalEditar');
+        const campoInput = document.getElementById('campoEditar');
+        const contenedorInput = document.getElementById('contenedorInput');
+        const tituloModal = document.getElementById('tituloModal');
+
+        if (!modal || !campoInput || !contenedorInput || !tituloModal) return;
+
+        modal.classList.remove('hidden');
+        campoInput.value = campo;
+
+        let html = '';
+        let titulo = '';
+        const listaPaises = [
+            "Argentina", "Brasil", "Chile", "Uruguay", "Paraguay",
+            "Bolivia", "Perú", "Ecuador", "Colombia", "Venezuela",
+            "México", "España", "Francia", "Italia", "Alemania",
+            "Estados Unidos", "Canadá", "Australia", "Japón", "China"
+        ];
+        switch (campo) {
+            case 'email':
+                titulo = 'Editar Email';
+                html = `<input type="email" name="valor" class="w-full p-3 border rounded-lg" required>`;
+                break;
+            case 'nombre':
+                titulo = 'Editar Nombre Completo';
+                html = `<input type="text" name="valor" class="w-full p-3 border rounded-lg" required>`;
+                break;
+            case 'fecha':
+                titulo = 'Editar Fecha de Nacimiento';
+                html = `<input type="date" name="valor" class="w-full p-3 border rounded-lg" required>`;
+                break;
+            case 'sexo':
+                titulo = 'Editar Género';
+                html = `<select name="valor" class="w-full p-3 border rounded-lg" required>
+                        <option value="">Selecciona...</option>
+                        <option value="1">Masculino</option>
+                        <option value="2">Femenino</option>
+                        <option value="3">Prefiero no cargarlo</option>
+                    </select>`;
+                break;
+            case 'usuario':
+                titulo = 'Editar Nombre de Usuario';
+                html = `<input type="text" name="valor" class="w-full p-3 border rounded-lg" required backgroundColor="blue">`;
+                break;
+            case 'pais':
+                titulo = 'Editar País';
+                html = `<select name="valor" class="w-full p-3 border rounded-lg" required>
+                <option value="">Selecciona un país...</option>
+                ${listaPaises.map(p => `<option value="${p}">${p}</option>`).join('')}
+            </select>`;
+
+                // Seleccionar el país actual
+                const paisActual = document.querySelector('[data-pais]')?.textContent.trim();
+                setTimeout(() => {
+                    if (paisActual) {
+                        const select = contenedorInput.querySelector('select');
+                        if (select) select.value = paisActual;
+                    }
+                }, 0);
+                break;
+            case 'ciudad':
+                titulo = 'Editar Ciudad';
+                html = `<input type="text" name="valor" class="w-full p-3 border rounded-lg" required>`;
+                break;
+            default:
+                titulo = 'Editar País';
+                html = `<input type="text" name="valor" class="w-full p-3 border rounded-lg" required>`;
+                break;
+        }
+
+        tituloModal.textContent = titulo;
+        contenedorInput.innerHTML = html;
+    };
+    const btnEditarFoto = document.getElementById('btnEditarFoto');
+
+    if (btnEditarFoto) {
+        btnEditarFoto.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            campoInput.value = 'foto';
+            tituloModal.textContent = 'Cambiar Foto de Perfil';
+            contenedorInput.innerHTML = `
+                <input type="file" name="foto" accept="image/*"
+                       class="w-full p-3 border rounded-lg" required>
+                <p class="text-xs text-gray-500 mt-2">Formatos aceptados: JPG, PNG. Máx 5MB.</p>
+            `;
+        });
+    }
+});</script>
 <div id="modalEditar" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl pokemon-border p-8 max-w-md w-full relative">
         <button id="btnCerrarModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
@@ -179,4 +325,5 @@
         </form>
     </div>
 </div>
+
 
