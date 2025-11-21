@@ -20,7 +20,6 @@
         }
     </style>
     <style>
-    /* ⚡ Efecto de trueno */
     .btn-combatir {
         position: relative;
         overflow: hidden;
@@ -34,20 +33,12 @@
 </style>
 
 </head>
-<!-- Librería de efectos (tsParticles) -->
-
-
-
 
 <body class="min-h-screen bg-gradient-to-b from-sky-400 to-emerald-300">
-
-<!-- Header estilo Game Boy -->
 <div class="bg-white shadow-2xl shadow-md top-0 z-50">
     <div class="container mx-auto px-5 py-3">
         <div class="flex justify-between items-center">
-            <!-- Lado izquierdo: Foto + Entrenador + Nombre -->
             <div class="flex items-center gap-3">
-                <!-- Foto de perfil -->
                 <div class="w-12 h-12 rounded-full overflow-hidden border-3 border-red-700 shadow-lg bg-white">
                     {{#tiene_foto}}
                         <img src="{{foto_perfil}}" alt="Foto de perfil" class="w-full h-full object-cover">
@@ -61,16 +52,11 @@
                         </div>
                     {{/tiene_foto}}
                 </div>
-
-                <!-- Texto -->
                 <div>
                     <p class="text-black text-xl font-bold">Entrenador: {{usuario}}</p>
                 </div>
             </div>
-
-            <!-- Lado derecho: Puntos -->
             <div class="flex items-center gap-4">
-                <!-- Puntos -->
                 <div class="hidden md:flex items-center gap-2 bg-yellow-400 pokemon-border px-4 py-2 rounded-lg">
                     <span class="text-xl mb-1">Puntaje: </span>
                     <p class="font-black text-gray-800">{{puntaje}}</p>
@@ -86,7 +72,6 @@
     </div>
 </div>
 
-<!-- Modal QR (oculto por defecto) -->
 <div id="modalQR" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl pokemon-border p-8 max-w-sm w-full relative">
         <button id="btnCerrarQR" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
@@ -96,10 +81,8 @@
     </div>
 </div>
 
-<!-- Contenido principal -->
 <main class="container mx-auto px-5 py-8">
 
-    <!-- Medallas/Stats -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div class="bg-white pokemon-border rounded-xl p-4 text-center transition-transform">
             <div class="text-4xl mb-2 flex items-center justify-center"><?xml version="1.0" encoding="UTF-8"?><svg id="gaming" class="w-12 h-12 fill-gray-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5032 13.502H9.50183V15.5024H15.5032V13.502Z"/><path d="M22.5048 10.5014V8.50091H21.5045V6.50045H20.5043V5.50023H19.5041V4.5H15.5032V5.50023H9.50182V4.5H5.50091V5.50023H4.50068V6.50045H3.50045V8.50091H2.50023V10.5014H1.5V18.5032H2.50023V19.5034H5.50091V18.5032H6.50114V17.503H7.50136V16.5027H8.50159V13.502H9.50182V12.5018H15.5032V13.502H16.5034V16.5027H17.5036V17.503H18.5039V18.5032H19.5041V19.5034H22.5048V18.5032H23.505V10.5014H22.5048ZM5.50091 8.50091V7.50068H6.50114V6.50045H7.50136V7.50068H8.50159V8.50091H9.50182V9.50114H8.50159V10.5014H7.50136V11.5016H6.50114V10.5014H5.50091V9.50114H4.50068V8.50091H5.50091ZM13.5027 9.50114H12.5025V10.5014H11.5023V9.50114H10.502V8.50091H11.5023V7.50068H12.5025V8.50091H13.5027V9.50114ZM20.5043 10.5014H18.5039V12.5018H16.5034V10.5014H14.503V8.50091H16.5034V6.50045H18.5039V8.50091H20.5043V10.5014Z"/><path d="M18.5039 8.50098H16.5034V10.5014H18.5039V8.50098Z"/></svg></div>
@@ -117,14 +100,11 @@
     <div class="text-4xl mb-2 flex items-center justify-center "><?xml version="1.0" encoding="UTF-8"?><?xml version="1.0" encoding="UTF-8"?><svg class="w-12 h-12 fill-blue-800" id="star-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="23 8 23 10 22 10 22 11 21 11 21 12 20 12 20 13 19 13 19 14 18 14 18 19 19 19 19 23 17 23 17 22 15 22 15 21 13 21 13 20 11 20 11 21 9 21 9 22 7 22 7 23 5 23 5 19 6 19 6 14 5 14 5 13 4 13 4 12 3 12 3 11 2 11 2 10 1 10 1 8 8 8 8 6 9 6 9 4 10 4 10 2 11 2 11 1 13 1 13 2 14 2 14 4 15 4 15 6 16 6 16 8 23 8"/></svg></div>
     <div class="flex items-center justify-center gap-2">
         <p class="text-blue-100 text-xs font-bold">NIVEL</p>
-        <!-- SVG de información -->
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="text-blue-100 cursor-help">
             <path fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11t-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8t-.288-.712T12 7t-.712.288T11 8t.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/>
         </svg>
     </div>
     <p class="text-white text-2xl font-black">{{nivel}}</p>
-    
-    <!-- Tooltip -->
     <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 z-10">
         <div class="bg-gray-900 text-white text-xs px-4 py-3 shadow-xl border-2 border-blue-400">
             <p class="leading-relaxed">
@@ -133,7 +113,6 @@
             (Min - NV1 <br>
              Max - NV10)
             </p>
-            <!-- Flechita del tooltip -->
             <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
                 <div class="border-8 border-transparent border-t-gray-900"></div>
             </div>
@@ -148,7 +127,6 @@
         </div>
     </div>
     <div class="flex justify-center mb-8">
-        <!-- Botón Combatir -->
         <form method="GET" action="/PreguntadosPW2/index.php">
             <input type="hidden" name="controller" value="Lobby">
             <input type="hidden" name="method" value="crearPartidaVista">
@@ -165,15 +143,8 @@
                     
             </button>
         </form>
-        
-
-
     </div>
-
-    <!-- Menú principal - estilo Pokédex -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-
-        <!-- Ranking -->
         <div class="bg-gradient-to-br from-yellow-300 to-yellow-500 pokemon-border rounded-2xl p-6">
             <div class="flex items-center gap-4 mb-4">
 <svg class="w-12 h-12 fill-yellow-800" id="users-crown-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="16 20 15 20 15 21 2 21 2 20 1 20 1 17 2 17 2 16 3 16 3 15 4 15 4 14 13 14 13 15 14 15 14 16 15 16 15 17 16 17 16 20"/><polygon points="13 12 13 11 14 11 14 5 18 5 18 6 19 6 19 11 18 11 18 12 13 12"/><polygon points="23 17 23 20 22 20 22 21 16 21 16 20 17 20 17 16 16 16 16 15 15 15 15 14 20 14 20 15 21 15 21 16 22 16 22 17 23 17"/><path d="m12,3v1h-1v1h-1v-1h-1v-1h-1v1h-1v1h-1v-1h-1v-1h-1v7h1v1h1v1h5v-1h1v-1h1V3h-1Zm-1,6h-1v1h-3v-1h-1v-2h5v2Z"/></svg>
@@ -187,8 +158,6 @@
                 VER ENTRENADORES
             </a>
         </div>
-
-        <!-- Perfil -->
         <div class="bg-gradient-to-br from-blue-400 to-blue-600 pokemon-border rounded-2xl p-6 ">
             <div class="flex items-center gap-4 mb-4">
 <?xml version="1.0" encoding="UTF-8"?><svg id="user-solid" class="w-12 h-12 fill-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="7 9 6 9 6 5 7 5 7 3 8 3 8 2 10 2 10 1 14 1 14 2 16 2 16 3 17 3 17 5 18 5 18 9 17 9 17 11 16 11 16 12 14 12 14 13 10 13 10 12 8 12 8 11 7 11 7 9"/><polygon points="22 19 22 22 21 22 21 23 3 23 3 22 2 22 2 19 3 19 3 18 4 18 4 17 5 17 5 16 7 16 7 15 17 15 17 16 19 16 19 17 20 17 20 18 21 18 21 19 22 19"/></svg>
@@ -204,8 +173,6 @@
         </div>
 
     </div>
-
-    <!-- Historial - estilo diálogo Pokémon -->
     <div class="bg-white pokemon-border rounded-2xl p-6">
         <div class="flex items-center gap-3 mb-5 pb-4 border-b-4 border-gray-300">
             <span class="text-3xl"><?xml version="1.0" encoding="UTF-8"?><svg id="clock-solid" class="w-12 h-12 fill-gray-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m22,9v-2h-1v-2h-1v-1h-1v-1h-2v-1h-2v-1h-6v1h-2v1h-2v1h-1v1h-1v2h-1v2h-1v6h1v2h1v2h1v1h1v1h2v1h2v1h6v-1h2v-1h2v-1h1v-1h1v-2h1v-2h1v-6h-1Zm-9,7v-1h-1v-1h-1V5h2v8h1v1h1v1h1v1h-1v1h-1v-1h-1Z"/></svg></span>
@@ -238,8 +205,6 @@
     </div>
 
 </main>
-
-<!-- Librería QRCode.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
@@ -267,7 +232,6 @@
             }
         });
     }
-
     const btnCerrarQR = document.getElementById('btnCerrarQR');
     if (btnCerrarQR) {
         btnCerrarQR.addEventListener('click', () => {

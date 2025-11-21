@@ -1,21 +1,16 @@
 <?php
-
-class RegistrarseController
-{
+class RegistrarseController{
     private $model;
     private $renderer;
 
-    public function __construct($model, $renderer)
-    {
+    public function __construct($model, $renderer){
         $this->model = $model;
         $this->renderer = $renderer;
     }
 
-    public function base()
-    {
+    public function base(){
         $this->registrarse();
     }
-
     public function registrarseForm()
     {
         $this->renderer->render("registrarse");
@@ -29,9 +24,6 @@ class RegistrarseController
         $fecha = $_POST["fecha_nac"];
         $nombre = trim($_POST["nombre_completo"]);
         $sexo = trim($_POST["sexo"]);
-
-
-
 
         // 1. Campos vacíos
         if (empty($usuario) || empty($password) || empty($repetir) || empty($email) || empty($fecha) || empty($nombre)|| empty($sexo)) {
@@ -86,8 +78,6 @@ if (!$sexo_id) {
     $this->renderer->render("registrarse", $data);
     return;
 }
-
-// Registrar usuario con el ID correcto
 $this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre, $sexo_id);
 
 include 'helper/enviarEmail.php';
@@ -121,9 +111,7 @@ $this->mostrarMailEnviado();
         $data['success'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
             $this->renderer->render("mailEnviado", $data); // sin datos por ahora
     }
-    //valido con AJAX
-    public function validarEmail()
-    {
+    public function validarEmail(){
         $email = $_GET["email"] ?? "";
 
         $existe = $this->model->existeEmail($email);
@@ -157,7 +145,6 @@ $this->mostrarMailEnviado();
             echo json_encode(['error' => 'Error al obtener datos']);
             return;
         }
-
         header("Content-Type: application/json");
         echo $result;
     }

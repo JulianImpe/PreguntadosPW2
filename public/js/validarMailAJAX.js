@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     msg.classList.add("text-red-700");
                     msg.classList.remove("text-green-700");
                 } else {
-                    msg.textContent = "✔ Email disponible";
+                    msg.textContent = "Email disponible";
                     msg.classList.add("text-green-700");
                     msg.classList.remove("text-red-700");
                 }
