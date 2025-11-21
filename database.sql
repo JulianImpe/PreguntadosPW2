@@ -541,7 +541,7 @@ INSERT INTO usuarios (
     Mapa_ID
 ) VALUES (
     'admin',
-    'admin123', 
+    'admin123',
     'admin@preguntados.com',
     '1990-01-01',
     NULL,
@@ -554,7 +554,7 @@ INSERT INTO usuarios (
 INSERT INTO usuarios (
     usuario, password, email, fecha_nac, nombre_completo, Sexo_ID, Rol_ID
 ) VALUES (
-    'editor', 'editor123', 'editor@preguntados.com', '1992-06-15', 
+    'editor', 'editor123', 'editor@preguntados.com', '1992-06-15',
     'Editor del Sistema', 1, 2
 );
 
@@ -562,14 +562,17 @@ INSERT INTO usuarios (
 INSERT INTO usuarios (
     usuario, password, email, fecha_nac, nombre_completo, Sexo_ID, Rol_ID
 ) VALUES (
-    'jugador', 'jugador123', 'jugador@preguntados.com', '1995-03-20', 
+    'jugador', 'jugador123', 'jugador@preguntados.com', '1995-03-20',
     'Jugador Normal', 1, 1
 );
 
-ALTER TABLE usuarios 
+ALTER TABLE usuarios
 ADD COLUMN Fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP AFTER Mapa_ID;
 
 -- Actualizar las fechas de los usuarios existentes
-UPDATE usuarios 
-SET Fecha_creacion = CURRENT_TIMESTAMP 
+UPDATE usuarios
+SET Fecha_creacion = CURRENT_TIMESTAMP
 WHERE Fecha_creacion IS NULL;
+ALTER TABLE usuario
+    ADD COLUMN pais VARCHAR(100) NOT NULL,
+ADD COLUMN ciudad VARCHAR(100) NOT NULL;
