@@ -31,7 +31,7 @@ class AdminController
             "total_preguntas"        => $this->model->obtenerCantidadPreguntas(),
             "preguntas_creadas"      => $this->model->obtenerCantidadPreguntasCreadas($filtro),
             "porcentaje_aciertos"    => $this->model->obtenerPorcentajeAciertosPorUsuario($filtro),
-            "usuarios_por_pais"      => $this->model->obtenerUsuariosPorPais($filtro),
+            "preguntas_por_medalla"      => $this->model->obtenerPreguntasPorMedalla($filtro),
             "usuarios_por_sexo"      => $this->model->obtenerUsuariosPorSexo($filtro),
             "usuarios_por_edad"      => $this->model->obtenerUsuariosPorGrupoEdad($filtro)
         ];
@@ -110,7 +110,7 @@ class AdminController
             "total_partidas"         => $this->model->obtenerCantidadPartidas($filtro),
             "total_preguntas"        => $this->model->obtenerCantidadPreguntas(),
             "preguntas_creadas"      => $this->model->obtenerCantidadPreguntasCreadas($filtro),
-            "usuarios_por_pais"      => $this->model->obtenerUsuariosPorPais($filtro),
+            "preguntas_por_medalla"      => $this->model->obtenerPreguntasPorMedalla($filtro),
             "usuarios_por_sexo"      => $this->model->obtenerUsuariosPorSexo($filtro),
             "usuarios_por_edad"      => $this->model->obtenerUsuariosPorGrupoEdad($filtro)
         ];
@@ -157,14 +157,13 @@ class AdminController
         }
 
 
-        // Agregar sección de usuarios por país
-        if (!empty($stats['usuarios_por_pais'])) {
-            $tabla['rows'][] = ['', ''];
-            $tabla['rows'][] = ['USUARIOS POR PAÍS', ''];
-            foreach ($stats['usuarios_por_pais'] as $item) {
-                $tabla['rows'][] = [$item['nombre'], $item['total']];
-            }
-        }
+if (!empty($stats['preguntas_por_medalla'])) {
+    $tabla['rows'][] = ['', ''];
+    $tabla['rows'][] = ['PREGUNTAS POR MEDALLA', ''];  // CAMBIAR TÍTULO
+    foreach ($stats['preguntas_por_medalla'] as $item) {
+        $tabla['rows'][] = [$item['nombre'], $item['total']];
+    }
+}
 
         // Agregar sección de usuarios por edad
         $tabla['rows'][] = ['', ''];

@@ -5,34 +5,30 @@
   <title>Pokedex</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<script>toastr.options = { "closeButton": true, "progressBar": true, "positionClass": "toast-top-right" }</script>
-<!--Google Fonts-->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-        .pixel-font {
-            font-family: 'Press Start 2P', cursive;
-        }
-        .pokeball-bg {
-            background: linear-gradient(180deg, #ef4444 0%, #ef4444 45%, #1f2937 45%, #1f2937 55%, #f3f4f6 55%, #f3f4f6 100%);
-        }
-        </style>
-            <style>
-        .pokemon-border {
-            border: 4px solid #2c3e50;
-            box-shadow:
-                    inset -4px -4px 0px rgba(0,0,0,0.3),
-                    inset 4px 4px 0px rgba(255,255,255,0.3),
-                    4px 4px 0px rgba(0,0,0,0.2);
-        }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script>toastr.options = { "closeButton": true, "progressBar": true, "positionClass": "toast-top-right" }</script>
+
+  <!--Google Fonts-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    .pixel-font {
+        font-family: 'Press Start 2P', cursive;
+    }
+
+    .pokemon-border {
+        border: 4px solid #2c3e50;
+        box-shadow:
+            inset -4px -4px 0px rgba(0,0,0,0.3),
+            inset 4px 4px 0px rgba(255,255,255,0.3),
+            4px 4px 0px rgba(0,0,0,0.2);
+    }
 
         .pokeball-bg {
             background: linear-gradient(180deg, #ef4444 0%, #ef4444 45%, #1f2937 45%, #1f2937 55%, #f3f4f6 55%, #f3f4f6 100%);
@@ -43,32 +39,165 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+    .pokeball-bg {
+        background: linear-gradient(180deg, #ef4444 0%, #ef4444 45%, #1f2937 45%, #1f2937 55%, #f3f4f6 55%, #f3f4f6 100%);
+    }
+
+    /* Animación del menú móvil */
+    .mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+
+    .mobile-menu.active {
+        max-height: 500px;
+    }
+
+    /* Animación del icono hamburguesa */
+    .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background: white;
+        margin: 5px 0;
+        transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(7px, 7px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+  </style>
 </head>
 <body class="bg-gray-100 pixel-font">
-    <header class="bg-red-700 p-3 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <img src="/public/img/logo.png" alt="Pokéball Icon" class="w-24 h-24">
-            <h1 class="text-yellow-300 text-3xl drop-shadow-lg" style="text-shadow: 3px 3px 0px #b45309;">POKETRIVIA</h1>
-            </div>
-            <nav class="flex gap-4">
-    {{#usuario}}
-    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/lobby/base">Inicio</a>
-    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/logout">Cerrar sesión</a>
-    <button id="btnMostrarQR" data-usuario-id="{{usuario_id}}" class="flex items-center justify-center transform bg-white pokemon-border w-12 h-12 shadow-lg hover:scale-105 transition-transform z-50 ">
-    <img src="/public/img/qr-simple.png" alt="qr" class="w-12 h-10">
-</button>
-    {{/usuario}}
+    <header class="bg-red-700 shadow-lg">
+        <div class="container mx-auto px-4">
+            <!-- Barra principal -->
+            <div class="flex justify-between items-center py-3">
 
-    {{^usuario}}
-    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/homeVista">Inicio</a>
-    <a  class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/login/loginForm">Iniciar sesión</a>
-    <a  class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border font-bold transition-all" href="/registrarse/registrarseForm">Registrarse</a>
-    {{/usuario}}
+                <!-- Logo y título -->
+                <div class="flex items-center gap-2 md:gap-4">
+                    <img src="/public/img/logo.png" alt="Pokéball Icon" class="w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24">
+                    <h1 class="text-yellow-300 text-sm md:text-2xl lg:text-3xl drop-shadow-lg" style="text-shadow: 2px 2px 0px #b45309;">
+                        POKETRIVIA
+                    </h1>
+                </div>
+
+                <!-- Navegación Desktop -->
+                <nav class="hidden lg:flex items-center gap-3">
+                    {{#usuario}}
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
+                           href="/lobby/base">
+                            Inicio
+                        </a>
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
+                           href="/logout">
+                            Cerrar sesión
+                        </a>
+                        <button id="btnMostrarQR"
+                                data-usuario-id="{{usuario_id}}"
+                                class="flex items-center justify-center bg-white pokemon-border w-12 h-12 shadow-lg hover:scale-105 transition-transform">
+                            <img src="/public/img/qr-simple.png" alt="qr" class="w-10 h-8">
+                        </button>
+                    {{/usuario}}
+
+                    {{^usuario}}
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
+                           href="/homeVista">
+                            Inicio
+                        </a>
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
+                           href="/login/loginForm">
+                            Iniciar sesión
+                        </a>
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
+                           href="/registrarse/registrarseForm">
+                            Registrarse
+                        </a>
+                    {{/usuario}}
+                </nav>
+
+                <!-- Botón hamburguesa (Móvil/Tablet) -->
+                <button id="menuToggle" class="lg:hidden hamburger p-2 focus:outline-none">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Menú móvil -->
+            <nav id="mobileMenu" class="mobile-menu lg:hidden pb-4">
+                <div class="flex flex-col gap-3">
+                    {{#usuario}}
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
+                           href="/lobby/base">
+                            🏠 Inicio
+                        </a>
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
+                           href="/logout">
+                            🚪 Cerrar sesión
+                        </a>
+                        <button id="btnMostrarQRMobile"
+                                data-usuario-id="{{usuario_id}}"
+                                class="bg-white pokemon-border px-4 py-3 text-xs font-bold flex items-center justify-center gap-2 hover:bg-gray-100 transition-all">
+                            <img src="/public/img/qr-simple.png" alt="qr" class="w-6 h-6">
+                            <span class="text-gray-800">Ver mi QR</span>
+                        </button>
+                    {{/usuario}}
+
+                    {{^usuario}}
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
+                           href="/homeVista">
+                            🏠 Inicio
+                        </a>
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
+                           href="/login/loginForm">
+                            🔑 Iniciar sesión
+                        </a>
+                        <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
+                           href="/registrarse/registrarseForm">
+                            📝 Registrarse
+                        </a>
+                    {{/usuario}}
+                </div>
             </nav>
         </div>
     </header>
-    
+
+    <!-- Script para el menú hamburguesa -->
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+            });
+        }
+
+        // Hacer que el botón QR móvil funcione igual que el desktop
+        const btnQRMobile = document.getElementById('btnMostrarQRMobile');
+        const btnQRDesktop = document.getElementById('btnMostrarQR');
+
+        if (btnQRMobile && btnQRDesktop) {
+            btnQRMobile.addEventListener('click', function() {
+                // Simular click en el botón desktop para mantener la funcionalidad
+                btnQRDesktop.click();
+                // Cerrar el menú móvil
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            });
+        }
+    </script>
+
 </body>
 </html>
-
