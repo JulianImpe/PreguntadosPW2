@@ -30,7 +30,7 @@ class PerfilModel{
             'email' => $datos['email'],
             'sexo' => $this->obtenerTextoSexo($datos['Sexo_ID']),
             'sexo_id' => $datos['Sexo_ID'],
-            'fecha_nacimiento' => $this->formatearFecha($datos['fecha_nac']),
+            'fecha_nac' => $this->formatearFecha($datos['fecha_nac']),
             'fecha_nac_raw' => $datos['fecha_nac'],
             'edad' => $this->calcularEdad($datos['fecha_nac']),
             'foto_perfil' => !empty($datos['foto_perfil'])
@@ -270,7 +270,7 @@ class PerfilModel{
             'nombre_completo' => $datos['nombre_completo'],
             'usuario' => $datos['usuario'],
             'sexo' => $this->obtenerTextoSexo($datos['Sexo_ID']),
-            'fecha_nacimiento' => $this->formatearFecha($datos['fecha_nac']),
+            'fecha_nac' => $this->formatearFecha($datos['fecha_nac']),
             'edad' => $this->calcularEdad($datos['fecha_nac']),
             'foto_perfil' => !empty($datos['foto_perfil'])
                 ? '/public/img/' . basename($datos['foto_perfil'])
