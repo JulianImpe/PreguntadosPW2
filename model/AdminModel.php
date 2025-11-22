@@ -65,23 +65,21 @@ class AdminModel
         return 0;
     }
 
-    public function obtenerUsuariosPorPais($filtro)
-    {
-        $where = $this->construirFiltroFecha("u.Fecha_creacion", $filtro);
-        
-        $resultado = $this->conexion->query("
-            SELECT p.Nombre AS nombre, COUNT(u.ID) AS total
-            FROM usuarios u
-            INNER JOIN Mapa m ON u.Mapa_ID = m.ID
-            INNER JOIN Provincia prov ON m.Provincia_ID = prov.ID
-            INNER JOIN Pais p ON prov.Pais_ID = p.ID
-            $where
-            GROUP BY p.Nombre
-            ORDER BY total DESC
-        ");
+public function obtenerPreguntasPorMedalla($filtro)
+{
+    $where = $this->construirFiltroFecha("p.Fecha_creacion", $filtro);
+    
+    $resultado = $this->conexion->query("
+        SELECT m.Nombre AS nombre, COUNT(p.ID) AS total
+        FROM Pregunta p
+        INNER JOIN Medallas m ON p.Medalla_ID = m.ID
+        $where
+        GROUP BY m.Nombre
+        ORDER BY total DESC
+    ");
 
-        return $resultado ?? [];
-    }
+    return $resultado ?? [];
+}
 
     public function obtenerUsuariosPorSexo($filtro)
     {

@@ -114,10 +114,9 @@
 
     </section>
 
-    <!-- FILA DE GRAFICOS -->
+
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- GÉNERO -->
         <div class="bg-white rounded-2xl p-6 pokemon-border">
             <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
                 <svg class="w-6 h-6 fill-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -129,18 +128,18 @@
             <canvas id="chartSexo"></canvas>
         </div>
 
-        <!-- PAISES -->
-        <div class="bg-white rounded-2xl p-6 pokemon-border">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-                <svg class="w-6 h-6 fill-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                </svg>
-                Usuarios por país
-            </h2>
-            <canvas id="chartPais"></canvas>
-        </div>
 
-        <!-- GRUPO DE EDAD -->
+<div class="bg-white rounded-2xl p-6 pokemon-border">
+    <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-gray-700" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M18 5v6h-1v1h-2v1h-1v2H9v-3h1v-1h1v-1h2V9h1V7h-1V6h-2v1h-1v1H9v1H8V8H7V7H6V6H5V5h1V4h1V3h2V2h6v1h1v1h1v1zm-5 13h1v3h-1v1h-3v-1H9v-3h1v-1h3z"/>
+        </svg>
+        Preguntas por Medalla
+    </h2>
+    <canvas id="chartMedalla"></canvas>
+</div>
+
+
         <div class="bg-white rounded-2xl p-6 pokemon-border">
             <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
                 <svg class="w-6 h-6 fill-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -155,6 +154,7 @@
 
 </main>
 
+
 <!-- SCRIPTS DE CHARTS.JS CON DATOS REALES -->
 <script>
     // Datos REALES desde PHP
@@ -164,10 +164,10 @@
         {{/stats.usuarios_por_sexo}}
     ];
 
-    const datosPais = [
-        {{#stats.usuarios_por_pais}}
+    const datosMedalla = [
+        {{#stats.preguntas_por_medalla}}
         {label: '{{nombre}}', value: {{total}}},
-        {{/stats.usuarios_por_pais}}
+        {{/stats.preguntas_por_medalla}}
     ];
 
     const datosEdad = {
@@ -176,11 +176,28 @@
         jubilados: {{stats.usuarios_por_edad.jubilados}}
     };
 
-    // Configuración de colores pixel art
+    // Configuración de colores pixel art (más colores para las medallas)
     const pixelColors = {
-        primary: ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6'],
-        bg: ['rgba(59, 130, 246, 0.2)', 'rgba(239, 68, 68, 0.2)', 'rgba(16, 185, 129, 0.2)', 
-             'rgba(245, 158, 11, 0.2)', 'rgba(139, 92, 246, 0.2)']
+        primary: [
+            '#3B82F6',  // Azul
+            '#EF4444',  // Rojo
+            '#10B981',  // Verde
+            '#F59E0B',  // Amarillo
+            '#8B5CF6',  // Púrpura
+            '#EC4899',  // Rosa
+            '#06B6D4',  // Cyan
+            '#F97316'   // Naranja
+        ],
+        bg: [
+            'rgba(59, 130, 246, 0.2)', 
+            'rgba(239, 68, 68, 0.2)', 
+            'rgba(16, 185, 129, 0.2)', 
+            'rgba(245, 158, 11, 0.2)', 
+            'rgba(139, 92, 246, 0.2)',
+            'rgba(236, 72, 153, 0.2)',
+            'rgba(6, 182, 212, 0.2)',
+            'rgba(249, 115, 22, 0.2)'
+        ]
     };
 
     // Configuración común
@@ -209,7 +226,7 @@
             labels: datosSexo.map(d => d.label),
             datasets: [{
                 data: datosSexo.map(d => d.value),
-                backgroundColor: pixelColors.primary,
+                backgroundColor: pixelColors.primary.slice(0, datosSexo.length),
                 borderColor: '#ffffff',
                 borderWidth: 3
             }]
@@ -217,17 +234,17 @@
         options: commonOptions
     });
 
-    // Gráfico de País
-    const ctxPais = document.getElementById('chartPais').getContext('2d');
-    new Chart(ctxPais, {
+    // Gráfico de Medallas (antes era País)
+    const ctxMedalla = document.getElementById('chartMedalla').getContext('2d');
+    new Chart(ctxMedalla, {
         type: 'bar',
         data: {
-            labels: datosPais.map(d => d.label),
+            labels: datosMedalla.map(d => d.label),
             datasets: [{
-                label: 'Usuarios',
-                data: datosPais.map(d => d.value),
-                backgroundColor: pixelColors.bg,
-                borderColor: pixelColors.primary,
+                label: 'Preguntas',
+                data: datosMedalla.map(d => d.value),
+                backgroundColor: pixelColors.bg.slice(0, datosMedalla.length),
+                borderColor: pixelColors.primary.slice(0, datosMedalla.length),
                 borderWidth: 3
             }]
         },
@@ -237,7 +254,37 @@
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 1
+                        stepSize: 1,
+                        font: {
+                            size: 11,
+                            weight: 'bold'
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 10,
+                            weight: 'bold'
+                        }
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.y + ' pregunta(s)';
+                        }
                     }
                 }
             }
@@ -252,7 +299,7 @@
             labels: ['Menores (< 18)', 'Adultos (18-65)', 'Jubilados (> 65)'],
             datasets: [{
                 data: [datosEdad.menores, datosEdad.adultos, datosEdad.jubilados],
-                backgroundColor: pixelColors.primary,
+                backgroundColor: pixelColors.primary.slice(0, 3),
                 borderColor: '#ffffff',
                 borderWidth: 3
             }]
