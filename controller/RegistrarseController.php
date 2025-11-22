@@ -155,8 +155,6 @@ class RegistrarseController{
         $this->renderer->render("mailEnviado", $data);
     }
 
-    // NUEVO MÉTODO: Validar el código que ingresa el usuario
-// NUEVO MÉTODO: Validar el código que ingresa el usuario
 public function validarCodigo()
 {
     $email = trim($_POST['email'] ?? '');
@@ -172,11 +170,17 @@ public function validarCodigo()
     // Validar token en la base de datos
     if ($this->model->validarToken($email, $token)) {
         // Activar cuenta
-        $this->model->activarCuenta($email);
-
-        // CAMBIO: Renderizar la vista cuentaActivada en lugar de redirigir
-        $data['success'] = "¡Tu cuenta ha sido activada exitosamente! Ya puedes iniciar sesión.";
-        $this->renderer->render("cuentaActivada", $data);
+        $resultado = $this->model->activarCuenta($email);
+        
+        // Verificar que realmente se activó
+        if ($this->model->estaValidada($email)) {
+            $data['success'] = "¡Tu cuenta ha sido activada exitosamente! Ya puedes iniciar sesión.";
+            $this->renderer->render("cuentaActivada", $data);
+        } else {
+            $data['error'] = "Hubo un error al activar tu cuenta. Por favor contacta a soporte.";
+            $data['email'] = $email;
+            $this->renderer->render("mailEnviado", $data);
+        }
     } else {
         $data['error'] = "Código inválido o expirado. Por favor verifica e intenta nuevamente.";
         $data['email'] = $email;

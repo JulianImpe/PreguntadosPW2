@@ -21,31 +21,41 @@ class LoginController
         $this->renderer->render("login");
     }
 
-    public function login()
-    {
-        $usuario = trim($_POST["usuario"] ?? '');
-        $password = trim($_POST["password"] ?? '');
+public function login()
+{
+    $usuario = trim($_POST["usuario"] ?? '');
+    $password = trim($_POST["password"] ?? '');
 
-        // decidir si hay que traer los datos de usuario y contraseña o si el usuario los escribe
-        if (empty($usuario) || empty($password)) {
-            $this->renderer->render("login", ["error" => "Todos los campos son obligatorios"]);
+    if (empty($usuario) || empty($password)) {
+        $this->renderer->render("login", ["error" => "Todos los campos son obligatorios"]);
+        return;
+    }
+
+    $resultado = $this->model->getUserWith($usuario, $password);
+
+    if (!empty($resultado)) {
+        // NUEVO: Verificar si el email está validado
+        if ($resultado[0]['email_validado'] == 0) {
+            $email = $resultado[0]['email'];
+            $data = [
+                'error' => "Tu cuenta aún no ha sido validada. Por favor revisa tu correo.",
+                'email' => $email,
+                'mostrar_reenvio' => true // Para mostrar opción de reenviar código
+            ];
+            $this->renderer->render("login", $data);
             return;
         }
 
-        $resultado = $this->model->getUserWith($usuario, $password);
+        // Login exitoso - cuenta validada
+        $_SESSION["usuario_id"] = $resultado[0]['ID'];
+        $_SESSION["usuario"] = $resultado[0]['usuario'];
+        $_SESSION["rol"] = $resultado[0]['rol'];
 
-        if (!empty($resultado)) {
-
-            $_SESSION["usuario_id"] = $resultado[0]['ID'];
-            $_SESSION["usuario"] = $resultado[0]['usuario'];
-            $_SESSION["rol"] = $resultado[0]['rol'];
-
-
-            $this->redirectToIndex();
-        } else {
-            $this->renderer->render("login", ["error" => "Usuario o contraseña incorrectos"]);
-        }
+        $this->redirectToIndex();
+    } else {
+        $this->renderer->render("login", ["error" => "Usuario o contraseña incorrectos"]);
     }
+}
 
     public function logout()
     {
