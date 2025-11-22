@@ -29,36 +29,33 @@ class RegistrarseController{
         $pais = $_POST['pais'] ?? '';
         $ciudad = $_POST['ciudad'] ?? '';
 
+        // --- VALIDACIONES ---
+        if (empty($usuario) || empty($password) || empty($repetir) || empty($email) ||
+            empty($fecha) || empty($nombre) || empty($sexo)) {
 
-        // 1. Campos vacíos
-        if (empty($usuario) || empty($password) || empty($repetir) || empty($email) || empty($fecha) || empty($nombre)|| empty($sexo)) {
             $data['error'] = "Todos los campos son obligatorios";
             $this->renderer->render("registrarse", $data);
             return;
         }
 
-        // 2. Contraseñas iguales
         if ($password !== $repetir) {
             $data['error'] = "Las contraseñas no coinciden";
             $this->renderer->render("registrarse", $data);
             return;
         }
 
-        // 3. Longitud y complejidad
         if (strlen($password) < 6 || !preg_match('/[A-Z]/', $password)) {
             $data['error'] = "La contraseña debe tener al menos 6 caracteres y contener una letra mayúscula";
             $this->renderer->render("registrarse", $data);
             return;
         }
 
-        // 4. Email válido
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $data['error'] = "El email no es válido";
             $this->renderer->render("registrarse", $data);
             return;
         }
 
-        // 6. Ya existe usuario, email o nombre completo
         if ($this->model->existeUsuario($usuario)) {
             $data['error'] = "El nombre de usuario ya está en uso";
             $this->renderer->render("registrarse", $data);
@@ -71,35 +68,40 @@ class RegistrarseController{
             return;
         }
 
-        // --- Si pasa todas las validaciones ---
+        // Foto
         $foto_perfil = $this->subirFoto();
-        $sexo_id = $this->model->getSexoIdByNombre($sexo);
 
-// Si no existe el ID, error
-if (!$sexo_id) {
-    $data['error'] = "Sexo inválido.";
-    $this->renderer->render("registrarse", $data);
-    return;
-}
-$this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre, $sexo_id, $pais,$ciudad);
+        $sexo_id = $this->model->getSexoIdByNombre($sexo);
         if (!$sexo_id) {
             $data['error'] = "Sexo inválido.";
             $this->renderer->render("registrarse", $data);
             return;
         }
 
-        // GENERAR TOKEN DE 6 DÍGITOS
+        // GENERAR TOKEN
         $token = sprintf("%06d", mt_rand(0, 999999));
 
-        // Registrar usuario con token
-        $this->model->registrarUsuario($usuario, $password, $email, $fecha, $foto_perfil, $nombre, $sexo_id, $token,$pais,$ciudad);
+        // REGISTRAR USUARIO (ÚNICA LLAMADA CORRECTA)
+        $this->model->registrarUsuario(
+            $usuario,
+            $password,
+            $email,
+            $fecha,
+            $foto_perfil,
+            $nombre,
+            $sexo_id,
+            $token,
+            $pais,
+            $ciudad
+        );
 
-        // Enviar email con el token (modificar tu helper)
+        // ENVIAR MAIL
         $this->enviarEmailConToken($email, $nombre, $token);
 
-        // Mostrar formulario de validación (modificar este método)
+        // MOSTRAR MENSAJE
         $this->mostrarMailEnviado($email);
     }
+
 
     private function enviarEmailConToken($email, $nombre, $token)
     {

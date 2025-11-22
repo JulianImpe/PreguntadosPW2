@@ -188,11 +188,13 @@ class EditorModel{
         $preguntaId = (int)$preguntaId;
         $editorId = (int)$editorId;
 
-        return $this->conexion->query("
-            UPDATE Pregunta_sugerida 
-            SET Estado = '$estado', Revisada_por = $editorId, Fecha_revision = NOW()
-            WHERE ID = $preguntaId
-        ");
+        $ok = $this->conexion->query("
+        UPDATE Pregunta_sugerida 
+        SET Estado = '$estado', Revisada_por = $editorId, Fecha_revision = NOW()
+        WHERE ID = $preguntaId
+    ");
+
+        return $ok !== false;
     }
 
     private function resolverReporte($preguntaId, $editorId, $estadoId, $accion)
