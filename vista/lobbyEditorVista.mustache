@@ -269,6 +269,59 @@
             <p class="text-center text-gray-500 font-semibold py-6">No hay reportes pendientes</p>
         {{/preguntas_reportadas}}
     </section>
+
+
+    <section class="bg-white pokemon-border rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-4 border-green-300 pb-3 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-5 14H7v-2h7zm3-4H7v-2h10zm0-4H7V7h10z"/>
+            </svg>
+            📚 Todas las Preguntas
+        </h2>
+
+        {{#preguntasTodas}}
+            <div class="bg-gradient-to-r from-green-50 to-green-100 pokemon-border rounded-xl p-4 mb-4 hover:from-green-100 hover:to-green-200 transition-all">
+                <div class="flex justify-between items-start gap-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="medalla-{{medalla_clase}} text-white px-3 py-1 rounded text-xs font-bold pokemon-border">{{medalla_emoji}} {{medalla_nombre}}</span>
+                        </div>
+                        <p class="text-gray-800 font-bold mb-3">{{Texto}}</p>
+                        <div class="grid grid-cols-2 gap-2 text-sm bg-white p-3 rounded-lg">
+                            {{#opciones}}
+                                <p class="{{#EsCorrecta}}text-green-600 font-bold{{/EsCorrecta}}{{^EsCorrecta}}text-gray-600{{/EsCorrecta}} flex items-center gap-1">
+                                    {{#EsCorrecta}}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1ZM5,11h1v-1h1v-1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1Z"/>
+                                        </svg>
+                                    {{/EsCorrecta}}
+                                    {{^EsCorrecta}}○{{/EsCorrecta}}
+                                    {{Texto}}
+                                </p>
+                            {{/opciones}}
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <form action="/editor/eliminarPregunta" method="POST" onsubmit="return confirm('¿Seguro que querés eliminar esta pregunta?')">
+                            <input type="hidden" name="id" value="{{ID}}">
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-bold pokemon-border flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="white" d="M20 6v8h-1v8h-1v1H6v-1H5v-8H4V6zm1-3v2H3V3h1V2h5V1h6v1h5v1z"/>
+                                </svg>
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {{/preguntasTodas}}
+
+        {{^preguntasTodas}}
+            <p class="text-center text-gray-500 font-semibold py-6">No hay preguntas registradas.</p>
+        {{/preguntasTodas}}
+    </section>
+
+
 </main>
 
 

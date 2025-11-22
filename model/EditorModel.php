@@ -210,7 +210,7 @@ class EditorModel{
 
         return true;
     }
-    private function getMedallaClase($nombre){
+    public function getMedallaClase($nombre){
         $clases = [
             'Medalla Roca' => 'roca', 'Medalla Cascada' => 'cascada',
             'Medalla Trueno' => 'trueno', 'Medalla Arcoíris' => 'arcoiris',
@@ -220,7 +220,7 @@ class EditorModel{
         return $clases[$nombre] ?? 'roca';
     }
 //cambiarlo por las fotos q tnemos descargadas
-    private function getMedallaEmoji($nombre){
+    public function getMedallaEmoji($nombre){
         $emojis = [
             'Medalla Roca' => '🪨', 'Medalla Cascada' => '💧',
             'Medalla Trueno' => '⚡', 'Medalla Arcoíris' => '🌈',
@@ -296,6 +296,74 @@ class EditorModel{
         $id = (int)$id;
         return $this->conexion->query("DELETE FROM medallas WHERE ID = $id");
     }
+
+
+
+    public function obtenerTodasLasPreguntas()
+    {
+        $sql = "
+    SELECT 
+        P.ID,
+        P.Texto,
+        EP.Nombre as Estado,
+        M.Nombre as medalla_nombre
+    FROM Pregunta P
+    LEFT JOIN Estado_pregunta EP ON EP.ID = P.Estado_ID
+    LEFT JOIN Medallas M ON M.ID = P.Medalla_ID
+    ORDER BY P.ID DESC
+    ";
+
+        $resultado = $this->conexion->query($sql);
+
+        if (is_array($resultado)) {
+            return $resultado;
+        }
+
+        if (is_object($resultado) && method_exists($resultado, "fetch_all")) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function eliminarPreguntaPorId($id)
+    {
+        $id = (int)$id;
+
+
+        $this->conexion->query("DELETE FROM Respuesta WHERE Pregunta_ID = $id");
+
+
+        return $this->conexion->query("DELETE FROM Pregunta WHERE ID = $id");
+    }
+
+
+    public function obtenerOpcionesDePregunta($preguntaId)
+    {
+        $preguntaId = intval($preguntaId);
+
+        $query = "
+        SELECT 
+            ID,
+            Texto,
+            Es_Correcta AS EsCorrecta
+        FROM Respuesta
+        WHERE Pregunta_ID = $preguntaId
+    ";
+
+
+        return $this->conexion->query($query);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -56,7 +56,7 @@ CREATE TABLE Mapa (
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- ==============================
--- USUARIOS
+-- USUARIOS (CON COLUMNAS PAIS Y CIUDAD)
 -- ==============================
 
 CREATE TABLE usuarios (
@@ -71,12 +71,13 @@ CREATE TABLE usuarios (
                           Rol_ID INT NOT NULL DEFAULT 1,
                           Puntaje_total INT DEFAULT 0,
                           Mapa_ID INT NULL,
+                          pais VARCHAR(100) NOT NULL,
+                          ciudad VARCHAR(100) NOT NULL,
+                          Fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
                           FOREIGN KEY (Rol_ID) REFERENCES Rol(ID),
                           FOREIGN KEY (Sexo_ID) REFERENCES Sexo(ID),
                           FOREIGN KEY (Mapa_ID) REFERENCES Mapa(ID) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-
 
 -- ==============================
 -- PARTIDAS
@@ -163,13 +164,17 @@ CREATE TABLE Reporte (
                          ID INT AUTO_INCREMENT PRIMARY KEY,
                          Usuario_ID INT NOT NULL,
                          Pregunta_ID INT NOT NULL,
+                         Partida_ID INT NULL,
                          Motivo TEXT NULL,
+                         Estado ENUM('Pendiente', 'En_revision', 'Resuelto', 'Rechazado') DEFAULT 'Pendiente',
                          Fecha_reporte DATETIME DEFAULT CURRENT_TIMESTAMP,
+                         Fecha_resolucion DATETIME NULL,
                          Revisado BOOLEAN DEFAULT FALSE,
                          Revisado_por INT NULL,
                          Accion_tomada VARCHAR(50) NULL,
                          FOREIGN KEY (Usuario_ID) REFERENCES usuarios(ID) ON DELETE CASCADE,
                          FOREIGN KEY (Pregunta_ID) REFERENCES Pregunta(ID) ON DELETE CASCADE,
+                         FOREIGN KEY (Partida_ID) REFERENCES Partida(ID) ON DELETE SET NULL,
                          FOREIGN KEY (Revisado_por) REFERENCES usuarios(ID) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -183,19 +188,42 @@ CREATE TABLE Usuario_pregunta_vista (
                                         UNIQUE KEY unique_usuario_pregunta (Usuario_ID, Pregunta_ID)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+CREATE TABLE Pregunta_sugerida (
+                                   ID INT AUTO_INCREMENT PRIMARY KEY,
+                                   Texto TEXT NOT NULL,
+                                   Medalla_ID INT NOT NULL,
+                                   Sugerida_por_usuario_ID INT NOT NULL,
+                                   Fecha_sugerencia DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                   Estado ENUM('Pendiente', 'Aprobada', 'Rechazada') DEFAULT 'Pendiente',
+                                   Revisada_por INT NULL,
+                                   Fecha_revision DATETIME NULL,
+                                   Motivo_rechazo TEXT NULL,
+                                   FOREIGN KEY (Medalla_ID) REFERENCES Medallas(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (Sugerida_por_usuario_ID) REFERENCES usuarios(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (Revisada_por) REFERENCES usuarios(ID) ON DELETE SET NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE Respuesta_sugerida (
+                                    ID INT AUTO_INCREMENT PRIMARY KEY,
+                                    Pregunta_sugerida_ID INT NOT NULL,
+                                    Texto VARCHAR(255) NOT NULL,
+                                    Es_Correcta BOOLEAN NOT NULL DEFAULT FALSE,
+                                    FOREIGN KEY (Pregunta_sugerida_ID) REFERENCES Pregunta_sugerida(ID) ON DELETE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- ==============================
 -- DATOS DE EJEMPLO - MEDALLAS
 -- ==============================
 
 INSERT INTO Medallas (Nombre, Color, Imagen_url) VALUES
-                                                     ('Medalla Roca', '#8B7355', 'img/categorias/Roca.png'),       -- Brock
-                                                     ('Medalla Cascada', '#4DA6FF', 'img/categorias/Cascada.png'),    -- Misty
-                                                     ('Medalla Trueno', '#FFD700', 'img/categorias/Electrico.png'),     -- Lt. Surge
-                                                     ('Medalla Arcoíris', '#FF80FF', 'img/categorias/Arcoiris.png'),   -- Erika
-                                                     ('Medalla Alma', '#9400D3', 'img/categorias/Alma.png'),          -- Koga
-                                                     ('Medalla Pantano', '#00FF7F', 'img/categorias/Psiquico.png'),      -- Sabrina
-                                                     ('Medalla Volcán', '#FF4500', 'img/categorias/Volcan.png'),     -- Blaine
-                                                     ('Medalla Tierra', '#654321', 'img/categorias/Tierra.png');        -- Giovanni
+                                                     ('Medalla Roca', '#8B7355', 'img/categorias/Roca.png'),
+                                                     ('Medalla Cascada', '#4DA6FF', 'img/categorias/Cascada.png'),
+                                                     ('Medalla Trueno', '#FFD700', 'img/categorias/Electrico.png'),
+                                                     ('Medalla Arcoíris', '#FF80FF', 'img/categorias/Arcoiris.png'),
+                                                     ('Medalla Alma', '#9400D3', 'img/categorias/Alma.png'),
+                                                     ('Medalla Pantano', '#00FF7F', 'img/categorias/Psiquico.png'),
+                                                     ('Medalla Volcán', '#FF4500', 'img/categorias/Volcan.png'),
+                                                     ('Medalla Tierra', '#654321', 'img/categorias/Tierra.png');
 
 -- ==============================
 -- PREGUNTAS Y RESPUESTAS
@@ -214,22 +242,18 @@ INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta) VALUES
                                                             (1, 'Onix y Rhyhorn', FALSE),
                                                             (1, 'Geodude y Machop', FALSE),
                                                             (1, 'Rhyhorn y Sandshrew', FALSE),
-
                                                             (2, 'Ciudad Plateada', TRUE),
                                                             (2, 'Ciudad Celeste', FALSE),
                                                             (2, 'Ciudad Verde', FALSE),
                                                             (2, 'Ciudad Carmín', FALSE),
-
                                                             (3, 'Tumba Rocas', TRUE),
                                                             (3, 'Hiperrayo', FALSE),
                                                             (3, 'Rayo Solar', FALSE),
                                                             (3, 'Trampa Rocas', FALSE),
-
                                                             (4, 'Agua o Planta', TRUE),
                                                             (4, 'Fuego o Volador', FALSE),
                                                             (4, 'Eléctrico o Acero', FALSE),
                                                             (4, 'Hielo o Siniestro', FALSE),
-
                                                             (5, 'Medalla Roca', TRUE),
                                                             (5, 'Medalla Cascada', FALSE),
                                                             (5, 'Medalla Trueno', FALSE),
@@ -248,22 +272,18 @@ INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta) VALUES
                                                             (6, 'Bulbasaur', FALSE),
                                                             (6, 'Charmander', FALSE),
                                                             (6, 'Pikachu', FALSE),
-
                                                             (7, 'Ciudad Celeste', TRUE),
                                                             (7, 'Ciudad Plateada', FALSE),
                                                             (7, 'Ciudad Azulona', FALSE),
                                                             (7, 'Ciudad Carmín', FALSE),
-
                                                             (8, 'Misty', TRUE),
                                                             (8, 'Brock', FALSE),
                                                             (8, 'Lt. Surge', FALSE),
                                                             (8, 'Erika', FALSE),
-
                                                             (9, 'Eléctrico o Planta', TRUE),
                                                             (9, 'Roca o Tierra', FALSE),
                                                             (9, 'Fuego o Hielo', FALSE),
                                                             (9, 'Acero o Fantasma', FALSE),
-
                                                             (10, 'Psíquico', TRUE),
                                                             (10, 'Tajo Umbrío', FALSE),
                                                             (10, 'Surf', FALSE),
@@ -282,22 +302,18 @@ INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta) VALUES
                                                             (11, 'Fuego', FALSE),
                                                             (11, 'Agua', FALSE),
                                                             (11, 'Tierra', FALSE),
-
                                                             (12, 'Ciudad Carmín', TRUE),
                                                             (12, 'Ciudad Celeste', FALSE),
                                                             (12, 'Ciudad Verde', FALSE),
                                                             (12, 'Ciudad Plateada', FALSE),
-
                                                             (13, 'Electabuzz', TRUE),
                                                             (13, 'Raichu', FALSE),
                                                             (13, 'Jolteon', FALSE),
                                                             (13, 'Pikachu', FALSE),
-
                                                             (14, 'Tierra', TRUE),
                                                             (14, 'Planta', FALSE),
                                                             (14, 'Hielo', FALSE),
                                                             (14, 'Fuego', FALSE),
-
                                                             (15, 'Medalla Trueno', TRUE),
                                                             (15, 'Medalla Roca', FALSE),
                                                             (15, 'Medalla Cascada', FALSE),
@@ -316,22 +332,18 @@ INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta) VALUES
                                                             (16, 'Agua', FALSE),
                                                             (16, 'Fuego', FALSE),
                                                             (16, 'Roca', FALSE),
-
                                                             (17, 'Ciudad Azulona', TRUE),
                                                             (17, 'Ciudad Plateada', FALSE),
                                                             (17, 'Ciudad Verde', FALSE),
                                                             (17, 'Ciudad Carmín', FALSE),
-
                                                             (18, 'Medalla Arcoíris', TRUE),
                                                             (18, 'Medalla Cascada', FALSE),
                                                             (18, 'Medalla Trueno', FALSE),
                                                             (18, 'Medalla Tierra', FALSE),
-
                                                             (19, 'Fuego o Volador', TRUE),
                                                             (19, 'Eléctrico o Hielo', FALSE),
                                                             (19, 'Tierra o Roca', FALSE),
                                                             (19, 'Agua o Fantasma', FALSE),
-
                                                             (20, 'Vileplume', TRUE),
                                                             (20, 'Venusaur', FALSE),
                                                             (20, 'Tangela', FALSE),
@@ -350,22 +362,18 @@ INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta) VALUES
                                                             (21, 'Ciudad Azulona', FALSE),
                                                             (21, 'Ciudad Plateada', FALSE),
                                                             (21, 'Ciudad Carmín', FALSE),
-
                                                             (22, 'Veneno', TRUE),
                                                             (22, 'Psíquico', FALSE),
                                                             (22, 'Agua', FALSE),
                                                             (22, 'Eléctrico', FALSE),
-
                                                             (23, 'Medalla Alma', TRUE),
                                                             (23, 'Medalla Pantano', FALSE),
                                                             (23, 'Medalla Tierra', FALSE),
                                                             (23, 'Medalla Trueno', FALSE),
-
                                                             (24, 'Tierra o Psíquico', TRUE),
                                                             (24, 'Fuego o Lucha', FALSE),
                                                             (24, 'Agua o Hielo', FALSE),
                                                             (24, 'Planta o Volador', FALSE),
-
                                                             (25, 'Se convierte en miembro del Alto Mando', TRUE),
                                                             (25, 'Se convierte en líder del Team Rocket', FALSE),
                                                             (25, 'Pierde su gimnasio y lo toma su hija', FALSE),
@@ -384,22 +392,18 @@ INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta) VALUES
                                                             (26, 'Eléctrico', FALSE),
                                                             (26, 'Veneno', FALSE),
                                                             (26, 'Fuego', FALSE),
-
                                                             (27, 'Ciudad Azafrán', TRUE),
                                                             (27, 'Ciudad Celeste', FALSE),
                                                             (27, 'Ciudad Plateada', FALSE),
                                                             (27, 'Ciudad Verde', FALSE),
-
                                                             (28, 'Medalla Pantano', TRUE),
                                                             (28, 'Medalla Alma', FALSE),
                                                             (28, 'Medalla Arcoíris', FALSE),
                                                             (28, 'Medalla Volcán', FALSE),
-
                                                             (29, 'Siniestro o Fantasma', TRUE),
                                                             (29, 'Tierra o Planta', FALSE),
                                                             (29, 'Agua o Hielo', FALSE),
                                                             (29, 'Roca o Acero', FALSE),
-
                                                             (30, 'Laberinto de baldosas y teletransportadores', TRUE),
                                                             (30, 'Entrenadores dobles aleatorios', FALSE),
                                                             (30, 'Movimientos de estado continuos', FALSE),
@@ -418,22 +422,18 @@ INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta) VALUES
                                                             (31, 'Ciudad Azafrán', FALSE),
                                                             (31, 'Ciudad Verde', FALSE),
                                                             (31, 'Ciudad Celeste', FALSE),
-
                                                             (32, 'Fuego', TRUE),
                                                             (32, 'Planta', FALSE),
                                                             (32, 'Roca', FALSE),
                                                             (32, 'Agua', FALSE),
-
                                                             (33, 'Medalla Volcán', TRUE),
                                                             (33, 'Medalla Tierra', FALSE),
                                                             (33, 'Medalla Roca', FALSE),
                                                             (33, 'Medalla Pantano', FALSE),
-
                                                             (34, 'Agua o Tierra', TRUE),
                                                             (34, 'Eléctrico o Hielo', FALSE),
                                                             (34, 'Planta o Bicho', FALSE),
                                                             (34, 'Fantasma o Siniestro', FALSE),
-
                                                             (35, 'Laberinto de flechas móviles o escaleras', TRUE),
                                                             (35, 'Solo batalla de líderes antiguos', FALSE),
                                                             (35, 'Combates dobles invisibles', FALSE),
@@ -452,37 +452,27 @@ INSERT INTO Respuesta (Pregunta_ID, Texto, Es_Correcta) VALUES
                                                             (36, 'Hielo', FALSE),
                                                             (36, 'Fantasma', FALSE),
                                                             (36, 'Fuego', FALSE),
-
                                                             (37, 'Ciudad Verde', TRUE),
                                                             (37, 'Ciudad Plateada', FALSE),
                                                             (37, 'Ciudad Celeste', FALSE),
                                                             (37, 'Ciudad Carmín', FALSE),
-
                                                             (38, 'Medalla Tierra', TRUE),
                                                             (38, 'Medalla Volcán', FALSE),
                                                             (38, 'Medalla Trueno', FALSE),
                                                             (38, 'Medalla Alma', FALSE),
-
                                                             (39, 'Jefe del Team Rocket', TRUE),
                                                             (39, 'Líder del Alto Mando', FALSE),
                                                             (39, 'Entrenador de doble tipo Agua', FALSE),
                                                             (39, 'Profesional de concursos Pokémon', FALSE),
-
                                                             (40, 'Agua o Hielo', TRUE),
                                                             (40, 'Planta o Eléctrico', FALSE),
                                                             (40, 'Fuego o Fantasma', FALSE),
                                                             (40, 'Volador o Bicho', FALSE);
 
 -- ==============================
--- ACTUALIZACIÓN DE ESTADOS Y DIFICULTAD
+-- ACTUALIZACIÓN DE DIFICULTAD
 -- ==============================
 
--- Actualizar todas las preguntas a estado Aprobada
-UPDATE pregunta
-SET Estado_ID = 2
-WHERE Estado_ID = 1;
-
--- Inicializar Dificultad para preguntas ya existentes (Laplace smoothing)
 UPDATE Pregunta
 SET Dificultad = ROUND(1 - ((Cant_veces_correcta + 1) / (GREATEST(Cant_veces_respondida,0) + 2)), 3),
     DificultadNivel =
@@ -493,86 +483,33 @@ SET Dificultad = ROUND(1 - ((Cant_veces_correcta + 1) / (GREATEST(Cant_veces_res
             ELSE 'Difícil'
             END;
 
+-- ==============================
+-- USUARIOS DE PRUEBA
+-- ==============================
 
-CREATE TABLE Pregunta_sugerida (
-                                   ID INT AUTO_INCREMENT PRIMARY KEY,
-                                   Texto TEXT NOT NULL,
-                                   Medalla_ID INT NOT NULL,
-                                   Sugerida_por_usuario_ID INT NOT NULL,
-                                   Fecha_sugerencia DATETIME DEFAULT CURRENT_TIMESTAMP,
-                                   Estado ENUM('Pendiente', 'Aprobada', 'Rechazada') DEFAULT 'Pendiente',
-                                   Revisada_por INT NULL,
-                                   Fecha_revision DATETIME NULL,
-                                   Motivo_rechazo TEXT NULL,
-                                   FOREIGN KEY (Medalla_ID) REFERENCES Medallas(ID) ON DELETE CASCADE,
-                                   FOREIGN KEY (Sugerida_por_usuario_ID) REFERENCES usuarios(ID) ON DELETE CASCADE,
-                                   FOREIGN KEY (Revisada_por) REFERENCES usuarios(ID) ON DELETE SET NULL
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- Tabla para respuestas de preguntas sugeridas
-CREATE TABLE Respuesta_sugerida (
-                                    ID INT AUTO_INCREMENT PRIMARY KEY,
-                                    Pregunta_sugerida_ID INT NOT NULL,
-                                    Texto VARCHAR(255) NOT NULL,
-                                    Es_Correcta BOOLEAN NOT NULL DEFAULT FALSE,
-                                    FOREIGN KEY (Pregunta_sugerida_ID) REFERENCES Pregunta_sugerida(ID) ON DELETE CASCADE
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- Modificar tabla Reporte para agregar más información
-ALTER TABLE Reporte
-    ADD COLUMN Estado ENUM('Pendiente', 'En_revision', 'Resuelto', 'Rechazado') DEFAULT 'Pendiente' AFTER Motivo,
-ADD COLUMN Fecha_resolucion DATETIME NULL AFTER Estado;
-
--- uni el reporte a la partida asi se pueden contrar por partida
-ALTER TABLE Reporte
-    ADD COLUMN Partida_ID INT NULL AFTER Pregunta_ID,
-ADD FOREIGN KEY (Partida_ID) REFERENCES Partida(ID) ON DELETE SET NULL;
-
+-- Administrador
 INSERT INTO usuarios (
-    usuario,
-    password,
-    email,
-    fecha_nac,
-    foto_perfil,
-    nombre_completo,
-    Sexo_ID,
-    Rol_ID,
-    Puntaje_total,
-    Mapa_ID
+    usuario, password, email, fecha_nac, foto_perfil, nombre_completo,
+    Sexo_ID, Rol_ID, Puntaje_total, Mapa_ID, pais, ciudad
 ) VALUES (
-    'admin',
-    'admin123',
-    'admin@preguntados.com',
-    '1990-01-01',
-    NULL,
-    'Administrador del Sistema',
-    1,     -- Sexo_ID (Masculino, o cambiá al que quieras)
-    3,     -- Rol_ID = Administrador
-    0,
-    NULL
-);
+             'admin', 'admin123', 'admin@preguntados.com', '1990-01-01', NULL,
+             'Administrador del Sistema', 1, 3, 0, NULL, 'Argentina', 'Buenos Aires'
+         );
+
+-- Editor
 INSERT INTO usuarios (
-    usuario, password, email, fecha_nac, nombre_completo, Sexo_ID, Rol_ID
+    usuario, password, email, fecha_nac, nombre_completo,
+    Sexo_ID, Rol_ID, pais, ciudad
 ) VALUES (
-    'editor', 'editor123', 'editor@preguntados.com', '1992-06-15',
-    'Editor del Sistema', 1, 2
-);
+             'editor', 'editor123', 'editor@preguntados.com', '1992-06-15',
+             'Editor del Sistema', 1, 2, 'Argentina', 'Buenos Aires'
+         );
 
--- Jugador de prueba
+-- Jugador
 INSERT INTO usuarios (
-    usuario, password, email, fecha_nac, nombre_completo, Sexo_ID, Rol_ID
+    usuario, password, email, fecha_nac, nombre_completo,
+    Sexo_ID, Rol_ID, pais, ciudad
 ) VALUES (
-    'jugador', 'jugador123', 'jugador@preguntados.com', '1995-03-20',
-    'Jugador Normal', 1, 1
-);
-
-ALTER TABLE usuarios
-ADD COLUMN Fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP AFTER Mapa_ID;
-
--- Actualizar las fechas de los usuarios existentes
-UPDATE usuarios
-SET Fecha_creacion = CURRENT_TIMESTAMP
-WHERE Fecha_creacion IS NULL;
-ALTER TABLE usuario
-    ADD COLUMN pais VARCHAR(100) NOT NULL,
-ADD COLUMN ciudad VARCHAR(100) NOT NULL;
+             'jugador', 'jugador123', 'jugador@preguntados.com', '1995-03-20',
+             'Jugador Normal', 1, 1, 'Argentina', 'Buenos Aires'
+         );
