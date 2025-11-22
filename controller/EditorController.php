@@ -1,28 +1,21 @@
 <?php
-
-class EditorController
-{
+class EditorController{
     private $model;
     private $renderer;
 
-    public function __construct($model, $renderer)
-    {
+    public function __construct($model, $renderer){
         $this->model = $model;
         $this->renderer = $renderer;
     }
-
-    public function base()
-    {
+    public function base(){
         $this->lobbyEditor();
     }
 
-    public function lobbyEditor()
-    {
+    public function lobbyEditor(){
         if (!isset($_SESSION["usuario_id"])) {
             header("Location: /login/loginForm");
             exit;
         }
-
         $usuarioId = $_SESSION["usuario_id"];
         $datosUsuario = $this->model->obtenerDatosUsuario($usuarioId);
 
@@ -30,7 +23,6 @@ class EditorController
         $preguntasReportadas = $this->model->obtenerPreguntasReportadas();
 
         $data = [
-            // Datos del editor
             'ID' => $datosUsuario['ID'] ?? $usuarioId,
             'usuario_id' => $datosUsuario['usuario_id'] ?? $usuarioId,
             'usuario' => $datosUsuario['usuario'] ?? 'Editor',
@@ -49,12 +41,10 @@ class EditorController
             'preguntas_sugeridas' => $preguntasSugeridas,
             'preguntas_reportadas' => $preguntasReportadas,
             
-            // ✅ Mensajes de notificación (ANTES de borrarlos)
             'exito_reporte' => $_SESSION['exito_reporte'] ?? null,
             'error_reporte' => $_SESSION['error_reporte'] ?? null
         ];
 
-        // ✅ AHORA SÍ los borramos DESPUÉS de agregarlos a $data
         unset($_SESSION['exito_reporte']);
         unset($_SESSION['error_reporte']);
 
@@ -162,7 +152,6 @@ class EditorController
         exit;
     }
 
-
     public function gestionarMedallas()
     {
         $medallas = $this->model->getAllMedallas();
@@ -183,15 +172,10 @@ class EditorController
         ]);
     }
 
-
-
     public function crearMedalla()
     {
         $this->renderer->render("crearMedallas");
     }
-
-
-
 
     public function editarMedalla()
     {
@@ -214,10 +198,6 @@ class EditorController
             "medalla" => $medalla
         ]);
     }
-
-
-
-
 
     public function guardarMedalla()
     {
@@ -264,10 +244,6 @@ class EditorController
         header("Location: /editor/medallas");
         exit;
     }
-
-
-
-
 
     public function eliminarMedalla()
     {
