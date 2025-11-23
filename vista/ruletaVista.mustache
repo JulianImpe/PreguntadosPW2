@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruleta Pokémon</title>
+    <link rel="stylesheet" href="/public/css/ruleta.css">
+</head>
+<body>
+
+<div class="container1">
+    <!-- NUEVO: Layout horizontal -->
+    <div class="ruleta-layout">
+        <!-- Texto a la izquierda -->
+        <div class="ruleta-text">
+            <p>¡Gira la ruleta para elegir una categoría!</p>
+        </div>
+
+        <!-- Ruleta en el centro -->
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <canvas id="wheel" width="400" height="400"></canvas>
+            <div class="center-circle"></div>
+        </div>
+
+        <!-- Botón a la derecha -->
+        <div class="ruleta-button">
+            <button id="spinBtn" class="spin-btn">GIRAR RULETA</button>
+        </div>
+    </div>
+
+    <form id="formCategoria" method="POST" action="/ruleta/seleccionarCategoria" style="display:none;">
+        <input type="hidden" name="medalla_id" id="medallaInput">
+    </form>
+</div>
+
+<!-- Modal de categoría seleccionada -->
+<div id="modalCategoria" class="modal-overlay">
+    <div class="modal-content">
+        <h2 class="modal-title">Categoría Seleccionada:</h2>
+        <img id="modalMedal" class="modal-medal" src="" alt="Medalla">
+        <p id="modalMedalName" class="modal-subtitle"></p>
+        <div id="modalWarning" class="modal-warning" style="display: none;"></div>
+        <button id="continuarBtn" class="modal-btn">CONTINUAR A PREGUNTA</button>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+    // Datos de las medallas desde PHP/Mustache
+    const medallas = [
+        {{#categorias}}
+            {
+                ID: {{ID}},
+                Nombre: '{{Nombre}}',
+                Color: '{{Color}}',
+                Imagen_url: '/public/{{Imagen_url}}'
+            },
+        {{/categorias}}
+    ];
+
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    const spinBtn = document.getElementById('spinBtn');
+    const medallaInput = document.getElementById('medallaInput');
+    const form = document.getElementById('formCategoria');
+    const modal = document.getElementById('modalCategoria');
+    const modalMedal = document.getElementById('modalMedal');
+    const modalMedalName = document.getElementById('modalMedalName');
+    const modalWarning = document.getElementById('modalWarning');
+    const continuarBtn = document.getElementById('continuarBtn');
+
+    let currentRotation = 0;
+    let isSpinning = false;
+    const totalMedallas = medallas.length;
+    const anglePerSection = (2 * Math.PI) / totalMedallas;
+
+    // Cargar imágenes
+    const images = {};
+    let imagesLoaded = 0;
+
+    medallas.forEach((medalla, index) => {
+        const img = new Image();
+        img.onload = () => {
+            imagesLoaded++;
+            if (imagesLoaded === totalMedallas) {
+                drawWheel(0);
+            }
+        };
+        img.onerror = () => {
+            console.warn(`No se pudo cargar la imagen: ${medalla.Imagen_url}`);
+            imagesLoaded++;
+            if (imagesLoaded === totalMedallas) {
+                drawWheel(0);
+            }
+        };
+        img.src = medalla.Imagen_url;
+        images[index] = img;
+    });
+
+    function drawWheel(rotation) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(200, 200);
+        ctx.rotate(rotation);
+
+        medallas.forEach((medalla, index) => {
+            const startAngle = index * anglePerSection;
+            const endAngle = startAngle + anglePerSection;
+
+            // Dibujar sector
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, 200, startAngle, endAngle);
+            ctx.closePath();
+            ctx.fillStyle = medalla.Color;
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Dibujar imagen
+            ctx.save();
+            const middleAngle = startAngle + anglePerSection / 2;
+            ctx.rotate(middleAngle);
+
+            if (images[index] && images[index].complete) {
+                ctx.drawImage(images[index], 80, -30, 60, 60);
+            }
+
+            ctx.restore();
+        });
+
+        ctx.restore();
+    }
+
+    function spinWheel() {
+        if (isSpinning) return;
+
+        isSpinning = true;
+        spinBtn.disabled = true;
+
+        // Rotación aleatoria: entre 5 y 8 vueltas completas + ángulo aleatorio
+        const minSpins = 5;
+        const maxSpins = 8;
+        const spins = minSpins + Math.random() * (maxSpins - minSpins);
+        const randomAngle = Math.random() * Math.PI * 2;
+        const totalRotation = currentRotation + (spins * Math.PI * 2) + randomAngle;
+
+        const duration = 5000; // 5 segundos
+        const startTime = Date.now();
+        const startRotation = currentRotation;
+
+        function animate() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Curva de desaceleración (easing)
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const rotation = startRotation + (totalRotation - startRotation) * easeOut;
+
+            drawWheel(rotation);
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                currentRotation = totalRotation % (Math.PI * 2);
+                finishSpin();
+            }
+        }
+
+        animate();
+    }
+
+    function finishSpin() {
+        // Normalizar la rotación actual (0 a 2π)
+        const normalizedRotation = ((currentRotation % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+
+        // Convertir la rotación de la ruleta al ángulo que está bajo el puntero
+        const pointerAngle = (Math.PI * 1.5 - normalizedRotation) % (Math.PI * 2);
+        const positiveAngle = (pointerAngle + Math.PI * 2) % (Math.PI * 2);
+
+        // Calculamos el índice del sector
+        let sectorIndex = Math.floor(positiveAngle / anglePerSection);
+        sectorIndex = sectorIndex % totalMedallas;
+
+        const selectedMedalla = medallas[sectorIndex];
+
+        console.log('=== DEBUG RULETA ===');
+        console.log('Sector seleccionado:', sectorIndex);
+        console.log('Medalla:', selectedMedalla);
+
+        // Guardar el ID en el input
+        medallaInput.value = selectedMedalla.ID;
+
+        // Mostrar modal con la categoría seleccionada
+        showModal(selectedMedalla);
+
+        setTimeout(() => {
+            isSpinning = false;
+            spinBtn.disabled = false;
+        }, 500);
+    }
+
+    function showModal(medalla) {
+        // Configurar el modal
+        modalMedal.src = medalla.Imagen_url;
+        modalMedalName.textContent = medalla.Nombre;
+
+        // Verificar si hay mensaje de cambio de categoría desde PHP
+        {{#cambio_categoria}}
+            modalWarning.innerHTML = '<strong>⚠️ Atención:</strong><br>{{mensaje}}<br>Se seleccionará una pregunta de otra categoría.';
+            modalWarning.style.display = 'block';
+        {{/cambio_categoria}}
+
+        {{^cambio_categoria}}
+            modalWarning.style.display = 'none';
+        {{/cambio_categoria}}
+
+        // Mostrar el modal
+        modal.classList.add('show');
+    }
+
+    // Evento del botón continuar
+    continuarBtn.addEventListener('click', () => {
+        // Ocultar modal
+        modal.classList.remove('show');
+
+        // Enviar formulario
+        console.log('Enviando formulario con medalla ID:', medallaInput.value);
+        form.submit();
+    });
+
+    spinBtn.addEventListener('click', spinWheel);
+
+    // Dibujar ruleta inicial
+    if (imagesLoaded === 0 && totalMedallas === 0) {
+        drawWheel(0);
+    }
+</script>

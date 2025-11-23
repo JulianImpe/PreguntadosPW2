@@ -20,10 +20,8 @@ include_once("controller/EditorController.php");
 include_once("model/EditorModel.php");
 include_once("controller/SugerenciaController.php");
 include_once("model/SugerenciaModel.php");
-
-
-
-
+include_once ("controller/RuletaController.php");
+include_once("model/RuletaModel.php");
 
 include_once("controller/HomeVistaController.php");
 
@@ -67,6 +65,8 @@ class ConfigFactory
         $this->objetos["EditorController"] = new EditorController(new EditorModel($this->conexion), $this->renderer);
 
         $this->objetos["SugerenciaController"] = new SugerenciaController(new SugerenciaModel($this->conexion), $this->renderer);
+
+        $this->objetos["RuletaController"] = new RuletaController(new RuletaModel($this->conexion), $this->renderer, $this->objetos["PartidaController"],);
 
 
     }
