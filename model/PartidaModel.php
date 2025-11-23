@@ -9,12 +9,13 @@ class PartidaModel
         $this->database = $database;
     }
 
-    public function getPreguntaYRespuesta($usuarioId, $medallaId = null)
+    public function getPreguntaYRespuesta($usuarioId, $medallaId = null, $partidaId = null)
     {
         $usuarioId = (int)$usuarioId;
+        $partidaId = $partidaId ? (int)$partidaId : null;
 
         $nivelJugador = $this->obtenerNivelJugador($usuarioId);
-
+        
         if ($nivelJugador <= 0.33) {
             $minDif = 0;
             $maxDif = 0.5;
@@ -25,60 +26,71 @@ class PartidaModel
             $minDif = 0.5;
             $maxDif = 1;
         }
-
+        
         $sqlMedalla = $medallaId ? "AND p.Medalla_ID = " . intval($medallaId) : "";
 
+        // CAMBIO IMPORTANTE: Ahora filtramos por Pregunta_partida en vez de Usuario_pregunta_vista
+        $sqlPartida = "";
+        if ($partidaId) {
+            $sqlPartida = "AND p.ID NOT IN (
+            SELECT Pregunta_ID 
+            FROM Pregunta_partida 
+            WHERE Partida_ID = $partidaId
+        )";
+        }
+
         $pregunta = $this->database->query("
+        SELECT 
+            p.ID AS preguntaId,
+            p.Texto AS preguntaTexto,
+            p.Dificultad,
+            p.DificultadNivel
+        FROM Pregunta p
+        WHERE p.Estado_ID = 2
+        AND COALESCE(p.Dificultad, 0.5) BETWEEN $minDif AND $maxDif
+        $sqlMedalla
+        $sqlPartida
+        ORDER BY RAND()
+        LIMIT 1
+    ");
+
+        // Si no hay preguntas disponibles en esta partida con esa categoría,
+        // buscamos de cualquier categoría
+        if (empty($pregunta) && $medallaId !== null) {
+            error_log("No hay más preguntas de medalla $medallaId en esta partida, buscando sin filtro de medalla");
+            $pregunta = $this->database->query("
             SELECT 
                 p.ID AS preguntaId,
                 p.Texto AS preguntaTexto,
                 p.Dificultad,
                 p.DificultadNivel
             FROM Pregunta p
-            LEFT JOIN Usuario_pregunta_vista upv 
-                ON p.ID = upv.Pregunta_ID AND upv.Usuario_ID = $usuarioId
             WHERE p.Estado_ID = 2
-            AND upv.ID IS NULL
             AND COALESCE(p.Dificultad, 0.5) BETWEEN $minDif AND $maxDif
-            $sqlMedalla
+            $sqlPartida
             ORDER BY RAND()
             LIMIT 1
         ");
-
-        if (empty($pregunta)) {
-            $this->database->query("DELETE FROM Usuario_pregunta_vista WHERE Usuario_ID = $usuarioId");
-
-            $pregunta = $this->database->query("
-                SELECT 
-                    p.ID AS preguntaId,
-                    p.Texto AS preguntaTexto,
-                    p.Dificultad,
-                    p.DificultadNivel
-                FROM Pregunta p
-                WHERE p.Estado_ID = 2
-                AND COALESCE(p.Dificultad, 0.5) BETWEEN $minDif AND $maxDif
-                $sqlMedalla
-                ORDER BY RAND()
-                LIMIT 1
-            ");
         }
 
-        if (empty($pregunta)) return [];
+        // Si agotó TODAS las preguntas de la BD en esta partida (¡ganó!)
+        if (empty($pregunta)) {
+            error_log("Usuario $usuarioId completó todas las preguntas disponibles");
+            return [];
+        }
 
         $preguntaId = $pregunta[0]['preguntaId'];
 
-        $this->marcarPreguntaVista($usuarioId, $preguntaId);
-
         $respuestas = $this->database->query("
-            SELECT DISTINCT
-                r.ID AS respuestaId,
-                r.Texto AS respuestaTexto,
-                r.Es_Correcta AS esCorrecta
-            FROM Respuesta r
-            WHERE r.Pregunta_ID = $preguntaId
-            ORDER BY RAND()
-            LIMIT 4
-        ");
+        SELECT DISTINCT
+            r.ID AS respuestaId,
+            r.Texto AS respuestaTexto,
+            r.Es_Correcta AS esCorrecta
+        FROM Respuesta r
+        WHERE r.Pregunta_ID = $preguntaId
+        ORDER BY RAND()
+        LIMIT 4
+    ");
 
         $resultado = [];
         foreach ($respuestas as $r) {
@@ -94,17 +106,6 @@ class PartidaModel
         }
 
         return $resultado;
-    }
-
-    private function marcarPreguntaVista($usuarioId, $preguntaId)
-    {
-        $usuarioId = (int)$usuarioId;
-        $preguntaId = (int)$preguntaId;
-
-        $this->database->query("
-            INSERT IGNORE INTO Usuario_pregunta_vista (Usuario_ID, Pregunta_ID)
-            VALUES ($usuarioId, $preguntaId)
-        ");
     }
 
     public function obtenerNivelJugador($usuarioId)
@@ -146,10 +147,11 @@ class PartidaModel
         return $result[0] ?? null;
     }
 
-    public function getPreguntaRender($usuarioId)
+    public function getPreguntaRender($usuarioId, $medallaId = null, $partidaId = null)
     {
-        $preguntaYRespuestas = $this->getPreguntaYRespuesta($usuarioId);
 
+        //aca modifique que le paso la medalla por parametro para q coincida en el contro
+        $preguntaYRespuestas = $this->getPreguntaYRespuesta($usuarioId, $medallaId, $partidaId);
         if (empty($preguntaYRespuestas)) {
             return null;
         }
@@ -429,5 +431,16 @@ class PartidaModel
         return $result ? $result[0] : null;
     }
 
-    
+    public function verificarPreguntaYaVista($partidaId, $preguntaId)
+    {
+        $partidaId = (int)$partidaId;
+        $preguntaId = (int)$preguntaId;
+
+        $resultado = $this->database->query("
+        SELECT * FROM Pregunta_partida 
+        WHERE Partida_ID = $partidaId AND Pregunta_ID = $preguntaId
+    ");
+
+        return !empty($resultado);
+    }
 }

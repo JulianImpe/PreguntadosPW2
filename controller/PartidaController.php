@@ -23,6 +23,19 @@ class PartidaController
     }
 }
 
+    //este metodo lo q hace es traerme los datos del usuario asi el header se ve bien
+    private function addUserData($data = [])
+    {
+        if (isset($_SESSION['usuario_id'])) {
+            $data['usuario'] = [
+                'usuario_id' => $_SESSION['usuario_id'],
+                'nombre' => $_SESSION['nombre'] ?? '',
+                'email' => $_SESSION['email'] ?? ''
+            ];
+        }
+        return $data;
+    }
+
     public function base()
     {
         if (!isset($_SESSION['usuario_id'])) {
@@ -30,19 +43,38 @@ class PartidaController
             exit;
         }
 
+        // FORZAR limpieza de partida anterior
+        if (isset($_SESSION['partida_id'])) {
+            error_log("Limpiando partida anterior: " . $_SESSION['partida_id']);
+            unset($_SESSION['partida_id']);
+        }
+        unset($_SESSION['puntaje']);
+        unset($_SESSION['categoria_actual']);
+        unset($_SESSION['pregunta_activa']);
+
         $partidaId = $this->model->crearPartida($_SESSION['usuario_id']);
         $_SESSION['partida_id'] = $partidaId;
 
-        $this->mostrarPartida();
+        error_log("Nueva partida creada con ID: " . $partidaId);
+
+        header("Location: /ruleta/base");
+        exit;
     }
 
     function mostrarPartida()
-    
     {
         $this->soloJugadores();
+        // DEBUG - AGREGÁ ESTO TEMPORALMENTE
+        error_log("=== MOSTRAR PARTIDA ===");
+        error_log("partida_id en sesión: " . ($_SESSION['partida_id'] ?? 'NO EXISTE'));
+        error_log("categoria_actual: " . ($_SESSION['categoria_actual'] ?? 'NO EXISTE'));
+
+        // Si venimos de la ruleta, limpiar pregunta anterior
+        if (isset($_SESSION['categoria_actual']) && isset($_SESSION['pregunta_activa'])) {
+            unset($_SESSION['pregunta_activa']);
+        }
         if (isset($_SESSION['pregunta_activa'])) {
             $inicio = $_SESSION['pregunta_activa']['inicio'];
-            $duracion = 15;
             $duracion = 15;
             $transcurrido = time() - $inicio;
 
@@ -59,33 +91,50 @@ class PartidaController
                 unset($_SESSION['puntaje']);
                 unset($_SESSION['partida_id']);
                 unset($_SESSION['pregunta_activa']);
-                
-                $this->renderer->render('partidaFinalizada', [
+
+                $data = $this->addUserData([
                     'esCorrecta' => false,
                     'mensaje' => '¡Tiempo agotado!',
                     'puntaje' => 0,
                     'pregunta' => null,
                     'partida_terminada' => true
                 ]);
+
+                $this->renderer->render('partidaFinalizada', $data);
                 unset($_SESSION['pregunta_activa']);
                 return;
             }
         }
+        //agregue la variable medalla y la agregue en los parametros de getpreguntarender
+        //para que ya no sea mas aleatoria, esta es la linea que estaba antes
+        //$preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id'];
+        $medallaId = $_SESSION['categoria_actual'] ?? null;
+        $partidaId = $_SESSION['partida_id'] ?? null;
 
-        $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id']);
+        error_log("Llamando getPreguntaRender con partidaId: $partidaId");
+
+        $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id'], $medallaId, $partidaId);
 
         if (!$preguntaRender) {
-            $this->renderer->render('partidaFinalizada', [
+            $data = $this->addUserData([
                 'esCorrecta' => false,
                 'mensaje' => 'No hay preguntas disponibles',
                 'puntaje' => $_SESSION['puntaje'] ?? 0,
                 'pregunta' => null,
                 'partida_terminada' => true
             ]);
+
+            $this->renderer->render('partidaFinalizada', $data);
             return;
         }
 
-        $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id']);
+        error_log("Pregunta obtenida ID: " . $preguntaRender['id']);
+
+        // llamo al model
+        if ($this->model->verificarPreguntaYaVista($partidaId, $preguntaRender['id'])) {
+            error_log("⚠️ ADVERTENCIA: Esta pregunta YA fue vista en esta partida!");
+        }
+
         $medallas = $this->model->getMedallaDeLaPregunta($preguntaRender['id']);
 
         $clase = 'bg-gray-200 text-gray-800 border-gray-300';
@@ -121,6 +170,8 @@ class PartidaController
             "medallas" => $medallas
         ]);
 
+        $data = $this->addUserData($data);
+
         $this->renderer->render("crearPartida", $data);
 
     }
@@ -149,9 +200,12 @@ class PartidaController
         }
 
         unset($_SESSION['pregunta_activa']);
-
+        unset($_SESSION['categoria_actual']);
 
         $data = $this->model->procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado);
+
+        // IMPORTANTE: Registrar ANTES de verificar si terminó
+        error_log("Registrando respuesta: Partida=" . $_SESSION['partida_id'] . ", Pregunta=$preguntaId, Correcta=" . ($data['esCorrecta'] ? '1' : '0'));
         $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaId, $data['esCorrecta'] ? 1 : 0);
 
         if (isset($data['partida_terminada']) && $data['partida_terminada'] === true) {
@@ -160,9 +214,10 @@ class PartidaController
             unset($_SESSION['partida_id']);
         }
 
+        $data = $this->addUserData($data);
+
         $this->renderer->render('partidaFinalizada', $data);
     }
-
     public function enviarReporte()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

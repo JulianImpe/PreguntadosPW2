@@ -26,6 +26,8 @@ include_once("model/AdminModel.php");
 
 
 
+include_once ("controller/RuletaController.php");
+include_once("model/RuletaModel.php");
 
 include_once("controller/HomeVistaController.php");
 
@@ -71,6 +73,9 @@ class ConfigFactory
         $this->objetos["SugerenciaController"] = new SugerenciaController(new SugerenciaModel($this->conexion), $this->renderer);
 
         $this->objetos["AdminController"] = new AdminController(new AdminModel($this->conexion), $this->renderer);
+        $this->objetos["RuletaController"] = new RuletaController(new RuletaModel($this->conexion), $this->renderer, $this->objetos["PartidaController"],);
+
+
     }
 
     public function get($objectName)
