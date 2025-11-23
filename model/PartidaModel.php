@@ -336,14 +336,11 @@ class PartidaModel
         return $this->database->query($query);
     }
 
-    public function enviarReporte($preguntaId, $usuarioId, $motivo)
-    {
+    public function enviarReporte($preguntaId, $usuarioId, $motivo) {
         if (!$preguntaId || !$usuarioId || empty(trim($motivo))) {
-            return ['ok' => false, 'msg' => 'Debes escribir un motivo.', 'partida_perdida' => false];
+            return ['ok' => false, 'msg' => 'Debes escribir un motivo.'];
         }
-
         $usuarioId = (int)$usuarioId;
-
         $partida = $this->database->query("
         SELECT ID 
         FROM Partida 
@@ -354,9 +351,8 @@ class PartidaModel
     ");
 
         if (empty($partida)) {
-            return ['ok' => false, 'msg' => 'No tienes una partida activa.', 'partida_perdida' => false];
+            return ['ok' => false, 'msg' => 'No tienes una partida activa.'];
         }
-
         $partidaId = (int)$partida[0]['ID'];
 
         $r = $this->database->query("
@@ -367,31 +363,15 @@ class PartidaModel
     ");
 
         $totalReportes = (int)($r[0]['total'] ?? 0);
-
         if ($totalReportes >= 1) {
-            $this->finalizarPartida($partidaId, $_SESSION['puntaje'] ?? 0);
-
-            return [
-                'ok' => true,
-                'msg' => '',
-                'partida_perdida' => true
-            ];
+            return ['ok' => false, 'msg' => 'Solo puedes hacer 2 reportes por partida.'];
         }
-
         $guardado = $this->guardarReporte($preguntaId, $usuarioId, $motivo, $partidaId);
 
         if ($guardado) {
-            return [
-                'ok' => true,
-                'msg' => 'Reporte enviado. Ya no podes volver a reportar durante la partida.',
-                'partida_perdida' => false
-            ];
+            return ['ok' => true, 'msg' => 'Reporte enviado. ¡Gracias!'];
         } else {
-            return [
-                'ok' => false,
-                'msg' => 'Error al enviar el reporte.',
-                'partida_perdida' => false
-            ];
+            return ['ok' => false, 'msg' => 'Error al enviar el reporte.'];
         }
     }
     public function guardarReporte($preguntaId, $usuarioId, $motivo, $partidaId = null) {
