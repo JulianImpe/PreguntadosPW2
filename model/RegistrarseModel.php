@@ -11,7 +11,6 @@ class RegistrarseModel
 
     public function getUserWith($user, $password)
     {
-        // IMPORTANTE: Agregar validación de email_validado
         $sql = "SELECT * FROM usuarios 
                 WHERE usuario = '$user' 
                 AND password = '$password' 
@@ -54,10 +53,8 @@ class RegistrarseModel
         return !empty($res);
     }
 
-    // CORREGIDO: Validar token con más debugging
     public function validarToken($email, $token)
     {
-        // Agregar trim para eliminar espacios
         $email = trim($email);
         $token = trim($token);
         
@@ -69,14 +66,10 @@ class RegistrarseModel
         
         $result = $this->conexion->query($sql);
         
-        // Debug: descomentar para ver qué está pasando
-        // error_log("SQL: " . $sql);
-        // error_log("Result: " . print_r($result, true));
         
         return !empty($result);
     }
 
-    // CORREGIDO: Activar cuenta y verificar que se ejecutó
     public function activarCuenta($email)
     {
         $email = trim($email);
@@ -89,18 +82,31 @@ class RegistrarseModel
         
         $result = $this->conexion->query($sql);
         
-        // Debug: descomentar para ver si se actualizó
-        // error_log("Activar cuenta SQL: " . $sql);
-        // error_log("Resultado: " . print_r($result, true));
         
         return $result;
     }
     
-    // NUEVO: Método para verificar si una cuenta está validada
     public function estaValidada($email)
     {
         $sql = "SELECT email_validado FROM usuarios WHERE email = '$email'";
         $result = $this->conexion->query($sql);
         return !empty($result) && $result[0]['email_validado'] == 1;
     }
+
+public function actualizarToken($email, $token, $expira)
+{
+    $sql = "UPDATE usuarios 
+            SET token_validacion = '$token', 
+                token_expira = '$expira' 
+            WHERE email = '$email' 
+            AND email_validado = 0";
+    $this->conexion->query($sql);
+}
+
+public function getUsuarioByEmail($email)
+{
+    $sql = "SELECT * FROM usuarios WHERE email = '$email'";
+    $result = $this->conexion->query($sql);
+    return !empty($result) ? $result[0] : null;
+}
 }

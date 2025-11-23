@@ -59,17 +59,29 @@
         }
 
         /* Icono hamburguesa */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
         .hamburger span {
             display: block;
-            width: 25px;
+            width: 100%;
             height: 3px;
             background: white;
-            margin: 5px 0;
+            border-radius: 2px;
             transition: all 0.3s ease;
         }
 
         .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(7px, 7px);
+            transform: rotate(45deg) translate(8px, 8px);
         }
 
         .hamburger.active span:nth-child(2) {
@@ -77,7 +89,14 @@
         }
 
         .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        /* Ajuste del logo en móvil */
+        @media (max-width: 640px) {
+            .pixel-font {
+                line-height: 1.4;
+            }
         }
     </style>
 </head>
@@ -85,60 +104,60 @@
 <body class="bg-gray-100 pixel-font">
 
 <header class="bg-red-700 shadow-lg">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-3 sm:px-4">
 
-        <!-- Barra principal -->
-        <div class="flex justify-between items-center py-3">
 
-            <!-- Logo -->
-            <div class="flex items-center gap-2 md:gap-4">
-                <img src="/public/img/logo.png" alt="Pokéball Icon" class="w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24">
-                <h1 class="text-yellow-300 text-sm md:text-2xl lg:text-3xl drop-shadow-lg"
+        <div class="flex justify-between items-center py-2 sm:py-3">
+
+
+            <div class="flex items-center gap-2 sm:gap-3 md:gap-4">
+                <img src="/public/img/logo.png" 
+                    alt="Pokéball Icon" 
+                    class="w-10 h-10 sm:w-14 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20">
+                <h1 class="text-yellow-300 text-[0.6rem] sm:text-2xl md:text-2xl lg:text-2xl xl:text-3xl drop-shadow-lg"
                     style="text-shadow: 2px 2px 0px #b45309;">
                     POKETRIVIA
                 </h1>
             </div>
 
-            <!-- Navegación Desktop -->
-            <nav class="hidden lg:flex items-center gap-3">
+            <nav class="hidden lg:flex items-center gap-2 xl:gap-3">
                 {{#usuario}}
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
-                       href="/lobby/base">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 xl:px-4 py-2 rounded pokemon-border text-[0.6rem] xl:text-xs font-bold transition-all"
+                    href="/lobby/base">
                         Inicio
                     </a>
 
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
-                       href="/logout">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 xl:px-4 py-2 rounded pokemon-border text-[0.6rem] xl:text-xs font-bold transition-all"
+                    href="/logout">
                         Cerrar sesión
                     </a>
 
                     <button id="btnMostrarQR"
                             data-usuario-id="{{usuario_id}}"
-                            class="flex items-center justify-center bg-white pokemon-border w-12 h-12 shadow-lg hover:scale-105 transition-transform">
-                        <img src="/public/img/qr-simple.png" alt="qr" class="w-10 h-8">
+                            class="flex items-center justify-center bg-white pokemon-border w-10 h-10 xl:w-12 xl:h-12 shadow-lg hover:scale-105 transition-transform">
+                        <img src="/public/img/qr-simple.png" alt="qr" class="w-6 h-6 xl:w-8 xl:h-8">
                     </button>
                 {{/usuario}}
 
                 {{^usuario}}
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
-                       href="/homeVista">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 xl:px-4 py-2 rounded pokemon-border text-[0.6rem] xl:text-xs font-bold transition-all"
+                    href="/homeVista">
                         Inicio
                     </a>
 
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
-                       href="/login/loginForm">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 xl:px-4 py-2 rounded pokemon-border text-[0.6rem] xl:text-xs font-bold transition-all"
+                    href="/login/loginForm">
                         Iniciar sesión
                     </a>
 
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded pokemon-border text-xs font-bold transition-all"
-                       href="/registrarse/registrarseForm">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 xl:px-4 py-2 rounded pokemon-border text-[0.6rem] xl:text-xs font-bold transition-all"
+                    href="/registrarse/registrarseForm">
                         Registrarse
                     </a>
                 {{/usuario}}
             </nav>
 
-            <!-- Botón hamburguesa -->
-            <button id="menuToggle" class="lg:hidden hamburger p-2 focus:outline-none">
+            <button id="menuToggle" class="lg:hidden hamburger focus:outline-none" aria-label="Menú">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -146,41 +165,41 @@
         </div>
 
         <!-- Menú móvil -->
-        <nav id="mobileMenu" class="mobile-menu lg:hidden pb-4">
-            <div class="flex flex-col gap-3">
+        <nav id="mobileMenu" class="mobile-menu lg:hidden pb-3 sm:pb-4">
+            <div class="flex flex-col gap-2 sm:gap-3">
 
                 {{#usuario}}
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
-                       href="/lobby/base">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
+                    href="/lobby/base">
                         🏠 Inicio
                     </a>
 
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
-                       href="/logout">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
+                    href="/logout">
                         🚪 Cerrar sesión
                     </a>
 
                     <button id="btnMostrarQRMobile"
                             data-usuario-id="{{usuario_id}}"
-                            class="bg-white pokemon-border px-4 py-3 text-xs font-bold flex items-center justify-center gap-2 hover:bg-gray-100 transition-all">
-                        <img src="/public/img/qr-simple.png" alt="qr" class="w-6 h-6">
+                            class="bg-white pokemon-border px-3 sm:px-4 py-2 sm:py-3 text-[0.6rem] sm:text-xs font-bold flex items-center justify-center gap-2 hover:bg-gray-100 transition-all active:scale-95">
+                        <img src="/public/img/qr-simple.png" alt="qr" class="w-5 h-5 sm:w-6 sm:h-6">
                         <span class="text-gray-800">Ver mi QR</span>
                     </button>
                 {{/usuario}}
 
                 {{^usuario}}
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
-                       href="/homeVista">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
+                    href="/homeVista">
                         🏠 Inicio
                     </a>
 
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
-                       href="/login/loginForm">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
+                    href="/login/loginForm">
                         🔑 Iniciar sesión
                     </a>
 
-                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded pokemon-border text-xs font-bold text-center transition-all"
-                       href="/registrarse/registrarseForm">
+                    <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
+                    href="/registrarse/registrarseForm">
                         📝 Registrarse
                     </a>
                 {{/usuario}}
@@ -197,6 +216,15 @@
         menuToggle.addEventListener('click', function() {
             this.classList.toggle('active');
             mobileMenu.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const isClickInside = menuToggle.contains(event.target) || mobileMenu.contains(event.target);
+            if (!isClickInside && mobileMenu.classList.contains('active')) {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            }
         });
     }
 

@@ -37,62 +37,65 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-b from-sky-400 to-emerald-300 flex items-center justify-center p-4">
+<body class="min-h-screen bg-gradient-to-b from-sky-400 to-emerald-300 p-4">
     
-    <div class="w-full max-w-md min-h-screen flex items-center justify-center">
+    <!-- Contenedor principal centrado -->
+    <div class="min-h-screen flex flex-col items-center justify-center mt-4">
+        <!-- Contenedor del card -->
+        <div class="w-full max-w-md mt-4">
         <!-- Card principal -->
-        <div class="bg-white pokemon-border rounded-2xl p-8 shadow-2xl text-center">
+        <div class="bg-white pokemon-border rounded-2xl p-6 sm:p-8 shadow-2xl text-center">
             
             <!-- Icono de éxito -->
-            <div class="flex justify-center mb-6">
-                <div class="bg-gradient-to-br from-green-400 to-green-600 pokemon-border rounded-full p-6 bounce-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 fill-white" viewBox="0 0 24 24">
+            <div class="flex justify-center mb-4 sm:mb-6">
+                <div class="bg-gradient-to-br from-green-400 to-green-600 pokemon-border rounded-full p-4 sm:p-6 bounce-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 sm:w-20 sm:h-20 fill-white" viewBox="0 0 24 24">
                         <path d="M22 2v20h-1v1H3v-1H2V2h1V1h18v1h1M5 11h1v-1h1V9h1v1h1v1h1v1h2v-1h1v-1h1v-1h1V8h1V7h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1H9v-1H8v-1H7v-1H6v-1H5v-1Z"/>
                     </svg>
                 </div>
             </div>
 
             <!-- Título -->
-            <h2 class="text-gray-800 text-3xl font-black mb-4">
+            <h2 class="text-gray-800 text-2xl sm:text-3xl font-black mb-3 sm:mb-4">
                 ¡CUENTA ACTIVADA!
             </h2>
 
             <!-- Mensaje -->
-            <div class="bg-green-50 pokemon-border rounded-lg p-6 mb-6">
-                <p class="text-gray-700 text-base leading-relaxed">
+            <div class="bg-green-50 pokemon-border rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+                <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
                     {{success}}
                 </p>
-                <p class="text-gray-600 text-sm mt-3">
+                <p class="text-gray-600 text-xs sm:text-sm mt-2 sm:mt-3">
                     Tu aventura en <strong>PokeTrivia</strong> está a punto de comenzar 🎮
                 </p>
             </div>
 
-            <!-- Pokeball decorativa -->
-            <div class="mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto" viewBox="0 0 24 24">
-                    <path fill="#ef4444" d="M12 2a10 10 0 0 1 10 10h-8a2 2 0 0 0-4 0H2A10 10 0 0 1 12 2z"/>
-                    <path fill="#1f2937" d="M12 12a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
-                    <path fill="#f3f4f6" d="M12 22a10 10 0 0 1-10-10h8a2 2 0 0 0 4 0h8a10 10 0 0 1-10 10z"/>
-                </svg>
-            </div>
 
             <!-- Botón iniciar sesión -->
             <a href="/login/loginForm"
-               class="block w-full bg-gradient-to-b from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-black text-lg py-4 rounded-lg pokemon-border hover:scale-105 transition-all">
+                class="block w-full bg-gradient-to-b from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-black text-base sm:text-lg py-3 sm:py-4 rounded-lg pokemon-border hover:scale-105 transition-all active:scale-95">
                 INICIAR SESIÓN →
             </a>
-
-        </div>
-
-        <!-- Footer info -->
-        <div class="text-center mt-6">
-            <p class="text-white text-sm font-bold drop-shadow-lg">
-                ¡Prepárate para demostrar tus conocimientos!
-            </p>
+            <!-- En tu login.php o login.mustache -->
+{{#error}}
+    <div class="alert alert-danger">{{error}}</div>
+    
+    {{#mostrar_reenvio}}
+        <form method="POST" action="/registrarse/reenviarCodigo">
+            <input type="hidden" name="email" value="{{email}}">
+            <button type="submit" class="btn btn-link">
+                ¿No recibiste el código? Haz clic aquí para reenviar
+            </button>
+        </form>
+    {{/mostrar_reenvio}}
+{{/error}}
         </div>
     </div>
 
-    <!-- Script para confetti (opcional) -->
+        </div>
+
+
+    <!-- Script para confetti -->
     <script>
         // Crear confetti al cargar
         for (let i = 0; i < 30; i++) {

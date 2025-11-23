@@ -29,7 +29,6 @@ class RegistrarseController{
         $pais = $_POST['pais'] ?? '';
         $ciudad = $_POST['ciudad'] ?? '';
 
-        // --- VALIDACIONES ---
         if (empty($usuario) || empty($password) || empty($repetir) || empty($email) ||
             empty($fecha) || empty($nombre) || empty($sexo)) {
 
@@ -68,7 +67,6 @@ class RegistrarseController{
             return;
         }
 
-        // Foto
         $foto_perfil = $this->subirFoto();
 
         $sexo_id = $this->model->getSexoIdByNombre($sexo);
@@ -78,10 +76,8 @@ class RegistrarseController{
             return;
         }
 
-        // GENERAR TOKEN
         $token = sprintf("%06d", mt_rand(0, 999999));
 
-        // REGISTRAR USUARIO (ÚNICA LLAMADA CORRECTA)
         $this->model->registrarUsuario(
             $usuario,
             $password,
@@ -95,17 +91,14 @@ class RegistrarseController{
             $ciudad
         );
 
-        // ENVIAR MAIL
         $this->enviarEmailConToken($email, $nombre, $token);
 
-        // MOSTRAR MENSAJE
         $this->mostrarMailEnviado($email);
     }
 
 
     private function enviarEmailConToken($email, $nombre, $token)
     {
-        // Incluir PHPMailer
         require __DIR__ . '/../helper/PHPMailer-master/src/PHPMailer.php';
         require __DIR__ . '/../helper/PHPMailer-master/src/SMTP.php';
         require __DIR__ . '/../helper/PHPMailer-master/src/Exception.php';
@@ -142,14 +135,12 @@ class RegistrarseController{
 
             $mail->send();
         } catch (\Exception $e) {
-            // Log del error pero no mostrar al usuario
             error_log("Error enviando email: " . $e->getMessage());
         }
     }
 
     public function mostrarMailEnviado($email = null)
     {
-        // Pasar el email para el formulario de validación
         $data['email'] = $email;
         $data['success'] = "Te hemos enviado un correo con un código de validación. Por favor, revisa tu bandeja de entrada.";
         $this->renderer->render("mailEnviado", $data);
@@ -167,12 +158,10 @@ public function validarCodigo()
         return;
     }
 
-    // Validar token en la base de datos
     if ($this->model->validarToken($email, $token)) {
         // Activar cuenta
         $resultado = $this->model->activarCuenta($email);
         
-        // Verificar que realmente se activó
         if ($this->model->estaValidada($email)) {
             $data['success'] = "¡Tu cuenta ha sido activada exitosamente! Ya puedes iniciar sesión.";
             $this->renderer->render("cuentaActivada", $data);
@@ -208,12 +197,6 @@ public function validarCodigo()
         return null;
     }
 
-
-    /*public function mostrarMailEnviado()
-    {
-        $data['success'] = "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.";
-            $this->renderer->render("mailEnviado", $data); // sin datos por ahora
-    }*/
     public function validarEmail(){
         $email = $_GET["email"] ?? "";
         $existe = $this->model->existeEmail($email);
@@ -250,5 +233,36 @@ public function validarCodigo()
         header("Content-Type: application/json");
         echo $result;
     }
+
+    public function reenviarCodigo()
+{
+    $email = trim($_POST['email'] ?? '');
+    
+    if (empty($email)) {
+        $this->renderer->render("login", ["error" => "Email no proporcionado"]);
+        return;
+    }
+
+
+    if (!$this->model->existeEmail($email)) {
+        $this->renderer->render("login", ["error" => "Email no encontrado"]);
+        return;
+    }
+
+    $token = sprintf("%06d", mt_rand(0, 999999));
+    $expira = date('Y-m-d H:i:s', strtotime('+30 minutes'));
+    
+
+    $this->model->actualizarToken($email, $token, $expira);
+    
+    $usuario = $this->model->getUsuarioByEmail($email);
+    $nombre = $usuario['nombre_completo'] ?? 'Usuario';
+
+    $this->enviarEmailConToken($email, $nombre, $token);
+    
+    $data['email'] = $email;
+    $data['success'] = "Se ha reenviado un nuevo código de validación a tu correo.";
+    $this->renderer->render("mailEnviado", $data);
+}
 
 }

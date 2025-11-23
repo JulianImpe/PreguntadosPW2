@@ -45,7 +45,6 @@ class AdminController
         $this->renderer->render("adminDashboard", $data);
     }
 
-    // Gestionar Editores
     public function gestionarEditores()
     {
         if (!isset($_SESSION["usuario_id"]) || $_SESSION["rol"] !== "admin") {
