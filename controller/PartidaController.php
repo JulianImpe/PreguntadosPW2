@@ -176,6 +176,25 @@ class PartidaController
         );
 
         $_SESSION[$resultado['ok'] ? 'exito_reporte' : 'error_reporte'] = $resultado['msg'];
+
+        if ($resultado['ok'] && isset($resultado['partida_perdida']) && $resultado['partida_perdida']) {
+            $preguntaId = $_POST['pregunta_id'] ?? null;
+            $pregunta = $this->model->getPreguntaPorId($preguntaId);
+
+            $this->renderer->render('partidaFinalizada', [
+                'esCorrecta' => false,
+                'mensaje' => $resultado['msg'],
+                'puntaje' => $_SESSION['puntaje'] ?? 0,
+                'pregunta' => $pregunta,
+                'partida_terminada' => true
+            ]);
+
+            unset($_SESSION['puntaje']);
+            unset($_SESSION['partida_id']);
+            unset($_SESSION['pregunta_activa']);
+            exit;
+        }
+
         header('Location: /partida/base');
         exit;
     }

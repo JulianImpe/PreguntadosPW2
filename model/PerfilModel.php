@@ -309,7 +309,8 @@ class PerfilModel{
         $hoy = new DateTime();
         return $hoy->diff($nac)->y;
     }
-    public function obtenerUrlQR($usuarioId){
+    public function obtenerUrlQR($usuarioId)
+    {
         if (!$usuarioId) return null;
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
             ? 'https://' : 'http://';
@@ -318,15 +319,4 @@ class PerfilModel{
         return "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" .
             urlencode($urlPerfil) . "&choe=UTF-8";
     }
-//    public function obtenerUrlQR($usuarioId){
-//        if (!$usuarioId) return null;
-//
-//        // Usamos constantes globales definidas en config.php
-//        $urlPerfil = APP_SCHEME . APP_HOST . '/perfil/perfilCompartidoVista?id=' . urlencode($usuarioId);
-//
-//        // URL del QR generado con Google Charts
-//        return "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" .
-//            urlencode($urlPerfil) . "&choe=UTF-8";
-//    }
-
 }
