@@ -338,9 +338,13 @@ class PartidaModel
 
     public function enviarReporte($preguntaId, $usuarioId, $motivo) {
         if (!$preguntaId || !$usuarioId || empty(trim($motivo))) {
-            return ['ok' => false, 'msg' => 'Debes escribir un motivo.'];
+            return ['ok' => false, 'msg' => 'Debes escribir un motivo.', 'limite_alcanzado' => false];
         }
+
         $usuarioId = (int)$usuarioId;
+        $preguntaId = (int)$preguntaId;
+
+        // Buscar partida activa
         $partida = $this->database->query("
         SELECT ID 
         FROM Partida 
@@ -351,10 +355,12 @@ class PartidaModel
     ");
 
         if (empty($partida)) {
-            return ['ok' => false, 'msg' => 'No tienes una partida activa.'];
+            return ['ok' => false, 'msg' => 'No tienes una partida activa.', 'limite_alcanzado' => false];
         }
+
         $partidaId = (int)$partida[0]['ID'];
 
+        // Contar reportes ya realizados en esta partida
         $r = $this->database->query("
         SELECT COUNT(*) AS total 
         FROM Reporte 
@@ -363,15 +369,40 @@ class PartidaModel
     ");
 
         $totalReportes = (int)($r[0]['total'] ?? 0);
-        if ($totalReportes >= 1) {
-            return ['ok' => false, 'msg' => 'Solo puedes hacer 2 reportes por partida.'];
+
+        // CRÍTICO: Si ya tiene 2 reportes, no permitir más
+        if ($totalReportes >= 2) {
+            return [
+                'ok' => false,
+                'msg' => 'Ya realizaste 2 reportes en esta partida.',
+                'limite_alcanzado' => true  // Finalizar partida
+            ];
         }
+
+        // Guardar el reporte
         $guardado = $this->guardarReporte($preguntaId, $usuarioId, $motivo, $partidaId);
 
-        if ($guardado) {
-            return ['ok' => true, 'msg' => 'Reporte enviado. ¡Gracias!'];
+        if (!$guardado) {
+            return ['ok' => false, 'msg' => 'Error al enviar el reporte.', 'limite_alcanzado' => false];
+        }
+
+        // Después de guardar, verificar si es el segundo reporte
+        $nuevoTotal = $totalReportes + 1;
+
+        if ($nuevoTotal >= 2) {
+            // Es el segundo reporte - finalizar partida
+            return [
+                'ok' => true,
+                'msg' => 'Reporte enviado. Has alcanzado el límite de 2 reportes por partida.',
+                'limite_alcanzado' => true
+            ];
         } else {
-            return ['ok' => false, 'msg' => 'Error al enviar el reporte.'];
+            // Primer reporte - continuar jugando
+            return [
+                'ok' => true,
+                'msg' => 'Reporte enviado. ¡Gracias! Puedes reportar 1 vez más en esta partida.',
+                'limite_alcanzado' => false
+            ];
         }
     }
     public function guardarReporte($preguntaId, $usuarioId, $motivo, $partidaId = null) {

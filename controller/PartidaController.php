@@ -162,6 +162,7 @@ class PartidaController
 
         $this->renderer->render('partidaFinalizada', $data);
     }
+
     public function enviarReporte()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -175,6 +176,31 @@ class PartidaController
             trim($_POST['motivo'] ?? '')
         );
 
+        // Si se alcanzó el límite de reportes, finalizar la partida y redirigir al lobby
+        if (isset($resultado['limite_alcanzado']) && $resultado['limite_alcanzado'] === true) {
+            // Finalizar la partida actual
+            if (isset($_SESSION['partida_id'])) {
+                $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje'] ?? 0);
+            }
+
+            // Limpiar todas las sesiones de la partida
+            unset($_SESSION['puntaje']);
+            unset($_SESSION['partida_id']);
+            unset($_SESSION['pregunta_activa']);
+
+            // Guardar mensaje para mostrar en el lobby
+            if ($resultado['ok']) {
+                $_SESSION['info_lobby'] = $resultado['msg'] . ' La partida ha finalizado.';
+            } else {
+                $_SESSION['error_lobby'] = $resultado['msg'] . ' La partida ha finalizado.';
+            }
+
+            // Redirigir al lobby
+            header('Location: /lobby/base');
+            exit;
+        }
+
+        // Caso normal: reporte exitoso, continuar jugando
         $_SESSION[$resultado['ok'] ? 'exito_reporte' : 'error_reporte'] = $resultado['msg'];
         header('Location: /partida/base');
         exit;

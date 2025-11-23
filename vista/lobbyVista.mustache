@@ -34,6 +34,45 @@
 
 <body class="min-h-screen bg-gradient-to-b from-sky-400 to-emerald-300">
 
+{{#info_lobby}}
+    <div id="mensajeInfo" class="fixed top-4 right-4 bg-blue-500 text-white px-6 py-4 rounded-lg shadow-lg z-[60] flex items-center gap-3 max-w-md">
+        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+            <path d="M12 8v4m0 4h.01" stroke-linecap="round" stroke-width="2"/>
+        </svg>
+        <span>{{info_lobby}}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            const msg = document.getElementById('mensajeInfo');
+            if (msg) {
+                msg.style.opacity = '0';
+                msg.style.transition = 'opacity 0.3s';
+                setTimeout(() => msg.remove(), 300);
+            }
+        }, 5000);
+    </script>
+{{/info_lobby}}
+
+{{#error_lobby}}
+    <div id="mensajeErrorLobby" class="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-[60] flex items-center gap-3 max-w-md">
+        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        <span>{{error_lobby}}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            const msg = document.getElementById('mensajeErrorLobby');
+            if (msg) {
+                msg.style.opacity = '0';
+                msg.style.transition = 'opacity 0.3s';
+                setTimeout(() => msg.remove(), 300);
+            }
+        }, 5000);
+    </script>
+{{/error_lobby}}
+
 <!-- Header estilo Game Boy -->
 <div class="bg-white shadow-2xl top-0 z-50">
     <div class="container mx-auto px-3 sm:px-5 py-3 sm:py-4">

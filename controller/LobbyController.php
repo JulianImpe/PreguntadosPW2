@@ -50,6 +50,18 @@ class LobbyController
         $datosUsuario['partidas_recientes'] = $partidasRecientes;
 
 
+        // Estas líneas verifican si hay mensajes en la sesión
+        if (isset($_SESSION['info_lobby'])) {
+            $datosUsuario['info_lobby'] = $_SESSION['info_lobby'];  // Pasa el mensaje a la vista
+            unset($_SESSION['info_lobby']);  // Lo elimina de la sesión
+        }
+
+        if (isset($_SESSION['error_lobby'])) {
+            $datosUsuario['error_lobby'] = $_SESSION['error_lobby'];
+            unset($_SESSION['error_lobby']);
+        }
+
+
         $this->renderer->render("lobby", $datosUsuario);
     }
     public function crearPartidaVista()
