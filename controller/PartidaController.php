@@ -61,221 +61,220 @@ class PartidaController
         exit;
     }
 
-    function mostrarPartida()
-    {
-        $this->soloJugadores();
-        // DEBUG - AGREGÁ ESTO TEMPORALMENTE
-        error_log("=== MOSTRAR PARTIDA ===");
-        error_log("partida_id en sesión: " . ($_SESSION['partida_id'] ?? 'NO EXISTE'));
-        error_log("categoria_actual: " . ($_SESSION['categoria_actual'] ?? 'NO EXISTE'));
+function mostrarPartida()
+{
+    $this->soloJugadores();
+    
+    error_log("=== MOSTRAR PARTIDA ===");
+    error_log("partida_id en sesión: " . ($_SESSION['partida_id'] ?? 'NO EXISTE'));
+    error_log("categoria_actual: " . ($_SESSION['categoria_actual'] ?? 'NO EXISTE'));
 
-        // Si venimos de la ruleta, limpiar pregunta anterior
-        if (isset($_SESSION['categoria_actual']) && isset($_SESSION['pregunta_activa'])) {
-            unset($_SESSION['pregunta_activa']);
-        }
-        if (isset($_SESSION['pregunta_activa'])) {
-            $inicio = $_SESSION['pregunta_activa']['inicio'];
-            $duracion = 15;
-            $transcurrido = time() - $inicio;
-
-            if ($transcurrido > $duracion) {
-                $preguntaId = $_SESSION['pregunta_activa']['id'];
-                $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaId, 0);
-                
-                $respuestaCorrecta = $this->model->getRespuestaCorrecta($preguntaId);
-                $respuestaCorrectaId = $respuestaCorrecta[0]['ID'] ?? 0;
-                
-                $data = $this->model->procesarRespuesta($preguntaId, $respuestaCorrectaId, true);
-                
-                $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje']);
-                unset($_SESSION['puntaje']);
-                unset($_SESSION['partida_id']);
-                unset($_SESSION['pregunta_activa']);
-
-                $data = $this->addUserData([
-                    'esCorrecta' => false,
-                    'mensaje' => '¡Tiempo agotado!',
-                    'puntaje' => 0,
-                    'pregunta' => null,
-                    'partida_terminada' => true
-                ]);
-
-                $this->renderer->render('partidaFinalizada', $data);
-                unset($_SESSION['pregunta_activa']);
-                return;
-            }
-        }
-        //agregue la variable medalla y la agregue en los parametros de getpreguntarender
-        //para que ya no sea mas aleatoria, esta es la linea que estaba antes
-        //$preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id'];
-        $medallaId = $_SESSION['categoria_actual'] ?? null;
-        $partidaId = $_SESSION['partida_id'] ?? null;
-
-        error_log("Llamando getPreguntaRender con partidaId: $partidaId");
-
-        $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id'], $medallaId, $partidaId);
-
-        if (!$preguntaRender) {
-            $data = $this->addUserData([
-                'esCorrecta' => false,
-                'mensaje' => 'No hay preguntas disponibles',
-                'puntaje' => $_SESSION['puntaje'] ?? 0,
-                'pregunta' => null,
-                'partida_terminada' => true
-            ]);
-
-            $this->renderer->render('partidaFinalizada', $data);
-            return;
-        }
-
-        error_log("Pregunta obtenida ID: " . $preguntaRender['id']);
-
-        // llamo al model
-        if ($this->model->verificarPreguntaYaVista($partidaId, $preguntaRender['id'])) {
-            error_log("⚠️ ADVERTENCIA: Esta pregunta YA fue vista en esta partida!");
-        }
-
-        $medallas = $this->model->getMedallaDeLaPregunta($preguntaRender['id']);
-
-        $clase = 'bg-gray-200 text-gray-800 border-gray-300';
-        $nivel = $preguntaRender['nivel_dificultad'] ?? null;
-        if ($nivel === 'Fácil') {
-            $clase = 'bg-green-100 text-green-800 border-green-300';
-        } elseif ($nivel === 'Medio') {
-            $clase = 'bg-yellow-100 text-yellow-800 border-yellow-300';
-        } elseif ($nivel === 'Difícil') {
-            $clase = 'bg-red-100 text-red-800 border-red-300';
-        }
-
-        $preguntaRender['dificultad_clase'] = $clase;
-
-        $_SESSION['pregunta_activa'] = [
-            'id' => $preguntaRender['id'],
-            'inicio' => time()
-        ];
-
-        $data = ["pregunta" => $preguntaRender];
-
-        if (isset($_SESSION['exito_reporte'])) {
-            $data['exito_reporte'] = $_SESSION['exito_reporte'];
-            unset($_SESSION['exito_reporte']);
-        }
-
-        if (isset($_SESSION['error_reporte'])) {
-            $data['error_reporte'] = $_SESSION['error_reporte'];
-            unset($_SESSION['error_reporte']);
-        }
-
-        $data = array_merge($data, [
-            "medallas" => $medallas
-        ]);
-
-        $data = $this->addUserData($data);
-
-        $this->renderer->render("crearPartida", $data);
-
+    // NUEVA VALIDACIÓN: Si no hay partida activa, redirigir al lobby
+    if (!isset($_SESSION['partida_id'])) {
+        error_log("⚠️ No hay partida activa, redirigiendo al lobby");
+        header("Location: /lobby/base");
+        exit;
     }
-    public function responder()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /partida/base');
-            exit;
-        }
 
-        $respuestaId = $_POST['respuesta'] ?? null;
-        $preguntaId = $_POST['pregunta_id'] ?? null;
-
-        if (!$respuestaId || !$preguntaId) {
-            header('Location: /partida/base');
-            exit;
-        }
-
-        $tiempoAgotado = false;
-        if (isset($_SESSION['pregunta_activa'])) {
-            $inicio = $_SESSION['pregunta_activa']['inicio'];
-            $transcurrido = time() - $inicio;
-            if ($transcurrido > 18) {
-                $tiempoAgotado = true;
-            }
-        }
-
+    // NUEVA VALIDACIÓN: Verificar que la partida siga activa en la BD
+    $partidaActiva = $this->model->verificarPartidaActiva($_SESSION['partida_id']);
+    if (!$partidaActiva) {
+        error_log("⚠️ La partida ya no está activa en la BD");
+        unset($_SESSION['partida_id']);
+        unset($_SESSION['puntaje']);
         unset($_SESSION['pregunta_activa']);
         unset($_SESSION['categoria_actual']);
+        header("Location: /lobby/base");
+        exit;
+    }
 
-        $data = $this->model->procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado);
+    // ============================================
+    // 🔥 CRÍTICO: DETECCIÓN DE F5 / RECARGA
+    // ============================================
+    
+    // CAMBIO IMPORTANTE: Solo detectar F5 si NO venimos de la ruleta
+    // Si venimos de la ruleta, tendremos 'categoria_actual' seteada
+    if (isset($_SESSION['pregunta_activa']) && !isset($_SESSION['categoria_actual'])) {
+        // Esto significa que ya había una pregunta activa Y no venimos de la ruleta
+        // Por lo tanto, es un F5
+        
+        $preguntaActivaId = $_SESSION['pregunta_activa']['id'];
+        
+        error_log("⚠️ F5 detectado: Ya existe pregunta activa sin categoria_actual");
+        error_log("⚠️ Usuario intentó recargar la página - Finalizando partida");
+        
+        // Registrar como incorrecta
+        $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaActivaId, 0);
+        
+        // Finalizar partida
+        $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje'] ?? 0);
+        
+        // Limpiar sesión
+        unset($_SESSION['puntaje']);
+        unset($_SESSION['partida_id']);
+        unset($_SESSION['pregunta_activa']);
+        unset($_SESSION['categoria_actual']);
+        
+        // Mensaje de feedback
+        $_SESSION['mensaje_lobby'] = "⚠️ Partida finalizada: No se permite recargar la página durante una pregunta.";
+        
+        // Redirigir al lobby
+        header("Location: /lobby/base");
+        exit;
+    }
 
-        // IMPORTANTE: Registrar ANTES de verificar si terminó
-        error_log("Registrando respuesta: Partida=" . $_SESSION['partida_id'] . ", Pregunta=$preguntaId, Correcta=" . ($data['esCorrecta'] ? '1' : '0'));
-        $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaId, $data['esCorrecta'] ? 1 : 0);
+    // Si venimos de la ruleta, limpiar pregunta anterior
+    if (isset($_SESSION['categoria_actual'])) {
+        // Venimos de la ruleta, limpiar cualquier pregunta anterior
+        unset($_SESSION['pregunta_activa']);
+    }
 
-        if (isset($data['partida_terminada']) && $data['partida_terminada'] === true) {
-            $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje']);
-            unset($_SESSION['puntaje']);
-            unset($_SESSION['partida_id']);
-        }
+    $medallaId = $_SESSION['categoria_actual'] ?? null;
+    $partidaId = $_SESSION['partida_id'] ?? null;
 
-        $data = $this->addUserData($data);
+    error_log("Llamando getPreguntaRender con partidaId: $partidaId");
+
+    $preguntaRender = $this->model->getPreguntaRender($_SESSION['usuario_id'], $medallaId, $partidaId);
+
+    if (!$preguntaRender) {
+        $data = $this->addUserData([
+            'esCorrecta' => false,
+            'mensaje' => 'No hay preguntas disponibles',
+            'puntaje' => $_SESSION['puntaje'] ?? 0,
+            'pregunta' => null,
+            'partida_terminada' => true
+        ]);
 
         $this->renderer->render('partidaFinalizada', $data);
+        return;
     }
-    public function enviarReporte()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /lobby/base');
-            exit;
-        }
 
-        $resultado = $this->model->enviarReporte(
-            $_POST['pregunta_id'] ?? null,
-            $_SESSION['usuario_id'] ?? null,
-            trim($_POST['motivo'] ?? '')
-        );
+    error_log("Pregunta obtenida ID: " . $preguntaRender['id']);
 
-        // Si se alcanzó el límite de reportes, finalizar la partida y redirigir al lobby
-        if (isset($resultado['limite_alcanzado']) && $resultado['limite_alcanzado'] === true) {
-            // Finalizar la partida actual
-            if (isset($_SESSION['partida_id'])) {
-                $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje'] ?? 0);
-            }
+    if ($this->model->verificarPreguntaYaVista($partidaId, $preguntaRender['id'])) {
+        error_log("⚠️ ADVERTENCIA: Esta pregunta YA fue vista en esta partida!");
+    }
 
-            // Limpiar todas las sesiones de la partida
-            unset($_SESSION['puntaje']);
+    $medallas = $this->model->getMedallaDeLaPregunta($preguntaRender['id']);
+
+    $clase = 'bg-gray-200 text-gray-800 border-gray-300';
+    $nivel = $preguntaRender['nivel_dificultad'] ?? null;
+    if ($nivel === 'Fácil') {
+        $clase = 'bg-green-100 text-green-800 border-green-300';
+    } elseif ($nivel === 'Medio') {
+        $clase = 'bg-yellow-100 text-yellow-800 border-yellow-300';
+    } elseif ($nivel === 'Difícil') {
+        $clase = 'bg-red-100 text-red-800 border-red-300';
+    }
+
+    $preguntaRender['dificultad_clase'] = $clase;
+
+    // CREAR TOKEN ÚNICO PARA ESTA PREGUNTA
+    $token = bin2hex(random_bytes(16));
+    
+    $_SESSION['pregunta_activa'] = [
+        'id' => $preguntaRender['id'],
+        'inicio' => time(),
+        'token' => $token
+    ];
+    
+    // IMPORTANTE: Limpiar categoria_actual después de usarla
+    // para que la próxima vez que entren aquí detectemos el F5
+    unset($_SESSION['categoria_actual']);
+
+    $data = ["pregunta" => $preguntaRender];
+    $data['pregunta_token'] = $token;
+
+    if (isset($_SESSION['exito_reporte'])) {
+        $data['exito_reporte'] = $_SESSION['exito_reporte'];
+        unset($_SESSION['exito_reporte']);
+    }
+
+    if (isset($_SESSION['error_reporte'])) {
+        $data['error_reporte'] = $_SESSION['error_reporte'];
+        unset($_SESSION['error_reporte']);
+    }
+
+    $data = array_merge($data, [
+        "medallas" => $medallas
+    ]);
+
+    $data = $this->addUserData($data);
+
+    $this->renderer->render("crearPartida", $data);
+}
+public function responder()
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('Location: /lobby/base');
+        exit;
+    }
+
+    // 🔥 VALIDAR TOKEN - Evita reenvíos y F5
+    if (!isset($_POST['pregunta_token']) || 
+        !isset($_SESSION['pregunta_activa']['token']) ||
+        $_POST['pregunta_token'] !== $_SESSION['pregunta_activa']['token']) {
+        
+        error_log("⚠️ Token inválido o ausente - Posible recarga o reenvío");
+        
+        // Si hay partida activa, finalizarla
+        if (isset($_SESSION['partida_id'])) {
+            $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje'] ?? 0);
             unset($_SESSION['partida_id']);
-            unset($_SESSION['pregunta_activa']);
-
-            // Guardar mensaje para mostrar en el lobby
-            if ($resultado['ok']) {
-                $_SESSION['info_lobby'] = $resultado['msg'] . ' La partida ha finalizado.';
-            } else {
-                $_SESSION['error_lobby'] = $resultado['msg'] . ' La partida ha finalizado.';
-            }
-
-            // Redirigir al lobby
-            header('Location: /lobby/base');
-            exit;
+            unset($_SESSION['puntaje']);
         }
-
-        // Caso normal: reporte exitoso, continuar jugando
-        $_SESSION[$resultado['ok'] ? 'exito_reporte' : 'error_reporte'] = $resultado['msg'];
-        header('Location: /partida/base');
+        
+        unset($_SESSION['pregunta_activa']);
+        unset($_SESSION['categoria_actual']);
+        
+        $_SESSION['mensaje_lobby'] = "⚠️ Partida finalizada: Token de pregunta inválido.";
+        header('Location: /lobby/base');
         exit;
     }
 
-    public function actualizarPreguntaCompleta()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: /editor/lobbyEditor");
-            exit;
-        }
+    $respuestaId = $_POST['respuesta'] ?? null;
+    $preguntaId = $_POST['pregunta_id'] ?? null;
 
-        $resultado = $this->model->actualizarPreguntaCompleta(
-            $_POST['pregunta_id'] ?? null,
-            $_POST['texto'] ?? '',
-            $_POST['respuestas'] ?? []
-        );
-
-        $_SESSION[$resultado['ok'] ? 'mensaje' : 'error'] = $resultado['msg'];
-        header("Location: /editor/lobbyEditor");
+    if (!$respuestaId || !$preguntaId) {
+        header('Location: /lobby/base');
         exit;
     }
+
+    // Validar que la pregunta coincida con la activa
+    if (!isset($_SESSION['pregunta_activa']) || 
+        $_SESSION['pregunta_activa']['id'] != $preguntaId) {
+        
+        error_log("⚠️ ID de pregunta no coincide con la activa");
+        header('Location: /lobby/base');
+        exit;
+    }
+
+    $tiempoAgotado = false;
+    if (isset($_SESSION['pregunta_activa'])) {
+        $inicio = $_SESSION['pregunta_activa']['inicio'];
+        $transcurrido = time() - $inicio;
+        if ($transcurrido > 18) {
+            $tiempoAgotado = true;
+        }
+    }
+
+    // INVALIDAR TOKEN después de usarlo
+    unset($_SESSION['pregunta_activa']);
+    unset($_SESSION['categoria_actual']);
+
+    $data = $this->model->procesarRespuesta($preguntaId, $respuestaId, $tiempoAgotado);
+
+    error_log("Registrando respuesta: Partida=" . $_SESSION['partida_id'] . ", Pregunta=$preguntaId, Correcta=" . ($data['esCorrecta'] ? '1' : '0'));
+    $this->model->registrarRespuesta($_SESSION['partida_id'], $preguntaId, $data['esCorrecta'] ? 1 : 0);
+
+    if (isset($data['partida_terminada']) && $data['partida_terminada'] === true) {
+        $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje']);
+        unset($_SESSION['puntaje']);
+        unset($_SESSION['partida_id']);
+    }
+
+    $data = $this->addUserData($data);
+
+    $this->renderer->render('partidaFinalizada', $data);
+}
 }

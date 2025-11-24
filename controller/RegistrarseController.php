@@ -118,7 +118,7 @@ class RegistrarseController{
             $mail->addAddress($email, $nombre);
 
             $mail->isHTML(true);
-            $mail->Subject = 'Código de validación - PokeTrivia';
+            $mail->Subject = 'Codigo de validacion - PokeTrivia';
             $mail->Body = "
                 <div style='font-family: Arial, sans-serif;'>
                     <h2>¡Hola, $nombre!</h2>

@@ -309,14 +309,12 @@ class PerfilModel{
         $hoy = new DateTime();
         return $hoy->diff($nac)->y;
     }
-    public function obtenerUrlQR($usuarioId)
+public function obtenerUrlQR($usuarioId)
     {
         if (!$usuarioId) return null;
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
             ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $urlPerfil = "{$protocol}{$host}/perfil/perfilCompartidoVista?id={$usuarioId}";
-        return "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" .
-            urlencode($urlPerfil) . "&choe=UTF-8";
+        return "{$protocol}{$host}/perfil/perfilCompartidoVista?id={$usuarioId}";
     }
 }

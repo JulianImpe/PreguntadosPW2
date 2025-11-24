@@ -346,12 +346,11 @@ class PartidaModel
         $usuarioId = (int)$usuarioId;
         $preguntaId = (int)$preguntaId;
 
-        // Buscar partida activa
         $partida = $this->database->query("
         SELECT ID 
         FROM Partida 
         WHERE Usuario_ID = $usuarioId 
-          AND Estado_ID = 1 
+        AND Estado_ID = 1 
         ORDER BY ID DESC 
         LIMIT 1
     ");
@@ -362,44 +361,38 @@ class PartidaModel
 
         $partidaId = (int)$partida[0]['ID'];
 
-        // Contar reportes ya realizados en esta partida
         $r = $this->database->query("
         SELECT COUNT(*) AS total 
         FROM Reporte 
         WHERE Usuario_ID = $usuarioId 
-          AND Partida_ID = $partidaId
+        AND Partida_ID = $partidaId
     ");
 
         $totalReportes = (int)($r[0]['total'] ?? 0);
 
-        // CRÍTICO: Si ya tiene 2 reportes, no permitir más
         if ($totalReportes >= 2) {
             return [
                 'ok' => false,
                 'msg' => 'Ya realizaste 2 reportes en esta partida.',
-                'limite_alcanzado' => true  // Finalizar partida
+                'limite_alcanzado' => true 
             ];
         }
 
-        // Guardar el reporte
         $guardado = $this->guardarReporte($preguntaId, $usuarioId, $motivo, $partidaId);
 
         if (!$guardado) {
             return ['ok' => false, 'msg' => 'Error al enviar el reporte.', 'limite_alcanzado' => false];
         }
 
-        // Después de guardar, verificar si es el segundo reporte
         $nuevoTotal = $totalReportes + 1;
 
         if ($nuevoTotal >= 2) {
-            // Es el segundo reporte - finalizar partida
             return [
                 'ok' => true,
                 'msg' => 'Reporte enviado. Has alcanzado el límite de 2 reportes por partida.',
                 'limite_alcanzado' => true
             ];
         } else {
-            // Primer reporte - continuar jugando
             return [
                 'ok' => true,
                 'msg' => 'Reporte enviado. ¡Gracias! Puedes reportar 1 vez más en esta partida.',
@@ -443,4 +436,17 @@ class PartidaModel
 
         return !empty($resultado);
     }
+
+public function verificarPartidaActiva($partidaId)
+{
+    $partidaId = (int)$partidaId;
+    
+    $resultado = $this->database->query("
+        SELECT ID, Estado_ID 
+        FROM Partida 
+        WHERE ID = $partidaId AND Estado_ID = 1
+    ");
+    
+    return !empty($resultado);
+}
 }
