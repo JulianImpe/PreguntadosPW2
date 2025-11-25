@@ -73,15 +73,15 @@
     </script>
 {{/error_lobby}}
 
-<!-- Header estilo Game Boy -->
+
 <div class="bg-white shadow-2xl top-0 z-50">
     <div class="container mx-auto px-3 sm:px-5 py-3 sm:py-4">
-        <!-- Layout en una sola fila -->
+
         <div class="flex items-center justify-between gap-3 sm:gap-4">
 
-            <!-- Lado izquierdo: Foto + Info -->
+
             <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                <!-- Foto de perfil -->
+
                 <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-3 border-red-700 shadow-lg bg-white flex-shrink-0">
                     {{#tiene_foto}}
                         <img src="{{foto_perfil}}" alt="Foto de perfil" class="w-full h-full object-cover">
@@ -96,7 +96,7 @@
                     {{/tiene_foto}}
                 </div>
 
-                <!-- Texto -->
+
                 <div class="min-w-0 flex-1">
                     <p class="text-black text-sm sm:text-lg lg:text-xl font-bold truncate">
                         Entrenador: {{usuario}}
@@ -104,10 +104,10 @@
                 </div>
             </div>
 
-            <!-- Centro/Derecha: Puntos y Botón -->
+
             <div class="flex items-center gap-3 sm:gap-4 flex-shrink-0">
 
-                <!-- Botón Crear Pregunta -->
+
                 <a href="/sugerencia/form"
                    class="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-3 rounded-lg pokemon-border transition-all shadow-md hover:scale-105 active:scale-95">
                     <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-white flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -121,7 +121,7 @@
     </div>
 </div>
 
-<!-- Modal QR (oculto por defecto) -->
+
 <div id="modalQR" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl pokemon-border p-6 sm:p-8 max-w-sm w-full relative">
         <button id="btnCerrarQR" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
@@ -131,10 +131,10 @@
     </div>
 </div>
 
-<!-- Contenido principal -->
+
 <main class="container mx-auto px-3 sm:px-5 py-4 sm:py-8">
 
-    <!-- Medallas/Stats -->
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 w-full">
         <div class="bg-white pokemon-border rounded-xl p-3 sm:p-4 text-center transition-transform">
             <div class="text-3xl sm:text-4xl mb-2 flex items-center justify-center">
@@ -172,7 +172,7 @@
             </div>
             <p class="text-white text-lg sm:text-xl md:text-2xl font-black">{{nivel}}</p>
 
-            <!-- Tooltip -->
+
             <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-48 sm:w-64 z-[70]">
                 <div class="bg-gray-900 text-white text-[0.6rem] sm:text-xs px-3 sm:px-4 py-2 sm:py-3 shadow-xl border-2 border-blue-400">
                     <p class="leading-relaxed">
@@ -190,7 +190,7 @@
     </div>
 
     <div class="flex justify-center mb-6 sm:mb-8">
-        <!-- Botón Combatir -->
+
         <form method="GET" action="/PreguntadosPW2/index.php">
             <input type="hidden" name="controller" value="Lobby">
             <input type="hidden" name="method" value="crearPartidaVista">
@@ -206,10 +206,10 @@
         </form>
     </div>
 
-    <!-- Menú principal - estilo Pokédex -->
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
 
-        <!-- Ranking -->
+
         <div class="bg-gradient-to-br from-yellow-300 to-yellow-500 pokemon-border rounded-2xl p-4 sm:p-6">
             <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                 <svg class="w-10 h-10 sm:w-12 sm:h-12 fill-yellow-800 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -229,7 +229,7 @@
             </a>
         </div>
 
-        <!-- Perfil -->
+
         <div class="bg-gradient-to-br from-blue-400 to-blue-600 pokemon-border rounded-2xl p-4 sm:p-6">
             <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                 <svg class="w-10 h-10 sm:w-12 sm:h-12 fill-blue-800 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -249,7 +249,7 @@
 
     </div>
 
-    <!-- Historial - estilo diálogo Pokémon -->
+
     <div class="bg-white pokemon-border rounded-2xl p-4 sm:p-6">
         <div class="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5 pb-3 sm:pb-4 border-b-4 border-gray-300">
             <svg class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 fill-gray-800 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -310,7 +310,7 @@
 
 </main>
 
-<!-- Librería QRCode.js -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
@@ -346,7 +346,7 @@
         });
     }
 
-    // Cerrar modal al hacer clic fuera
+
     modalQR?.addEventListener('click', (e) => {
         if (e.target === modalQR) {
             modalQR.classList.add('hidden');

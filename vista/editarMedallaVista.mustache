@@ -18,7 +18,7 @@
 <body class="min-h-screen bg-gradient-to-b from-purple-400 to-indigo-300 py-8">
 
 <div class="container mx-auto px-5 max-w-2xl mt-3">
-    <!-- Header -->
+
     <div class="bg-white pokemon-border rounded-2xl p-6 mb-6">
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
@@ -28,13 +28,13 @@
         </div>
     </div>
 
-    <!-- Formulario -->
+
     <form method="POST" action="/editor/guardarMedalla" enctype="multipart/form-data" class="bg-white pokemon-border rounded-2xl p-6 space-y-6 mb-6">
         
         <input type="hidden" name="id" value="{{medalla.ID}}">
         <input type="hidden" name="Imagen_url_actual" value="{{medalla.Imagen_url}}">
 
-        <!-- Nombre -->
+
         <div class="space-y-2">
             <label class="block text-gray-800 font-bold text-lg flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -52,7 +52,7 @@
             >
         </div>
 
-        <!-- Color -->
+
         <div class="space-y-2">
             <label class="block text-gray-800 font-bold text-lg flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        <!-- Imagen Actual -->
+
         <div class="space-y-2">
             <label class="block text-gray-800 font-bold text-lg flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -91,7 +91,7 @@
             </div>
         </div>
 
-        <!-- Subir Nueva Imagen -->
+
         <div class="space-y-2">
             <label class="block text-gray-800 font-bold text-lg flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@
             <p class="text-sm text-gray-500 italic">* Si no seleccionas una imagen, se mantendrá la actual</p>
         </div>
 
-        <!-- Botones -->
+
         <div class="flex gap-3 pt-4">
             <button 
                 type="submit" 

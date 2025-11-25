@@ -159,7 +159,7 @@ public function validarCodigo()
     }
 
     if ($this->model->validarToken($email, $token)) {
-        // Activar cuenta
+
         $resultado = $this->model->activarCuenta($email);
         
         if ($this->model->estaValidada($email)) {

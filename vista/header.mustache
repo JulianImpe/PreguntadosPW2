@@ -5,11 +5,11 @@
     <title>Pokedex</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Tailwind CDN -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Toastr -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -21,10 +21,10 @@
         };
     </script>
 
-    <!-- Google Fonts -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
-    <!-- Leaflet -->
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
@@ -47,7 +47,7 @@
             background: linear-gradient(180deg, #ef4444 0%, #ef4444 45%, #1f2937 45%, #1f2937 55%, #f3f4f6 55%, #f3f4f6 100%);
         }
 
-        /* Menú móvil */
+
         .mobile-menu {
             max-height: 0;
             overflow: hidden;
@@ -58,7 +58,7 @@
             max-height: 500px;
         }
 
-        /* Icono hamburguesa */
+
         .hamburger {
             display: flex;
             flex-direction: column;
@@ -92,7 +92,7 @@
             transform: rotate(-45deg) translate(8px, -8px);
         }
 
-        /* Ajuste del logo en móvil */
+
         @media (max-width: 640px) {
             .pixel-font {
                 line-height: 1.4;
@@ -164,19 +164,19 @@
             </button>
         </div>
 
-        <!-- Menú móvil -->
+
         <nav id="mobileMenu" class="mobile-menu lg:hidden pb-3 sm:pb-4">
             <div class="flex flex-col gap-2 sm:gap-3">
 
                 {{#usuario}}
                     <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 mt-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
                     href="/lobby/base">
-                        🏠 Inicio
+                         Inicio
                     </a>
 
                     <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
                     href="/logout">
-                        🚪 Cerrar sesión
+                         Cerrar sesión
                     </a>
 
                     <button id="btnMostrarQRMobile"
@@ -190,17 +190,17 @@
                 {{^usuario}}
                     <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
                     href="/homeVista">
-                        🏠 Inicio
+                         Inicio
                     </a>
 
                     <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
                     href="/login/loginForm">
-                        🔑 Iniciar sesión
+                         Iniciar sesión
                     </a>
 
                     <a class="bg-gray-800 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-3 rounded pokemon-border text-[0.6rem] sm:text-xs font-bold text-center transition-all active:scale-95"
                     href="/registrarse/registrarseForm">
-                        📝 Registrarse
+                         Registrarse
                     </a>
                 {{/usuario}}
             </div>
@@ -218,7 +218,7 @@
             mobileMenu.classList.toggle('active');
         });
 
-        // Cerrar menú al hacer clic fuera
+
         document.addEventListener('click', function(event) {
             const isClickInside = menuToggle.contains(event.target) || mobileMenu.contains(event.target);
             if (!isClickInside && mobileMenu.classList.contains('active')) {

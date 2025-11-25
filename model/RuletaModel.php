@@ -20,7 +20,7 @@ class RuletaModel
         $medallaId = (int)$medallaId;
         $partidaId = (int)$partidaId;
 
-        // Calcular nivel del jugador (simplificado, puedes usar el del PartidaModel si lo necesitas)
+
         $nivelResult = $this->database->query("
             SELECT 
                 SUM(CASE WHEN pp.EsCorrecta = 1 THEN 1 ELSE 0 END) as respuestas_correctas,

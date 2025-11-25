@@ -39,14 +39,14 @@
 </head>
 <body class="min-h-screen bg-gradient-to-b from-sky-400 to-emerald-300 p-4">
     
-    <!-- Contenedor principal centrado -->
+
     <div class="min-h-screen flex flex-col items-center justify-center mt-4">
-        <!-- Contenedor del card -->
+
         <div class="w-full max-w-md mt-4">
-        <!-- Card principal -->
+
         <div class="bg-white pokemon-border rounded-2xl p-6 sm:p-8 shadow-2xl">
             
-            <!-- Icono de email -->
+
             <div class="flex justify-center mb-4 sm:mb-6">
                 <div class="bg-gradient-to-br from-blue-400 to-blue-600 pokemon-border rounded-full p-4 sm:p-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 sm:w-20 sm:h-20 fill-white" viewBox="0 0 24 24">
@@ -55,12 +55,12 @@
                 </div>
             </div>
 
-            <!-- Título -->
+
             <h2 class="text-center text-gray-800 text-xl sm:text-2xl font-black mb-2">
                 ¡CORREO ENVIADO!
             </h2>
             
-            <!-- Descripción -->
+
             <div class="bg-blue-50 pokemon-border rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
                 <p class="text-gray-700 text-xs sm:text-sm text-center leading-relaxed">
                     Hemos enviado un <strong>código de 6 dígitos</strong> a tu correo electrónico.
@@ -69,11 +69,11 @@
                 </p>
             </div>
 
-            <!-- Formulario -->
+
             <form action="/registrarse/validarCodigo" method="POST" class="space-y-4 sm:space-y-6">
                 <input type="hidden" name="email" value="{{email}}">
                 
-                <!-- Input del código -->
+
                 <div>
                     <label for="token" class="block text-gray-700 font-bold text-xs sm:text-sm mb-2 sm:mb-3 text-center">
                         INGRESA EL CÓDIGO:
@@ -94,7 +94,7 @@
                     </p>
                 </div>
 
-                <!-- Mensaje de error -->
+
                 {{#error}}
                 <div class="bg-red-100 pokemon-border rounded-lg p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 fill-red-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24">
@@ -104,7 +104,7 @@
                 </div>
                 {{/error}}
 
-                <!-- Mensaje de éxito -->
+
                 {{#success}}
                 <div class="bg-green-100 pokemon-border rounded-lg p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 fill-green-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24">
@@ -114,7 +114,7 @@
                 </div>
                 {{/success}}
 
-                <!-- Botón validar -->
+
                 <button 
                     type="submit"
                     class="w-full bg-gradient-to-b from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-black text-base sm:text-lg py-3 sm:py-4 rounded-lg pokemon-border hover:scale-105 transition-all active:scale-95">
@@ -122,7 +122,7 @@
                 </button>
             </form>
 
-            <!-- Ayuda -->
+
             <div class="mt-4 sm:mt-6 text-center">
                 <p class="text-gray-600 text-xs">
                     ¿No recibiste el correo? Revisa tu carpeta de spam
@@ -131,7 +131,7 @@
 
         </div>
 
-        <!-- Link volver -->
+
         <div class="text-center mt-4 sm:mt-6">
             <a href="/registrarse/registrarseForm" class="text-white hover:text-yellow-300 text-xs sm:text-sm font-bold transition-colors drop-shadow-lg">
                 ← Volver al registro
@@ -139,7 +139,7 @@
         </div>
         
         </div>
-        <!-- Fin contenedor principal -->
+
     </div>
 
 </body>

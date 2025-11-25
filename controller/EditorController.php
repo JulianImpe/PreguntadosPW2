@@ -61,9 +61,7 @@ class EditorController
         unset($_SESSION['exito_reporte']);
         unset($_SESSION['error_reporte']);
 
-       // $data["preguntasTodas"] = $this->model->obtenerTodasLasPreguntas();
 
-        //$this->renderer->render("lobbyEditor", $data);
 
         $preguntas = $this->model->obtenerTodasLasPreguntas();
 

@@ -1,12 +1,12 @@
-<!-- Contenedor principal con fondo degradado -->
+
 <div class="min-h-screen bg-[url('/public/img/pika-fondo.jpeg')] bg-fixed bg-cover bg-center flex items-center justify-center p-5">
 
     <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl relative overflow-hidden">
-        <!-- Barra superior decorativa -->
+
         <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
 
         <div class="p-8 md:p-10">
-            <!-- Logo y título -->
+
             <div class="text-center mb-8">
                 <div class="text-6xl mb-4">
                     <div class="text-center mb-4 flex justify-center">
@@ -23,7 +23,7 @@
                 </h1>
             </div>
 
-            <!-- Formulario de login -->
+
             <form method="POST" action="/login/login" id="loginForm">
 
                 {{#error}}
@@ -32,7 +32,7 @@
                     </div>
                 {{/error}}
 
-                <!-- Usuario -->
+
                 <div class="mb-5">
                     <label for="usuario" class="block text-gray-800 font-semibold mb-2 text-sm">
                         Usuario <span class="text-red-700">*</span>
@@ -47,7 +47,7 @@
                     >
                 </div>
 
-                <!-- Contraseña -->
+
                 <div class="mb-6">
                     <label for="password" class="block text-gray-800 font-semibold mb-2 text-sm">
                         Contraseña <span class="text-red-700">*</span>
@@ -62,29 +62,29 @@
                     >
                 </div>
 
-                <!-- Botón Ingresar -->
+
                 <button type="submit"
                         class="w-full py-3 px-6 bg-green-600 text-white font-bold uppercase tracking-wide text-lg border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150">
                     Ingresar
                 </button>
             </form>
 
-            <!-- Link de registro -->
+
             <div class="text-center mt-5 text-gray-600 text-sm">
                 ¿No tienes cuenta? <a href="/registrarse/registrarseForm"
                                       class="text-red-700 font-bold no-underline transition-all duration-300 hover:text-red-600 hover:underline">Regístrate
                 aquí</a>
             </div>
-            <!-- En tu login.php o login.mustache -->
+
 {{#error}}
-    <div class="alert alert-danger">{{error}}</div>
+    <!--<div class="alert alert-danger">{{error}}</div>-->
     
     {{#mostrar_reenvio}}
         <form method="POST" action="/registrarse/reenviarCodigo">
             <input type="hidden" name="email" value="{{email}}">
-            <button type="submit" class="btn btn-link">
+           <!-- <button type="submit" class="btn btn-link">
                 ¿No recibiste el código? Haz clic aquí para reenviar
-            </button>
+            </button>-->
         </form>
     {{/mostrar_reenvio}}
 {{/error}}
@@ -92,7 +92,7 @@
     </div>
 
     <script>
-        // Animación de carga en el botón
+
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             const btn = this.querySelector('button[type="submit"]');
             btn.classList.add('opacity-70', 'cursor-not-allowed');

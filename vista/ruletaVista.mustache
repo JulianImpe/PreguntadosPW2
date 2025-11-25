@@ -9,21 +9,21 @@
 <body>
 
 <div class="container1">
-    <!-- NUEVO: Layout horizontal -->
+
     <div class="ruleta-layout">
-        <!-- Texto a la izquierda -->
+
         <div class="ruleta-text">
             <p>¡Gira la ruleta para elegir una categoría!</p>
         </div>
 
-        <!-- Ruleta en el centro -->
+
         <div class="wheel-container">
             <div class="pointer"></div>
             <canvas id="wheel" width="400" height="400"></canvas>
             <div class="center-circle"></div>
         </div>
 
-        <!-- Botón a la derecha -->
+
         <div class="ruleta-button">
             <button id="spinBtn" class="spin-btn">GIRAR RULETA</button>
         </div>
@@ -34,7 +34,7 @@
     </form>
 </div>
 
-<!-- Modal de categoría seleccionada -->
+
 <div id="modalCategoria" class="modal-overlay">
     <div class="modal-content">
         <h2 class="modal-title">Categoría Seleccionada:</h2>
@@ -48,7 +48,7 @@
 </html>
 
 <script>
-    // Datos de las medallas desde PHP/Mustache
+
     const medallas = [
         {{#categorias}}
             {
@@ -76,7 +76,7 @@
     const totalMedallas = medallas.length;
     const anglePerSection = (2 * Math.PI) / totalMedallas;
 
-    // Cargar imágenes
+
     const images = {};
     let imagesLoaded = 0;
 
@@ -109,7 +109,7 @@
             const startAngle = index * anglePerSection;
             const endAngle = startAngle + anglePerSection;
 
-            // Dibujar sector
+
             ctx.beginPath();
             ctx.moveTo(0, 0);
             ctx.arc(0, 0, 200, startAngle, endAngle);
@@ -120,7 +120,7 @@
             ctx.lineWidth = 3;
             ctx.stroke();
 
-            // Dibujar imagen
+
             ctx.save();
             const middleAngle = startAngle + anglePerSection / 2;
             ctx.rotate(middleAngle);
@@ -141,14 +141,14 @@
         isSpinning = true;
         spinBtn.disabled = true;
 
-        // Rotación aleatoria: entre 5 y 8 vueltas completas + ángulo aleatorio
+
         const minSpins = 5;
         const maxSpins = 8;
         const spins = minSpins + Math.random() * (maxSpins - minSpins);
         const randomAngle = Math.random() * Math.PI * 2;
         const totalRotation = currentRotation + (spins * Math.PI * 2) + randomAngle;
 
-        const duration = 5000; // 5 segundos
+        const duration = 5000;
         const startTime = Date.now();
         const startRotation = currentRotation;
 
@@ -156,7 +156,7 @@
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Curva de desaceleración (easing)
+
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const rotation = startRotation + (totalRotation - startRotation) * easeOut;
 
@@ -174,14 +174,14 @@
     }
 
     function finishSpin() {
-        // Normalizar la rotación actual (0 a 2π)
+
         const normalizedRotation = ((currentRotation % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
 
-        // Convertir la rotación de la ruleta al ángulo que está bajo el puntero
+
         const pointerAngle = (Math.PI * 1.5 - normalizedRotation) % (Math.PI * 2);
         const positiveAngle = (pointerAngle + Math.PI * 2) % (Math.PI * 2);
 
-        // Calculamos el índice del sector
+
         let sectorIndex = Math.floor(positiveAngle / anglePerSection);
         sectorIndex = sectorIndex % totalMedallas;
 
@@ -191,10 +191,10 @@
         console.log('Sector seleccionado:', sectorIndex);
         console.log('Medalla:', selectedMedalla);
 
-        // Guardar el ID en el input
+
         medallaInput.value = selectedMedalla.ID;
 
-        // Mostrar modal con la categoría seleccionada
+
         showModal(selectedMedalla);
 
         setTimeout(() => {
@@ -204,13 +204,13 @@
     }
 
     function showModal(medalla) {
-        // Configurar el modal
+
         modalMedal.src = medalla.Imagen_url;
         modalMedalName.textContent = medalla.Nombre;
 
-        // Verificar si hay mensaje de cambio de categoría desde PHP
+
         {{#cambio_categoria}}
-            modalWarning.innerHTML = '<strong>⚠️ Atención:</strong><br>{{mensaje}}<br>Se seleccionará una pregunta de otra categoría.';
+            modalWarning.innerHTML = '<strong> Atención:</strong><br>{{mensaje}}<br>Se seleccionará una pregunta de otra categoría.';
             modalWarning.style.display = 'block';
         {{/cambio_categoria}}
 
@@ -218,23 +218,23 @@
             modalWarning.style.display = 'none';
         {{/cambio_categoria}}
 
-        // Mostrar el modal
+
         modal.classList.add('show');
     }
 
-    // Evento del botón continuar
+
     continuarBtn.addEventListener('click', () => {
-        // Ocultar modal
+
         modal.classList.remove('show');
 
-        // Enviar formulario
+
         console.log('Enviando formulario con medalla ID:', medallaInput.value);
         form.submit();
     });
 
     spinBtn.addEventListener('click', spinWheel);
 
-    // Dibujar ruleta inicial
+
     if (imagesLoaded === 0 && totalMedallas === 0) {
         drawWheel(0);
     }

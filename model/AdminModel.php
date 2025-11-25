@@ -60,8 +60,6 @@ class AdminModel
 
     public function obtenerPorcentajeAciertosPorUsuario($filtro)
     {
-        // Este método no tiene sentido con el filtro así
-        // Lo dejo retornando 0 por ahora
         return 0;
     }
 
@@ -137,7 +135,7 @@ public function obtenerPreguntasPorMedalla($filtro)
                 return "";
         }
     }
-    // Agregar estos métodos a AdminModel.php
+
 
 public function obtenerRankingParaEditores()
 {

@@ -6,7 +6,7 @@
     <title>Pokémon Trivia - Partida</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/public/js/temporizador.js"></script>
-        <script>
+    <script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -18,121 +18,94 @@
         }
     </script>
     <style>
-        .background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+        /* Fondo de pantalla completo y responsive */
+        html, body {
             height: 100%;
-            z-index: -1;
+            margin: 0;
+            overflow-x: hidden;
         }
 
-        .background-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* Tamaño recomendado para la imagen: 1920x1080px */
-            max-width: 1920px;
-            max-height: 1080px;
-        }
-
-        .btn-pokemon {
-            transition: all 0.3s ease;
-        }
-        .btn-pokemon:hover {
-            transform: translateY(-2px);
-        }
-    </style>
-
-    <style>
-        /* Estilos existentes */
-        .btn-pokemon {
-            transition: all 0.3s ease;
-        }
-        .btn-pokemon:hover {
-            transform: translateY(-2px);
-        }
-        
-        /* Agregar estilo de fondo como respaldo */
         body {
+            background-image: url('/public/img/vsMisty.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
         }
-    </style>
 
-    <style>
         .btn-pokemon {
             transition: all 0.3s ease;
         }
+
         .btn-pokemon:hover {
             transform: translateY(-2px);
         }
     </style>
 </head>
-    <div class="background-container">
 
+<body class="bg-gradient-to-b from-red-100/80 to-red-300/80 min-h-screen p-3 sm:p-4">
 
-<body class="bg-gradient-to-b from-red-100 to-red-300 min-h-screen p-4" style="background-image: url('/public/img/vsMisty.png');">
-    </div>
 <!-- Mensaje de feedback flotante -->
-<div id="feedbackMessage" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 px-12 py-8 rounded-3xl shadow-2xl text-white text-4xl font-bold border-4 border-white animate-pulse">
+<div id="feedbackMessage" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 px-8 sm:px-12 py-6 sm:py-8 rounded-3xl shadow-2xl text-white text-2xl sm:text-4xl font-bold border-4 border-white animate-pulse">
 </div>
 
 <div class="max-w-2xl mx-auto">
-    <!-- Título Medalla Cascada -->
+    <!-- Título Medalla -->
     {{#medallas}}
-        <div class="m-8 text-center">
-            <div class="inline-block bg-gray-800 rounded-xl px-5 py-4 shadow-xl border-4 border-white mt-5 flex flex-row items-center justify-center gap-5">
-                <img src="/public/{{imagen_url}}" alt="{{nombre}}" class="w-16 h-16 rounded-full border-2 border-white shadow-md mb-3">
-                <h1 class="text-white text-2xl font-bold">{{nombre}}</h1>
+        <div class="my-4 sm:my-8 text-center">
+            <div class="inline-block bg-gray-800 rounded-xl px-4 sm:px-5 py-3 sm:py-4 shadow-xl border-4 border-white mt-3 sm:mt-5 flex flex-row items-center justify-center gap-3 sm:gap-5">
+                <img src="/public/{{imagen_url}}" alt="{{nombre}}" class="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-white shadow-md">
+                <h1 class="text-white text-xl sm:text-2xl font-bold">{{nombre}}</h1>
             </div>
         </div>
     {{/medallas}}
 
-    <!-- Contenedor principal -->
-    <div class="bg-white rounded-2xl shadow-2xl p-12 m-6 border-4 border-gray-300">
-
+    <!-- Contenedor principal responsive -->
+    <div class="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-6 sm:p-8 md:p-10 lg:p-12 mx-3 sm:mx-6 my-4 sm:my-6 border-4 border-gray-300">
 
         <!-- Timer -->
-        <div class="text-center mb-6">
-            <span id="timer" class="text-2xl font-bold">15</span> segundos restantes
-            <div class="w-full h-4 bg-gray-300 rounded-full mt-2">
-                <div id="progressBar" class="h-4 bg-sky-400 rounded-full w-full transition-all duration-300"></div>
+        <div class="text-center mb-4 sm:mb-6">
+            <span id="timer" class="text-xl sm:text-2xl font-bold">15</span>
+            <span class="text-sm sm:text-base">segundos restantes</span>
+            <div class="w-full h-3 sm:h-4 bg-gray-300 rounded-full mt-2">
+                <div id="progressBar" class="h-3 sm:h-4 bg-sky-400 rounded-full w-full transition-all duration-300"></div>
             </div>
         </div>
 
         {{#pregunta}}
             <!-- Pregunta -->
-            <div class="mb-8">
-                <p id="pregunta" class="text-2xl font-semibold text-gray-900 text-center leading-relaxed">
+            <div class="mb-6 sm:mb-8">
+                <p id="pregunta" class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 text-center leading-relaxed">
                     {{texto}}
                 </p>
             </div>
+
+            <!-- Dificultad -->
             <div class="mb-4 text-center">
-                <span class="inline-block px-3 py-1 rounded-full font-semibold border-2 {{dificultad_clase}}">
+                <span class="inline-block px-2.5 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold border-2 {{dificultad_clase}}">
                     {{nivel_dificultad}}{{#dificultad}} ({{dificultad}}){{/dificultad}}
                 </span>
             </div>
 
             <!-- Formulario de respuestas -->
-<form id="formRespuestas" method="POST" action="/partida/responder">
-    <input type="hidden" name="pregunta_id" value="{{id}}">
-    <input type="hidden" name="pregunta_token" value="{{pregunta_token}}">
-    <input type="hidden" name="respuesta" id="respuestaInput" value="">
-    <input type="hidden" name="respuesta_id_correcta" value="{{respuesta_correcta_id}}">
+            <form id="formRespuestas" method="POST" action="/partida/responder">
+                <input type="hidden" name="pregunta_id" value="{{id}}">
+                <input type="hidden" name="pregunta_token" value="{{pregunta_token}}">
+                <input type="hidden" name="respuesta" id="respuestaInput" value="">
+                <input type="hidden" name="respuesta_id_correcta" value="{{respuesta_correcta_id}}">
 
-                <div class="space-y-4">
+                <div class="space-y-3 sm:space-y-4">
                     {{#respuestas}}
                         <button type="button"
                                 data-respuesta-id="{{id}}"
                                 data-correcta="{{es_correcta_str}}"
-                                class="respuesta-btn w-full bg-white hover:bg-gray-50 rounded-xl p-6 border-4 border-gray-400 shadow-lg btn-pokemon text-left">
-                            <div class="flex items-start gap-4">
-                                <div class="letra-circulo w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center font-black text-xl text-white flex-shrink-0 border-2 border-gray-800">
+                                class="respuesta-btn w-full bg-white hover:bg-gray-50 rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border-4 border-gray-400 shadow-lg btn-pokemon text-left">
+                            <div class="flex items-start gap-3 sm:gap-4">
+                                <div class="letra-circulo w-8 h-8 sm:w-10 sm:h-10 bg-orange-500 rounded-full flex items-center justify-center font-black text-lg sm:text-xl text-white flex-shrink-0 border-2 border-gray-800">
                                     {{letra}}
                                 </div>
-                                <p class="text-gray-900 font-medium text-lg leading-relaxed pt-1">
+                                <p class="text-gray-900 font-medium text-sm sm:text-base md:text-lg leading-relaxed pt-0.5 sm:pt-1">
                                     {{texto}}
                                 </p>
                             </div>
@@ -143,20 +116,17 @@
         {{/pregunta}}
 
         {{^pregunta}}
-            <div class="bg-red-100 border-2 border-red-400 text-red-700 px-6 py-4 rounded-xl text-center mt-8">
+            <div class="bg-red-100 border-2 border-red-400 text-red-700 px-4 sm:px-6 py-3 sm:py-4 rounded-xl text-center mt-6 sm:mt-8 text-sm sm:text-base">
                 ❌ No se encontró ninguna pregunta disponible.
             </div>
         {{/pregunta}}
     </div>
+</div>
 
-
-
-
-</body>
-<!--mensajito de exito-->
+<!-- Mensaje de éxito -->
 {{#exito_reporte}}
-    <div id="mensajeExito" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div id="mensajeExito" class="fixed top-4 right-4 bg-green-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg shadow-lg z-50 flex items-center gap-2 sm:gap-3 text-sm sm:text-base max-w-xs sm:max-w-md">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
         <span>{{exito_reporte}}</span>
@@ -164,15 +134,19 @@
     <script>
         setTimeout(() => {
             const msg = document.getElementById('mensajeExito');
-            msg.style.opacity = '0';
-            setTimeout(() => msg.remove(), 300);
+            if(msg) {
+                msg.style.opacity = '0';
+                msg.style.transition = 'opacity 0.3s';
+                setTimeout(() => msg.remove(), 300);
+            }
         }, 3000);
     </script>
 {{/exito_reporte}}
 
+<!-- Mensaje de error -->
 {{#error_reporte}}
-    <div id="mensajeError" class="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div id="mensajeError" class="fixed top-4 right-4 bg-red-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg shadow-lg z-50 flex items-center gap-2 sm:gap-3 text-sm sm:text-base max-w-xs sm:max-w-md">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
         <span>{{error_reporte}}</span>
@@ -180,9 +154,14 @@
     <script>
         setTimeout(() => {
             const msg = document.getElementById('mensajeError');
-            msg.style.opacity = '0';
-            setTimeout(() => msg.remove(), 300);
+            if(msg) {
+                msg.style.opacity = '0';
+                msg.style.transition = 'opacity 0.3s';
+                setTimeout(() => msg.remove(), 300);
+            }
         }, 3000);
     </script>
 {{/error_reporte}}
+
+</body>
 </html>

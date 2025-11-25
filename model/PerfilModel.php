@@ -38,7 +38,7 @@ class PerfilModel{
                 : '/public/img/default-avatar.png',
             'tiene_foto' => !empty($datos['foto_perfil']),
             'puntaje_total' => $datos['Puntaje_total'] ?? 0,
-            'pais' => $datos['pais'] ?? '',        // <--- agregalo
+            'pais' => $datos['pais'] ?? '',
             'ciudad' => $datos['ciudad'] ?? '',
             'toast' => $toast
         ];

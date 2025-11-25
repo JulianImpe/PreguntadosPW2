@@ -221,7 +221,7 @@ class EditorModel{
         ];
         return $clases[$nombre] ?? 'roca';
     }
-//cambiarlo por las fotos q tnemos descargadas
+
     public function getMedallaEmoji($nombre){
         $emojis = [
             'Medalla Roca' => '🪨', 'Medalla Cascada' => '💧',

@@ -34,19 +34,19 @@ public function login()
     $resultado = $this->model->getUserWith($usuario, $password);
 
     if (!empty($resultado)) {
-        // NUEVO: Verificar si el email está validado
+
         if ($resultado[0]['email_validado'] == 0) {
             $email = $resultado[0]['email'];
             $data = [
                 'error' => "Tu cuenta aún no ha sido validada. Por favor revisa tu correo.",
                 'email' => $email,
-                'mostrar_reenvio' => true // Para mostrar opción de reenviar código
+                'mostrar_reenvio' => true
             ];
             $this->renderer->render("login", $data);
             return;
         }
 
-        // Login exitoso - cuenta validada
+
         $_SESSION["usuario_id"] = $resultado[0]['ID'];
         $_SESSION["usuario"] = $resultado[0]['usuario'];
         $_SESSION["rol"] = $resultado[0]['rol'];
@@ -81,7 +81,7 @@ public function redirectToIndex()
         exit;
     }
 
-    // Si es jugador común
+
     header("Location: /lobby/base");
     exit;
 }

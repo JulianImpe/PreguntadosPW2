@@ -21,7 +21,7 @@
 
 <body class="min-h-screen bg-gradient-to-b from-purple-400 to-indigo-300 flex flex-col">
 
-<!-- HEADER -->
+
 <header class="bg-white shadow-2xl">
     <div class="container mx-auto px-5 py-4 flex justify-between items-center flex-wrap gap-4">
         <div class="flex items-center gap-3">
@@ -65,10 +65,10 @@
 
 <main class="flex-1 container mx-auto px-5 py-10 space-y-10">
 
-    <!-- WIDGETS ARRIBA -->
+
     <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-        <!-- Usuarios -->
+
         <div class="bg-white rounded-2xl p-6 pokemon-border text-center">
             <div class="flex justify-center mb-2">
                 <svg id="user-solid" class="w-12 h-12 fill-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -80,7 +80,7 @@
             <p class="text-3xl font-bold text-blue-600">{{stats.total_usuarios}}</p>
         </div>
 
-        <!-- Partidas -->
+
         <div class="bg-white rounded-2xl p-6 pokemon-border text-center ">
             <div class="flex justify-center mb-2">
                 <svg id="gaming" class="w-12 h-12 fill-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@
             <p class="text-3xl font-bold text-green-600">{{stats.total_partidas}}</p>
         </div>
 
-        <!-- Preguntas Totales -->
+
         <div class="bg-white rounded-2xl p-6 pokemon-border text-center">
             <div class="flex justify-center mb-2">
 <svg xmlns="http://www.w3.org/2000/svg"class="w-12 h-12 fill-gray-600" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18 5v6h-1v1h-2v1h-1v2H9v-3h1v-1h1v-1h2V9h1V7h-1V6h-2v1h-1v1H9v1H8V8H7V7H6V6H5V5h1V4h1V3h2V2h6v1h1v1h1v1zm-5 13h1v3h-1v1h-3v-1H9v-3h1v-1h3z"/></svg>
@@ -101,7 +101,7 @@
             <p class="text-3xl font-bold text-purple-600">{{stats.total_preguntas}}</p>
         </div>
 
-        <!-- Preguntas Creadas -->
+
         <div class="bg-white rounded-2xl p-6 pokemon-border text-center">
             <div class="flex justify-center mb-2">
                 <svg class="w-12 h-12 fill-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -155,9 +155,9 @@
 </main>
 
 
-<!-- SCRIPTS DE CHARTS.JS CON DATOS REALES -->
+
 <script>
-    // Datos REALES desde PHP
+
     const datosSexo = [
         {{#stats.usuarios_por_sexo}}
         {label: '{{nombre}}', value: {{total}}},
@@ -176,17 +176,17 @@
         jubilados: {{stats.usuarios_por_edad.jubilados}}
     };
 
-    // Configuración de colores pixel art (más colores para las medallas)
+
     const pixelColors = {
         primary: [
-            '#3B82F6',  // Azul
-            '#EF4444',  // Rojo
-            '#10B981',  // Verde
-            '#F59E0B',  // Amarillo
-            '#8B5CF6',  // Púrpura
-            '#EC4899',  // Rosa
-            '#06B6D4',  // Cyan
-            '#F97316'   // Naranja
+            '#3B82F6',
+            '#EF4444',
+            '#10B981',
+            '#F59E0B',
+            '#8B5CF6',
+            '#EC4899',
+            '#06B6D4',
+            '#F97316'
         ],
         bg: [
             'rgba(59, 130, 246, 0.2)', 
@@ -200,7 +200,7 @@
         ]
     };
 
-    // Configuración común
+
     const commonOptions = {
         responsive: true,
         maintainAspectRatio: true,
@@ -218,7 +218,7 @@
         }
     };
 
-    // Gráfico de Sexo
+
     const ctxSexo = document.getElementById('chartSexo').getContext('2d');
     new Chart(ctxSexo, {
         type: 'doughnut',
@@ -234,7 +234,7 @@
         options: commonOptions
     });
 
-    // Gráfico de Medallas (antes era País)
+
     const ctxMedalla = document.getElementById('chartMedalla').getContext('2d');
     new Chart(ctxMedalla, {
         type: 'bar',
@@ -291,7 +291,7 @@
         }
     });
 
-    // Gráfico de Edad
+
     const ctxEdad = document.getElementById('chartEdad').getContext('2d');
     new Chart(ctxEdad, {
         type: 'pie',

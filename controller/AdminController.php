@@ -62,7 +62,12 @@ class AdminController
 
         $data = [
             'ranking' => $ranking,
-            'mensaje_exito' => $_SESSION['mensaje_exito'] ?? null
+            'mensaje_exito' => $_SESSION['mensaje_exito'] ?? null,
+            'usuario' => [
+                'usuario_id' => $_SESSION['usuario_id'],
+                'nombre' => $_SESSION['nombre'] ?? '',
+                'email' => $_SESSION['email'] ?? ''
+            ]
         ];
 
         unset($_SESSION['mensaje_exito']);
@@ -70,7 +75,7 @@ class AdminController
         $this->renderer->render("gestionarEditores", $data);
     }
 
-    // Promover a Editor
+
     public function promoverEditor()
     {
         if (!isset($_SESSION["usuario_id"]) || $_SESSION["rol"] !== "admin") {
@@ -94,7 +99,7 @@ class AdminController
         exit;
     }
 
-    // DESCARGA PDF CON DOMPDF
+
     public function descargarPDF()
     {
         if (!isset($_SESSION["usuario_id"]) || $_SESSION["rol"] !== "admin") {
@@ -114,19 +119,19 @@ class AdminController
             "usuarios_por_edad"      => $this->model->obtenerUsuariosPorGrupoEdad($filtro)
         ];
 
-        // Generar PDF con DOMPDF
+
         $this->generarPDFConDompdf($filtro, $stats);
         exit;
     }
 
-    // GENERADOR PDF CON DOMPDF
+
     private function generarPDFConDompdf($filtro, $stats)
     {
         require_once __DIR__ . '/../helper/PdfGenerator.php';
 
         $pdfGenerator = new PdfGenerator();
 
-        // Preparar título
+
         $tituloFiltro = [
             'dia' => 'Hoy',
             'semana' => 'Esta Semana',
@@ -136,7 +141,7 @@ class AdminController
 
         $titulo = 'Reporte Administrativo - ' . ($tituloFiltro[$filtro] ?? 'General');
 
-        // Preparar estructura de tabla
+
         $tabla = [
             'headers' => ['Métrica', 'Valor'],
             'rows' => [
@@ -158,20 +163,20 @@ class AdminController
 
 if (!empty($stats['preguntas_por_medalla'])) {
     $tabla['rows'][] = ['', ''];
-    $tabla['rows'][] = ['PREGUNTAS POR MEDALLA', ''];  // CAMBIAR TÍTULO
+    $tabla['rows'][] = ['PREGUNTAS POR MEDALLA', ''];
     foreach ($stats['preguntas_por_medalla'] as $item) {
         $tabla['rows'][] = [$item['nombre'], $item['total']];
     }
 }
 
-        // Agregar sección de usuarios por edad
+
         $tabla['rows'][] = ['', ''];
         $tabla['rows'][] = ['USUARIOS POR EDAD', ''];
         $tabla['rows'][] = ['Menores (< 18)', $stats['usuarios_por_edad']['menores']];
         $tabla['rows'][] = ['Adultos (18-65)', $stats['usuarios_por_edad']['medio']];
         $tabla['rows'][] = ['Jubilados (> 65)', $stats['usuarios_por_edad']['jubilados']];
 
-        // Generar y enviar PDF
+
         $pdfGenerator->generarReporteAdmin($titulo, $tabla);
     }
 }

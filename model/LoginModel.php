@@ -29,7 +29,7 @@ class LoginModel
             $user = $result[0];
 
             if ($user['password'] === $password) {
-                // Normalizar el rol a minúsculas y sin tildes
+
                 $user['rol'] = $this->normalizarRol($user['rol_nombre']);
                 return [$user];
             }

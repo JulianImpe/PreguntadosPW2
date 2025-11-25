@@ -19,10 +19,7 @@ class LobbyController
 
     public function index()
     {
-       // if (!isset($_SESSION["usuario_id"])) {
-         //   header("Location:login/loginForm");
-           // exit;
-        //}
+
 
         $usuario = $_SESSION["usuario_id"];
         $datosUsuario = $this->model->obtenerDatosUsuario($usuario);
@@ -50,10 +47,10 @@ class LobbyController
         $datosUsuario['partidas_recientes'] = $partidasRecientes;
 
 
-        // Estas líneas verifican si hay mensajes en la sesión
+
         if (isset($_SESSION['info_lobby'])) {
-            $datosUsuario['info_lobby'] = $_SESSION['info_lobby'];  // Pasa el mensaje a la vista
-            unset($_SESSION['info_lobby']);  // Lo elimina de la sesión
+            $datosUsuario['info_lobby'] = $_SESSION['info_lobby'];
+            unset($_SESSION['info_lobby']);
         }
 
         if (isset($_SESSION['error_lobby'])) {

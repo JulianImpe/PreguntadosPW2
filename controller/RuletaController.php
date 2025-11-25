@@ -36,10 +36,10 @@ class RuletaController
             ]
         ];
 
-        // Pasar mensaje de cambio de categoría si existe
+
         if (isset($_SESSION['cambio_categoria'])) {
             $data['cambio_categoria'] = $_SESSION['cambio_categoria'];
-            unset($_SESSION['cambio_categoria']); // Limpiar después de usarlo
+            unset($_SESSION['cambio_categoria']);
         }
 
         $this->renderer->render("ruleta", $data);
@@ -58,13 +58,13 @@ class RuletaController
             exit;
         }
 
-        // Guardamos la categoría elegida en sesión
+
         $_SESSION["categoria_actual"] = (int)$medallaId;
 
-        //limpio lo de pregunta activa (esto hacia q me tire vista de incorrecta
+
         unset($_SESSION['pregunta_activa']);
 
-        // NUEVO: Verificar si hay preguntas disponibles de esta categoría
+
         $partidaId = $_SESSION['partida_id'] ?? null;
         $usuarioId = $_SESSION['usuario_id'] ?? null;
 
@@ -72,7 +72,7 @@ class RuletaController
             $hayPreguntas = $this->model->verificarPreguntasDisponibles($usuarioId, $medallaId, $partidaId);
 
             if (!$hayPreguntas) {
-                // No hay preguntas de esta categoría, buscar de otra
+
                 $_SESSION['cambio_categoria'] = [
                     'categoria_original' => $medallaId,
                     'mensaje' => 'No hay más preguntas disponibles de esta categoría en esta partida'
@@ -80,7 +80,7 @@ class RuletaController
             }
         }
 
-        // Vamos A PARTIDA pero SOLO con esa categoría
+
         header("Location: /partida/mostrarPartida");
         exit;
 

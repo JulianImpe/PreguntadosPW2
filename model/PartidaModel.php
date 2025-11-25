@@ -29,7 +29,7 @@ class PartidaModel
         
         $sqlMedalla = $medallaId ? "AND p.Medalla_ID = " . intval($medallaId) : "";
 
-        // CAMBIO IMPORTANTE: Ahora filtramos por Pregunta_partida en vez de Usuario_pregunta_vista
+
         $sqlPartida = "";
         if ($partidaId) {
             $sqlPartida = "AND p.ID NOT IN (
@@ -54,8 +54,7 @@ class PartidaModel
         LIMIT 1
     ");
 
-        // Si no hay preguntas disponibles en esta partida con esa categoría,
-        // buscamos de cualquier categoría
+
         if (empty($pregunta) && $medallaId !== null) {
             error_log("No hay más preguntas de medalla $medallaId en esta partida, buscando sin filtro de medalla");
             $pregunta = $this->database->query("
@@ -73,7 +72,7 @@ class PartidaModel
         ");
         }
 
-        // Si agotó TODAS las preguntas de la BD en esta partida (¡ganó!)
+        
         if (empty($pregunta)) {
             error_log("Usuario $usuarioId completó todas las preguntas disponibles");
             return [];
@@ -150,7 +149,7 @@ class PartidaModel
     public function getPreguntaRender($usuarioId, $medallaId = null, $partidaId = null)
     {
 
-        //aca modifique que le paso la medalla por parametro para q coincida en el contro
+
         $preguntaYRespuestas = $this->getPreguntaYRespuesta($usuarioId, $medallaId, $partidaId);
         if (empty($preguntaYRespuestas)) {
             return null;

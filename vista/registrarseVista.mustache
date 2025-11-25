@@ -1,23 +1,21 @@
-<div class="min-h-screen bg-[url('/public/img/fondo.jpg')] bg-fixed bg-cover bg-center flex items-center justify-center p-5">
+<div class="bg-[url('/public/img/fondo.jpg')] bg-fixed bg-cover bg-center flex items-center justify-center p-3 sm:p-4 py-4 sm:py-6">
     <script src="/public/js/validarMailAJAX.js"></script>
 
-    <!-- Contenedor más ancho -->
-    <div class="w-full max-w-6xl bg-white rounded-3xl shadow-2xl relative overflow-hidden">
-        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
 
-        <div class="p-8 md:p-10">
-            <!-- Título centrado -->
-            <div class="text-center mb-8">
-                <div class="text-6xl mb-4">
-                    <div class="text-center mb-4 flex justify-center">
-                        <svg class="text-center" xmlns="http://www.w3.org/2000/svg" width="80" height="80"
-                             viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                  d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/>
-                        </svg>
-                    </div>
+    <div class="w-full max-w-5xl bg-white rounded-xl sm:rounded-2xl shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-700 via-red-600 to-red-700"></div>
+
+        <div class="p-4 sm:p-6 md:p-7">
+
+            <div class="text-center mb-4 sm:mb-5">
+                <div class="flex justify-center mb-2 sm:mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" class="sm:w-16 sm:h-16"
+                         viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                              d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/>
+                    </svg>
                 </div>
-                <h1 class="text-2xl md:text-3xl font-bold text-red-700 uppercase tracking-wider mb-2"
+                <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-red-700 uppercase tracking-wide"
                     style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
                     Completá con tus datos
                 </h1>
@@ -31,19 +29,19 @@
                     </script>
                 {{/error}}
 
-                <!-- Grid de 2 columnas -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                    <!-- COLUMNA IZQUIERDA -->
-                    <div class="space-y-5">
-                        <!-- Nombre Completo -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
+
+
+                    <div class="space-y-3 sm:space-y-3.5">
+
                         <div>
-                            <label for="nombre_completo" class="block text-gray-800 font-semibold mb-2 text-sm">
+                            <label for="nombre_completo" class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
                                 Nombre Completo <span class="text-red-700">*</span>
                             </label>
                             <input
                                     type="text"
-                                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                                    class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-100 hover:border-red-700"
                                     id="nombre_completo"
                                     name="nombre_completo"
                                     placeholder="Ej: Ash Ketchum"
@@ -51,14 +49,14 @@
                                     value="{{nombre_completo}}">
                         </div>
 
-                        <!-- Nombre de Usuario -->
+
                         <div>
-                            <label for="usuario" class="block text-gray-800 font-semibold mb-2 text-sm">
+                            <label for="usuario" class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
                                 Nombre de Usuario <span class="text-red-700">*</span>
                             </label>
                             <input
                                     type="text"
-                                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                                    class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-100 hover:border-red-700"
                                     id="usuario"
                                     name="usuario"
                                     placeholder="Ej: ash_maestro"
@@ -68,31 +66,31 @@
                                     value="{{usuario}}">
                         </div>
 
-                        <!-- Email -->
+
                         <div>
-                            <label for="email" class="block text-gray-800 font-semibold mb-2 text-sm">
+                            <label for="email" class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
                                 Email <span class="text-red-700">*</span>
                             </label>
                             <input
                                     type="email"
-                                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                                    class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-100 hover:border-red-700"
                                     id="email"
                                     name="email"
                                     placeholder="tu@email.com"
                                     required
                                     value="{{email}}">
-                            <div id="msg-email" class="mt-1 text-sm font-semibold"></div>
+                            <div id="msg-email" class="mt-1 text-xs font-semibold"></div>
                         </div>
 
-                        <!-- Contraseñas -->
-                        <div class="grid grid-cols-2 gap-4">
+
+                        <div class="grid grid-cols-2 gap-2 sm:gap-3">
                             <div>
-                                <label for="password" class="block text-gray-800 font-semibold mb-2 text-sm">
+                                <label for="password" class="block text-gray-800 font-semibold mb-1.5 text-xs">
                                     Contraseña <span class="text-red-700">*</span>
                                 </label>
                                 <input
                                         type="password"
-                                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                                        class="w-full px-2.5 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-100 hover:border-red-700"
                                         id="password"
                                         name="password"
                                         placeholder="••••••••"
@@ -101,12 +99,12 @@
                             </div>
 
                             <div>
-                                <label for="repetir_password" class="block text-gray-800 font-semibold mb-2 text-xs">
-                                    Repetir Contraseña <span class="text-red-700 text-xs">*</span>
+                                <label for="repetir_password" class="block text-gray-800 font-semibold mb-1.5 text-xs">
+                                    Repetir <span class="text-red-700">*</span>
                                 </label>
                                 <input
                                         type="password"
-                                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                                        class="w-full px-2.5 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-100 hover:border-red-700"
                                         id="repetir_password"
                                         name="repetir_password"
                                         placeholder="••••••••"
@@ -115,31 +113,31 @@
                             </div>
                         </div>
 
-                        <!-- Sexo y Fecha -->
-                        <div class="grid grid-cols-2 gap-4">
+
+                        <div class="grid grid-cols-2 gap-2 sm:gap-3">
                             <div>
-                                <label for="sexo" class="block text-gray-800 font-semibold mb-2 text-sm">
+                                <label for="sexo" class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
                                     Sexo<span class="text-red-700">*</span>
                                 </label>
                                 <select
                                         id="sexo"
                                         name="sexo"
                                         required
-                                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700">
+                                        class="w-full px-2.5 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-100 hover:border-red-700">
                                     <option value="" disabled selected>Género</option>
                                     <option value="Masculino" {{#Masculino}}selected{{/Masculino}}>Masculino</option>
                                     <option value="Femenino" {{#Femenino}}selected{{/Femenino}}>Femenino</option>
-                                    <option value="Prefiero no cargarlo" {{#Otro}}selected{{/Otro}}>Prefiero no cargarlo</option>
+                                    <option value="Prefiero no cargarlo" {{#Otro}}selected{{/Otro}}>No especificar</option>
                                 </select>
                             </div>
 
                             <div>
-                                <label for="fechaNacimiento" class="block text-gray-800 font-semibold mb-2 text-sm">
-                                    Fecha Nacimiento <span class="text-red-700">*</span>
+                                <label for="fechaNacimiento" class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
+                                    Fecha Nac. <span class="text-red-700">*</span>
                                 </label>
                                 <input
                                         type="date"
-                                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-4 focus:ring-red-100 hover:border-red-700"
+                                        class="w-full px-2.5 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-100 hover:border-red-700"
                                         id="fecha_nac"
                                         name="fecha_nac"
                                         required
@@ -149,38 +147,38 @@
                         </div>
                     </div>
 
-                    <!-- COLUMNA DERECHA -->
-                    <div class="space-y-5">
-                        <!-- Mapa -->
+
+                    <div class="space-y-3 sm:space-y-3.5">
+
                         <div>
-                            <label class="block text-gray-800 font-semibold mb-2 text-sm">
+                            <label class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
                                 Ubicación <span class="text-red-700">*</span>
                             </label>
-                            <div id="map" style="height: 250px; border: 2px solid #ccc; border-radius: 10px;"></div>
+                            <div id="map" class="h-40 sm:h-48 border-2 border-gray-300 rounded-lg"></div>
                         </div>
 
-                        <!-- País y Ciudad -->
-                        <div class="grid grid-cols-2 gap-4">
+
+                        <div class="grid grid-cols-2 gap-2 sm:gap-3">
                             <div>
-                                <label class="block text-gray-800 font-semibold mb-2 text-sm">
+                                <label class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
                                     País <span class="text-red-700">*</span>
                                 </label>
                                 <input type="text" id="pais" name="pais" required
-                                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg" readonly>
+                                       class="w-full px-2.5 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm" readonly>
                             </div>
 
                             <div>
-                                <label class="block text-gray-800 font-semibold mb-2 text-sm">
+                                <label class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
                                     Ciudad <span class="text-red-700">*</span>
                                 </label>
                                 <input type="text" id="ciudad" name="ciudad" required
-                                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg" readonly>
+                                       class="w-full px-2.5 py-2 border-2 border-gray-300 rounded-lg text-xs sm:text-sm" readonly>
                             </div>
                         </div>
 
-                        <!-- Foto de Perfil -->
+
                         <div>
-                            <label for="foto_perfil" class="block text-gray-800 font-semibold mb-2 text-sm">
+                            <label for="foto_perfil" class="block text-gray-800 font-semibold mb-1.5 text-xs sm:text-sm">
                                 Foto de Perfil (opcional)
                             </label>
                             <div class="relative">
@@ -192,27 +190,27 @@
                                         class="hidden"
                                         onchange="updateFileName(this)">
                                 <label for="foto_perfil"
-                                       class="flex items-center justify-center px-4 py-3 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer transition-all duration-300 hover:bg-white hover:border-red-700 text-gray-600 hover:text-red-700">
-                                    <span class="text-xl mr-2">📷</span>
-                                    <span>Seleccionar imagen</span>
+                                       class="flex items-center justify-center px-3 py-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer transition-all duration-300 hover:bg-white hover:border-red-700 text-gray-600 hover:text-red-700">
+                                    <span class="text-base sm:text-lg mr-2">📷</span>
+                                    <span class="text-xs sm:text-sm">Seleccionar imagen</span>
                                 </label>
                             </div>
-                            <div id="fileName" class="mt-2 text-xs text-gray-600 italic"></div>
+                            <div id="fileName" class="mt-1.5 text-xs text-gray-600 italic"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Botón centrado -->
-                <div class="mt-8 flex justify-center">
+
+                <div class="mt-5 sm:mt-6 flex justify-center">
                     <button type="submit"
-                            class="w-full max-w-md py-3 px-6 bg-green-600 text-white font-bold uppercase tracking-wide text-lg border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150">
+                            class="w-full sm:max-w-sm py-2 sm:py-2.5 px-4 sm:px-5 bg-green-600 text-white font-bold uppercase tracking-wide text-sm sm:text-base border-3 sm:border-4 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150">
                         Registrarse
                     </button>
                 </div>
             </form>
 
-            <!-- Link de inicio de sesión centrado -->
-            <div class="text-center mt-5 text-gray-600 text-sm">
+
+            <div class="text-center mt-3 sm:mt-4 text-gray-600 text-xs sm:text-sm">
                 ¿Ya tienes cuenta? <a href="/login/loginForm"
                                       class="text-red-700 font-bold no-underline transition-all duration-300 hover:text-red-600 hover:underline">Inicia
                 sesión aquí</a>
@@ -233,7 +231,7 @@
         document.getElementById('registroForm').addEventListener('submit', function (e) {
             const btn = this.querySelector('button[type="submit"]');
             btn.classList.add('opacity-70', 'cursor-not-allowed');
-            btn.innerHTML = 'Registrando... <span class="inline-block animate-spin ml-3 align-middle"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="#fff" d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg></span>';
+            btn.innerHTML = 'Registrando... <span class="inline-block animate-spin ml-2 align-middle"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M12 2a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2c-4.08 0-7.45 3.05-7.94 7h4.07c.44-1.73 2.01-3 3.87-3s3.43 1.27 3.87 3h4.07c-.49-3.95-3.86-7-7.94-7m0 16c4.08 0 7.45-3.05 7.94-7h-4.07c-.44 1.73-2.01 3-3.87 3s-3.43-1.27-3.87-3H4.06c.49 3.95 3.86 7 7.94 7m0-10a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg></span>';
         });
     </script>
 
