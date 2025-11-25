@@ -77,14 +77,10 @@
             </div>
 
 {{#error}}
-    <!--<div class="alert alert-danger">{{error}}</div>-->
     
     {{#mostrar_reenvio}}
         <form method="POST" action="/registrarse/reenviarCodigo">
             <input type="hidden" name="email" value="{{email}}">
-           <!-- <button type="submit" class="btn btn-link">
-                ¿No recibiste el código? Haz clic aquí para reenviar
-            </button>-->
         </form>
     {{/mostrar_reenvio}}
 {{/error}}
