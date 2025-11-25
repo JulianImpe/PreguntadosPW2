@@ -448,4 +448,20 @@ public function verificarPartidaActiva($partidaId)
     
     return !empty($resultado);
 }
+
+
+    public function contarReportesEnPartida($partidaId, $usuarioId)
+    {
+        $partidaId = (int)$partidaId;
+        $usuarioId = (int)$usuarioId;
+
+        $resultado = $this->database->query("
+        SELECT COUNT(*) AS total 
+        FROM Reporte 
+        WHERE Usuario_ID = $usuarioId 
+        AND Partida_ID = $partidaId
+    ");
+
+        return (int)($resultado[0]['total'] ?? 0);
+    }
 }
