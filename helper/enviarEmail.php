@@ -9,20 +9,19 @@ require __DIR__ . '/PHPMailer-master/src/Exception.php';
 $mail = new PHPMailer(true);
 
 try {
-    // ⚙️ Configuración SMTP
+
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
-    $mail->Username   = 'julian.m.imperiale@gmail.com'; // <-- tu correo real
-    $mail->Password   = 'jisb uvwz igee qsih'; // <-- la que generaste
+    $mail->Username   = 'julian.m.imperiale@gmail.com'; 
+    $mail->Password   = 'jisb uvwz igee qsih'; 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
 
-    // ✉️ Remitente y destinatario
-    $mail->setFrom('julian.m.imperiale@gmail.com', 'Pokémon Trivia');
-    $mail->addAddress($email, $nombre); // 👈 variables del controller
 
-    // 🧾 Contenido del correo
+    $mail->setFrom('julian.m.imperiale@gmail.com', 'Pokémon Trivia');
+    $mail->addAddress($email, $nombre);
+
     $mail->isHTML(true);
     $mail->Subject = 'Confirma tu cuenta en PokeTrivia';
     $mail->Body = "

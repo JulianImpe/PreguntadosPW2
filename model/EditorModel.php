@@ -36,8 +36,8 @@ class EditorModel{
     public function obtenerPreguntasReportadas($limite = 3){
         $resultado = $this->conexion->query("
             SELECT p.ID as id, p.Texto as texto, m.Nombre as medalla_nombre,
-                   COUNT(r.ID) as cantidad_reportes,
-                   GROUP_CONCAT(r.Motivo SEPARATOR ' | ') as motivo
+                COUNT(r.ID) as cantidad_reportes,
+                GROUP_CONCAT(r.Motivo SEPARATOR ' | ') as motivo
             FROM Pregunta p
             JOIN Medallas m ON p.Medalla_ID = m.ID
             JOIN Reporte r ON r.Pregunta_ID = p.ID
@@ -58,8 +58,8 @@ class EditorModel{
         $editorId = (int)$editorId;
         $resultado = $this->conexion->query("
             SELECT COUNT(CASE WHEN Estado = 'Aprobada' THEN 1 END) as aprobadas,
-                   COUNT(CASE WHEN Estado = 'Rechazada' THEN 1 END) as rechazadas,
-                   0 as editadas, COUNT(*) as total
+                COUNT(CASE WHEN Estado = 'Rechazada' THEN 1 END) as rechazadas,
+                0 as editadas, COUNT(*) as total
             FROM Pregunta_sugerida WHERE Revisada_por = $editorId
         ");
 

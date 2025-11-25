@@ -17,9 +17,8 @@ class NewRouter
     {
         $controllerName = strtolower($controllerParam ?? '');
 
-        // CASO 1: Rutas públicas (sin sesión requerida)
         if (in_array($controllerName, ['login', 'registrarse', 'homevista', ''])) {
-            // Si ya tiene sesión y está intentando acceder a login/registro, redirigir a su dashboard
+            
             if (isset($_SESSION['usuario_id']) && in_array($controllerName, ['login', 'registrarse'])) {
                 $this->redirectByRole();
                 exit;
@@ -29,26 +28,22 @@ class NewRouter
                 $this->executeMethodFromController($controller, $methodParam);
                 return;
             }
-            // Si no tiene sesión o está en homeVista, dejar pasar
             $controller = $this->getControllerFrom($controllerParam);
             $this->executeMethodFromController($controller, $methodParam);
             return;
         }
 
-        // CASO 2: Logout (siempre permitido)
         if ($controllerName === 'logout') {
             session_destroy();
             header("Location: /homeVista");
             exit;
         }
 
-        // CASO 3: Verificar que el usuario tenga sesión para rutas protegidas
         if (!isset($_SESSION['usuario_id'])) {
             header("Location: /login/loginForm");
             exit;
         }
 
-        // CASO 4: Rutas exclusivas de ADMIN
         if ($controllerName === 'admin') {
             if ($_SESSION["rol"] !== "admin") {
                 header("Location: /login/loginForm");
@@ -59,7 +54,6 @@ class NewRouter
             return;
         }
 
-        // CASO 5: Rutas exclusivas de EDITOR
         if ($controllerName === 'editor') {
             if ($_SESSION["rol"] !== "editor") {
                 header("Location: /login/loginForm");
@@ -70,10 +64,10 @@ class NewRouter
             return;
         }
 
-        // CASO 6: Rutas exclusivas de JUGADOR (lobby, partida, perfil, ranking)
+
         if (in_array($controllerName, ['lobby', 'partida', 'perfil', 'ranking'])) {
             if ($_SESSION["rol"] !== "jugador") {
-                // Si es admin o editor intentando entrar a rutas de jugador, redirigir a su dashboard
+                
                 $this->redirectByRole();
                 exit;
             }
@@ -82,7 +76,6 @@ class NewRouter
             return;
         }
 
-        // CASO 7: Cualquier otra ruta protegida (genérica)
         $controller = $this->getControllerFrom($controllerParam);
         $this->executeMethodFromController($controller, $methodParam);
     }
@@ -99,7 +92,6 @@ class NewRouter
             exit;
         }
 
-        // Jugador común
         header("Location: /lobby/base");
         exit;
     }
