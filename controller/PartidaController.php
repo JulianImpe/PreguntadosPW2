@@ -73,7 +73,8 @@ class PartidaController
 
         if (!$preguntaId || empty($motivo)) {
             $_SESSION['error_reporte'] = 'Debes escribir un motivo para el reporte.';
-            header('Location: /partida/base');
+            // <-- No vamos a /partida/base (que crea nueva partida). Volvemos a mostrar la misma vista de resultado
+            header('Location: /partida/mostrarPartida');
             exit;
         }
 
@@ -86,7 +87,7 @@ class PartidaController
             exit;
         }
 
-
+        // Verifica que la partida siga activa
         $partidaActiva = $this->model->verificarPartidaActiva($partidaId);
         if (!$partidaActiva) {
             $_SESSION['error_lobby'] = 'La partida ya finalizó.';
@@ -94,19 +95,19 @@ class PartidaController
             exit;
         }
 
-
+        // Cuenta reportes hechos
         $totalReportes = $this->model->contarReportesEnPartida($partidaId, $usuarioId);
 
         error_log("📝 Intentando reportar - Reportes actuales: $totalReportes");
-
 
         if ($totalReportes >= 2) {
 
             error_log("❌ Límite alcanzado - Finalizando partida");
 
+            // Finaliza partida pero NO resetea el puntaje (puntaje se conserva en BD/registro)
             $this->model->finalizarPartida($partidaId, $_SESSION['puntaje'] ?? 0);
 
-            unset($_SESSION['puntaje']);
+            // limpiar session relacionada con partida (pero conservar puntaje si querés)
             unset($_SESSION['partida_id']);
             unset($_SESSION['pregunta_activa']);
             unset($_SESSION['categoria_actual']);
@@ -117,18 +118,18 @@ class PartidaController
             exit;
         }
 
-
+        // Guarda el reporte
         $guardado = $this->model->guardarReporte($preguntaId, $usuarioId, $motivo, $partidaId);
 
         if (!$guardado) {
             $_SESSION['error_reporte'] = 'Error al enviar el reporte. Intenta nuevamente.';
-            header('Location: /partida/base');
+            // volvemos a la misma pantalla (mostrarPartida no crea partida)
+            header('Location: /partida/mostrarPartida');
             exit;
         }
 
         $nuevoTotal = $totalReportes + 1;
         error_log("✅ Reporte guardado - Total ahora: $nuevoTotal");
-
 
         $huboIncorrecta = isset($_SESSION['respuesta_incorrecta_pendiente']);
 
@@ -136,15 +137,14 @@ class PartidaController
 
             unset($_SESSION['respuesta_incorrecta_pendiente']);
 
-
             if ($nuevoTotal >= 2) {
                 error_log("🎯 Segundo reporte después de incorrecta - Finalizando partida");
 
+                // Finaliza pero NO toca puntaje
                 $this->model->finalizarPartida($partidaId, $_SESSION['puntaje'] ?? 0);
 
                 $puntajeFinal = $_SESSION['puntaje'] ?? 0;
 
-                unset($_SESSION['puntaje']);
                 unset($_SESSION['partida_id']);
                 unset($_SESSION['pregunta_activa']);
                 unset($_SESSION['categoria_actual']);
@@ -154,8 +154,10 @@ class PartidaController
                 exit;
             }
 
-
+            // Si no llegó a 2, volvemos a mostrar la partida para que el usuario siga jugando
             $_SESSION['exito_reporte'] = '✅ Reporte enviado. Continúa jugando. Te queda 1 reporte disponible.';
+            header('Location: /partida/mostrarPartida');
+            exit;
         } else {
 
             if ($nuevoTotal >= 2) {
@@ -163,13 +165,16 @@ class PartidaController
             } else {
                 $_SESSION['exito_reporte'] = '✅ Reporte enviado. Te queda ' . (2 - $nuevoTotal) . ' reporte disponible.';
             }
-        }
 
-        header('Location: /partida/base');
-        exit;
+            // Si reportó una pregunta que respondió bien, permitimos seguir jugando:
+            header('Location: /partida/mostrarPartida');
+            exit;
+        }
     }
 
-function mostrarPartida()
+
+
+    function mostrarPartida()
 {
     $this->soloJugadores();
     
