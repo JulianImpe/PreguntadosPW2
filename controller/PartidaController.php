@@ -61,6 +61,49 @@ class PartidaController
         exit;
     }
 
+    public function enviarReporte()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /lobby/base');
+            exit;
+        }
+
+        $resultado = $this->model->enviarReporte(
+            $_POST['pregunta_id'] ?? null,
+            $_SESSION['usuario_id'] ?? null,
+            trim($_POST['motivo'] ?? '')
+        );
+
+
+        if (isset($resultado['limite_alcanzado']) && $resultado['limite_alcanzado'] === true) {
+
+            if (isset($_SESSION['partida_id'])) {
+                $this->model->finalizarPartida($_SESSION['partida_id'], $_SESSION['puntaje'] ?? 0);
+            }
+
+
+            unset($_SESSION['puntaje']);
+            unset($_SESSION['partida_id']);
+            unset($_SESSION['pregunta_activa']);
+
+
+            if ($resultado['ok']) {
+                $_SESSION['info_lobby'] = $resultado['msg'] . ' La partida ha finalizado.';
+            } else {
+                $_SESSION['error_lobby'] = $resultado['msg'] . ' La partida ha finalizado.';
+            }
+
+
+            header('Location: /lobby/base');
+            exit;
+        }
+
+
+        $_SESSION[$resultado['ok'] ? 'exito_reporte' : 'error_reporte'] = $resultado['msg'];
+        header('Location: /partida/base');
+        exit;
+    }
+
 function mostrarPartida()
 {
     $this->soloJugadores();

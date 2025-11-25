@@ -394,7 +394,7 @@ class PartidaModel
         } else {
             return [
                 'ok' => true,
-                'msg' => 'Reporte enviado. ¡Gracias! Puedes reportar 1 vez más en esta partida.',
+                'msg' => 'Reporte enviado. ¡Gracias!.',
                 'limite_alcanzado' => false
             ];
         }
