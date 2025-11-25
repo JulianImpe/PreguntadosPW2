@@ -167,7 +167,7 @@ class PartidaController
             }
 
             // Si reportó una pregunta que respondió bien, permitimos seguir jugando:
-            header('Location: /partida/mostrarPartida');
+            header("Location: /ruleta/base");
             exit;
         }
     }
