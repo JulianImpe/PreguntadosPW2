@@ -1,14 +1,1 @@
-<img width="1772" height="947" alt="Pregunta" src="https://github.com/user-attachments/assets/555dc765-d6bc-4aea-ad8a-6a3200c91fa6" />
-<img width="1837" height="936" alt="IniciarSesion" src="https://github.com/user-attachments/assets/efef1bd5-1759-4bcc-b7ee-86fffb64649d" />
-<img width="1702" height="939" alt="Home" src="https://github.com/user-attachments/assets/881d6b22-5393-4b03-808d-4aa0a7109380" />
-<img width="1761" height="946" alt="editarPerfil" src="https://github.com/user-attachments/assets/0ec502bc-d25f-4240-8ade-d433275972a4" />
-<img width="1825" height="919" alt="CrearPregunta" src="https://github.com/user-attachments/assets/0956b681-6e63-4b6a-b285-b864e6b6ec2f" />
-<img width="1611" height="932" alt="AgregarMedallasARuleta" src="https://github.com/user-attachments/assets/7d5116f0-3740-40ca-b970-9a9a51c5b7c5" />
-<img width="1434" height="848" alt="verificacionMailConToken" src="https://github.com/user-attachments/assets/ade10784-611b-4d5b-aac3-cc746515359b" />
-<img width="1755" height="936" alt="Ruleta" src="https://github.com/user-attachments/assets/ec90ee94-8bf6-44c3-98a1-a49212f77cbf" />
-<img width="1490" height="945" alt="RolEditor" src="https://github.com/user-attachments/assets/c1df0655-820b-490d-b7ba-d7d849fb9a07" />
-<img width="1551" height="939" alt="RolAdmin" src="https://github.com/user-attachments/assets/7a14756f-422d-4b33-8ddf-7d10511920a0" />
-<img width="1453" height="933" alt="ReportarPregunta" src="https://github.com/user-attachments/assets/d6bd84e2-d77b-4145-b2ae-4e1b24f5058e" />
-<img width="1842" height="951" alt="Registrarse" src="https://github.com/user-attachments/assets/6bdeb53f-d11d-4644-8639-e5dd0a8dd91e" />
-<img width="1597" height="934" alt="Ranking" src="https://github.com/user-attachments/assets/e06813c7-dc0e-4652-8262-3fdc93ecbf4f" />
-<img width="1646" height="935" alt="QR" src="https://github.com/user-attachments/assets/8861afd0-eb99-456a-aadb-601bc17f4dd8" />
+
